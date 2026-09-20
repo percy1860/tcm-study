@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>中醫自學</title>
+    <style>
+      :root {
+        --bg: #1a1a2e;
+        --surface: #16213e;
+        --card: #0f3460;
+        --accent: #e94560;
+        --text: #eaeaea;
+        --muted: #a0a0b0;
+        --green: #4caf50;
+        --radius: 8px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        padding-bottom: 70px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .tab-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        background: var(--surface);
+        border-top: 1px solid #2a2a4a;
+        z-index: 100;
+      }
+      .tab-bar button {
+        flex: 1;
+        padding: 10px 4px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .tab-bar button.active {
+        color: var(--accent);
+      }
+      .tab-bar button span.icon {
+        font-size: 18px;
+      }
+      .page {
+        display: none;
+        padding: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .page.active {
+        display: block;
+      }
+      h1 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: var(--accent);
+      }
+      h2 {
+        font-size: 17px;
+        margin: 16px 0 8px;
+        color: var(--text);
+      }
+      h3 {
+        font-size: 15px;
+        margin: 12px 0 6px;
+        color: var(--muted);
+      }
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 10px;
+      }
+      .badge {
+        display: inline-block;
+        background: var(--surface);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        margin-right: 4px;
+        color: var(--muted);
+      }
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        border: none;
+        border-radius: var(--radius);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+      }
+      .btn-green {
+        background: var(--green);
+      }
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #2a2a4a;
+        border-radius: var(--radius);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+      }
+      .flex {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+      .mt {
+        margin-top: 12px;
+      }
+      .mb {
+        margin-bottom: 12px;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .text-muted {
+        color: var(--muted);
+      }
+      .text-sm {
+        font-size: 12px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .flashcard {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 24px;
+        text-align: center;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        perspective: 1000px;
+      }
+      .flashcard .front {
+        font-size: 22px;
+        font-weight: bold;
+      }
+      .flashcard .back {
+        font-size: 14px;
+        text-align: left;
+        margin-top: 12px;
+        line-height: 1.8;
+      }
+      .flashcard .back dt {
+        color: var(--accent);
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      .flashcard .back dd {
+        margin-left: 0;
+      }
+      .nav-controls {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .progress-bar {
+        height: 4px;
+        background: var(--surface);
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 4px 0;
+      }
+      .progress-bar > div {
+        height: 100%;
+        background: var(--accent);
+        transition: width 0.3s;
+      }
+      .stage-card {
+        border-left: 3px solid var(--accent);
+        padding-left: 12px;
+        margin-bottom: 16px;
+      }
+      .quiz-option {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 12px;
+        margin: 6px 0;
+        border-radius: var(--radius);
+        border: 1px solid #2a2a4a;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .quiz-option.correct {
+        border-color: var(--green);
+        background: rgba(76, 175, 80, 0.15);
+      }
+      .quiz-option.wrong {
+        border-color: var(--accent);
+        background: rgba(233, 69, 96, 0.15);
+      }
+      .quiz-option:disabled {
+        opacity: 0.7;
+      }
+      .search-results {
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tab-bar">
+      <button class="active" data-tab="path">
+        <span class="icon">◈</span>學習路徑
+      </button>
+      <button data-tab="cards"><span class="icon">◇</span>卡片記憶</button>
+      <button data-tab="ref"><span class="icon">☰</span>查詢</button>
+      <button data-tab="quiz"><span class="icon">✓</span>測驗</button>
+    </div>
+
+    <div id="page-path" class="page active">
+      <h1>學習路徑</h1>
+      <div id="path-content"></div>
+    </div>
+    <div id="page-cards" class="page">
+      <h1>卡片記憶</h1>
+      <div id="card-controls"></div>
+      <div id="card-area"></div>
+    </div>
+    <div id="page-ref" class="page">
+      <h1>查詢工具書</h1>
+      <div id="ref-content"></div>
+    </div>
+    <div id="page-quiz" class="page">
+      <h1>測驗考試</h1>
+      <div id="quiz-content"></div>
+    </div>
+
+    <script>
+      window.TCM_DATA={"curriculum": {"stages": [{"id": "s1", "title": "階段一｜中醫基礎理論（上）", "goal": "建立陰陽五行與藏象氣血的思維框架——這是所有後續內容的「語法」。", "howto": "先讀卡片搞懂定義，再用測驗檢測；陰陽五行要能不假思索說出對應表（五色/五味/五臟/五季）。", "duration": "2–3 週", "tasks": [{"label": "陰陽學說：定義、相互關係、臨牀套用", "module": "theory", "filter": "陰陽"}, {"label": "五行學說：生剋乘侮、五臟對應表", "module": "theory", "filter": "五行"}, {"label": "藏象：五臟六腑功能與相互關係", "module": "theory", "filter": "藏象"}, {"label": "氣血津液：生成、運行、功能", "module": "theory", "filter": "氣血津液"}], "milestone": "能默寫五行歸屬對應表，並用陰陽解釋一個日常病理例子（如潮熱盜汗）。"}, {"id": "s2", "title": "階段二｜中醫基礎理論（下）：經絡・病因・治則", "goal": "掌握經絡系統輪廓與發病邏輯，學會「為什麼这样治」。", "howto": "經絡部分搭配穴位模組先認十四經名稱與走向；病因治則重在理解案例。", "duration": "2 週", "tasks": [{"label": "經絡：十二經脈走向、任督二脈", "module": "theory", "filter": "經絡"}, {"label": "病因：六淫、七情、飲食勞倦", "module": "theory", "filter": "病因"}, {"label": "治則治法：八法、標本緩急、三因制宜", "module": "theory", "filter": "治則治法"}, {"label": "十四經總覽（穴位模組的經絡頁）", "module": "acupoints", "filter": ""}], "milestone": "能背出十二經脈流注順序與陰陽表裡配對。"}, {"id": "s3", "title": "階段三｜中藥學", "goal": "掌握 ~100 味常用藥的性味歸經與功效，建立「以類記藥」的骨架。", "howto": "按章節（牌組）逐類背：先記每類代表藥，再記類內對比（如麻黃與桂枝）。每日新藥 5–8 味，間隔重複。", "duration": "4–6 週", "tasks": [{"label": "解表藥・清熱藥", "module": "herbs", "filter": "解表藥"}, {"label": "補虛藥・溫裡藥", "module": "herbs", "filter": "補虛藥"}, {"label": "理氣・活血・止血藥", "module": "herbs", "filter": "理氣藥"}, {"label": "化痰止咳・安神・平肝息風藥", "module": "herbs", "filter": "化痰止咳平喘藥"}, {"label": "其餘章節收尾（瀉下/祛風濕/化濕/利水/消食/開竅/收澀）", "module": "herbs", "filter": "瀉下藥"}], "milestone": "隨機抽 20 味藥能說出性味、歸經、功效與使用注意。"}, {"id": "s4", "title": "階段四｜方劑學", "goal": "背熟 ~60 首代表方：組成（君臣佐使）、功用、主治、歌訣。", "howto": "每首方先背歌訣，再拆方義；同類方對比記（四君子湯與六君子湯與香砂六君子湯）。", "duration": "4–6 週", "tasks": [{"label": "解表劑・清熱劑", "module": "formulas", "filter": "解表劑"}, {"label": "補益劑（四君/四物/六味/生脈系列）", "module": "formulas", "filter": "補益劑"}, {"label": "理血・化痰止咳・安神劑", "module": "formulas", "filter": "理血劑"}, {"label": "其餘章節（瀉下/祛風濕/開竅/消食/固澀/平肝息風）", "module": "formulas", "filter": "瀉下劑"}], "milestone": "看到證型（如脾胃氣虛）能立刻寫出代表方與君臣佐使。"}, {"id": "s5", "title": "階段五｜經絡穴位", "goal": "掌握十四經 ~120 個重點穴的定位、主治與特殊穴性。", "howto": "按經背穴：每經先記走向與總數，再記特定穴（五輸/募/會/四總穴）；配合自身體表定位。", "duration": "3–4 週", "tasks": [{"label": "任督二脈（要穴最密集，優先）", "module": "acupoints", "filter": "m13"}, {"label": "足陽明胃經（足三里為首）", "module": "acupoints", "filter": "m07"}, {"label": "手三陰三陽（心肺脾胃相表裡）", "module": "acupoints", "filter": "m01"}, {"label": "足三陰三陽・督脈收尾", "module": "acupoints", "filter": "m10"}], "milestone": "能口述 30 個常用穴的正確定位（骨度分寸）與主治。"}, {"id": "s6", "title": "階段六｜整合與測驗", "goal": "跨模組混合測驗，查漏補缺，把知識變成可提取的長期記憶。", "howto": "每輪 20–40 題混合測驗；錯題回到卡片模組重背；每週重測一次上週錯題。", "duration": "持續", "tasks": [{"label": "混合測驗：理論 + 中藥 + 方劑 + 穴位", "module": "quiz", "filter": ""}, {"label": "錯題回收（卡片模組標記「不記得」的卡）", "module": "herbs", "filter": ""}], "milestone": "混合測驗穩定 85 分以上。"}]}, "theory": {"concepts": [{"id": "t001", "term": "陰陽學說", "category": "陰陽", "definition": "研究陰陽基本概念及其相互關係的學說，是中醫學的理論核心。宇宙萬物皆內含對立統一的两个方面，以陰陽概括之。", "keyPoints": ["陰陽是對宇宙事物相互對立兩方面的概括", "屬性：運動、外向、上升、温热、明亮為陽；靜止、內守、下降、寒冷、晦暗為陰", "陰陽學說用於說明人體結構、生理、病理及指導診斷治療"]}, {"id": "t002", "term": "陰陽對立制約", "category": "陰陽", "definition": "陰陽雙方屬性相反，相互抑制、相互約束。如機能（陽）與物質（陰）之間的相互制約，維持動態平衡。", "keyPoints": ["陰勝則陽病，陽勝則陰病", "陰勝則寒，陽勝則熱", "制約失調則出現陰陽偏盛偏衰的病理狀態"]}, {"id": "t003", "term": "陰陽互根互用", "category": "陰陽", "definition": "陰陽雙方各以對方為自己存在的前提，並相互促進、相互資生。如氣（陽）與血（陰）：氣能生血行血，血能載氣養氣。", "keyPoints": ["孤陰不生，獨陽不長", "陰為陽之守，陽為陰之使", "互根關係破壞則出現「陰竭」「陽脫」的危候"]}, {"id": "t004", "term": "陰陽消長平衡", "category": "陰陽", "definition": "陰陽雙方處於動態的增減變化之中，此消彼長、此長彼消，維持相對平衡。消長是陰陽運動的基本形式。", "keyPoints": ["陰長則陽消，陽長則陰消", "生理狀態：陰平陽秘，精神乃治", "病理狀態：陰陽消長失調，則疾病發生"]}, {"id": "t005", "term": "陰陽轉化", "category": "陰陽", "definition": "陰陽雙方在一定的條件下，各自向著其相反的方向轉化。陰可以轉陽，陽可以轉陰。", "keyPoints": ["重陰必陽，重陽必陰", "寒極生熱，熱極生寒", "轉化是消長變化的量變達到質變的結果"]}, {"id": "t006", "term": "陰虛則熱", "category": "陰陽", "definition": "陰液虧損，陰不制陽，陽相對偏亢而出現虛熱證。表現為潮熱、盜汗、五心煩熱、舌紅少苔、脈細數。", "keyPoints": ["屬虛熱證，非陽氣過盛", "治法：滋陰制陽（陽病治陰、壯水之主以制陽光）", "代表表現：潮熱盜汗、五心煩熱"]}, {"id": "t007", "term": "陽虛則寒", "category": "陰陽", "definition": "陽氣虧虛，陽不制陰，陰相對偏盛而出現虛寒證。表現為畏寒肢冷、面色㿠白、小便清長、脈沉遲無力。", "keyPoints": ["屬虛寒證，非陰氣過盛", "治法：補陽制陰（陰病治陽、益火之源以消陰翳）", "與陰盛則寒（實寒證）的鉴别：一虛一實"]}, {"id": "t008", "term": "五行學說", "category": "五行", "definition": "以木、火、土、金、水五行的特性及生剋制化關係，說明事物屬性及其相互联系的學說。中醫學以此歸類人體臟腑組織並說明其相互關係。", "keyPoints": ["五行特性：木曰曲直、火曰炎上、土爰稼穡、金曰從革、水曰潤下", "五臟配五行：肝木、心火、脾土、肺金、腎水", "生剋制化維持整體協調平衡"]}, {"id": "t009", "term": "木曰曲直", "category": "五行", "definition": "木的特性是能屈能伸，代表生長、升發、條達。凡具有此類特性的事物均属木。", "keyPoints": ["生長、升發、條達", "肝屬木：肝喜條達而惡抑鬱", "對應春、東、風、青、酸"]}, {"id": "t010", "term": "火曰炎上", "category": "五行", "definition": "火的特性是溫熱、上升。凡具有溫熱、升騰作用的事物均属火。", "keyPoints": ["溫熱、升騰", "心屬火：心陽溫煦全身", "對應夏、南、熱、赤、苦"]}, {"id": "t011", "term": "土爰稼穡", "category": "五行", "definition": "土有播種和收穫農作物的特性，引申為受納、生化、承載。凡具有生化、承載、受納作用的事物均属土。", "keyPoints": ["生化、承載、受納", "脾屬土：為後天之本、氣血生化之源", "土為五行之中，對應長夏、中央、黃、甘"]}, {"id": "t012", "term": "金曰從革", "category": "五行", "definition": "從革指金屬可變更形制而從人之意，引申為清肅、肅殺、收斂。凡具有清肅、收殺、肅降特性的事物均属金。", "keyPoints": ["清肅、肅降、收斂", "肺屬金：肺主肅降、清肅", "對應秋、西、燥、白、辛"]}, {"id": "t013", "term": "水曰潤下", "category": "五行", "definition": "水具有滋潤、向下、閉藏的特性。凡具有寒涼、滋潤、下行作用的事物均属水。", "keyPoints": ["寒涼、滋潤、下行、閉藏", "腎屬水：腎主藏精、主水", "對應冬、北、寒、黑、鹹"]}, {"id": "t014", "term": "五行相生", "category": "五行", "definition": "五行之間有序的資生、助長關係：木生火、火生土、土生金、金生水、水生木。生我者為母，我生者為子。", "keyPoints": ["次序：木→火→土→金→水→木", "母子關係：生我為母、我生為子", "病理傳變：母病及子（腎病及肝）、子病犯母（肝病及腎）"]}, {"id": "t015", "term": "五行相剋", "category": "五行", "definition": "五行之間有序的克制、制約關係：木剋土、土剋水、水剋火、火剋金、金剋木。克我者為所不勝，我克者為所勝。", "keyPoints": ["次序：木→土→水→火→金→木", "所勝與所不勝：我克者為所勝，克我者為所不勝", "相剋是生理性的制約，維持平衡"]}, {"id": "t016", "term": "五行乘侮", "category": "五行", "definition": "五行乘侮是相剋關係異常的病理表現。相乘是克制太過（過強克過弱或本身過強），相侮是反向克制（恃強凌弱，反克其「所不勝」）。", "keyPoints": ["相乘：次序與相剋一致，但力量異常（木旺乘土）", "相侮：次序與相剋相反（木火刑金，木反侮金）", "「氣盛則侮所不勝，氣衰則為己所勝者侮也」"]}, {"id": "t017", "term": "五行制化", "category": "五行", "definition": "相生與相剋結合，生中有剋、剋中有生，調節維持整體平衡的機制。如木生火、火生土、土生金、金剋木，形成自我調節。", "keyPoints": ["制則化，化則生，生而不已，為萬物之母", "有制化才有事物的穩定與發展", "制化失調則乘侮病變發生"]}, {"id": "t018", "term": "臟象", "category": "藏象", "definition": "內臟生理病理表現於外的徵象，也指研究臟腑臟象的學說。通過體外的徵象推測內在臟腑變化，稱「司外揣內」。", "keyPoints": ["臟：心、肺、脾、肝、腎（五臟）", "腑：膽、胃、小腸、大腸、膀胱、三焦（六腑）", "臟象的特點是「藏於內而顯於外」"]}, {"id": "t019", "term": "五臟", "category": "藏象", "definition": "心、肺、脾、肝、腎的合稱。功能以「藏精氣」為主，「藏而不瀉」，「滿而不能實」。", "keyPoints": ["五臟主化生和贮藏精氣", "五臟與五體、五官、五華等相聯絡", "病理特点：五臟多虛證"]}, {"id": "t020", "term": "六腑", "category": "藏象", "definition": "膽、胃、小腸、大腸、膀胱、三焦的合稱。功能以「傳化水谷」為主，「瀉而不藏」，「實而不能滿」，以通為用。", "keyPoints": ["六腑主受納、腐熟、傳導、排泄", "六腑以通為用、以降為和", "病理特点：六腑多實證，「六腑以通為補」"]}, {"id": "t021", "term": "奇恆之腑", "category": "藏象", "definition": "腦、髓、骨、脈、膽、女子胞的合稱。形態似腑似臟，功能藏精似臟而不傳化水谷，故既非臟亦非腑。", "keyPoints": ["腦、髓、骨、脈、膽、女子胞", "膽既屬六腑又屬奇恆之腑", "「貯而不寫，故實而不能滿也」"]}, {"id": "t022", "term": "心", "category": "藏象", "definition": "位於胸中，為生命活動的主宰。主血脈、主神志，為五臟六腑之大主，稱「君主之官」。", "keyPoints": ["心為君主之官、五臟六腑之大主", "在體合脈，其華在面，開竅於舌", "在志為喜，在液為汗，在五行屬火，與小腸相表裡"]}, {"id": "t023", "term": "心主血脈", "category": "藏象", "definition": "心氣推動血液在脈中循環運行。心、血、脈三者密切相關，心氣充沛則血脈充盈、運行正常。", "keyPoints": ["心氣推動血液運行", "血液充盈依賴心氣和心陽（心火）的溫煦", "臨床：心氣不足則血行無力，面淡無華、脈虛"]}, {"id": "t024", "term": "心主神志", "category": "藏象", "definition": "心主宰人體的精神、意識、思維活動。心主神志以心血為物質基礎，稱「心者，神明之府也」。", "keyPoints": ["心藏神，主宰精神意識思維", "心血不足則心悸、失眠、多夢、健忘", "心主神志失常可出現神昏、譫語、狂躁"]}, {"id": "t025", "term": "肺", "category": "藏象", "definition": "位於胸中，主氣、司呼吸，主宣發肅降，通調水道，朝百脈、主治節，為「相傅之官」「華蓋」「嬌臟」。", "keyPoints": ["肺為相傅之官，主治節", "肺為華蓋，為嬌臟，不耐寒熱", "在體合皮膚，開竅於鼻，在志為憂（悲），在液為涕"]}, {"id": "t026", "term": "肺主氣司呼吸", "category": "藏象", "definition": "肺主一身之氣，包括主呼吸之氣和主一身之氣（司宗氣生成）。肺通過呼吸運動吐故納新，維持全身氣機。", "keyPoints": ["主呼吸之氣：體内外氣體交換", "主一身之氣：參與宗氣生成，調節全身氣機", "肺氣虛則氣短不足以息、聲音低怯"]}, {"id": "t027", "term": "肺主宣發肅降", "category": "藏象", "definition": "宣發指肺氣向上向外的發散宣散；肅降指肺氣向下肅清、肅降。宣發與肅降相因，維持呼吸、行水、衛外功能。", "keyPoints": ["宣發：呼出濁氣、散精氣、宣發衛氣", "肅降：吸入清氣、通調水道下輸膀胱、肅清肺道", "宣降失調則咳、喘、痰飲、水腫"]}, {"id": "t028", "term": "脾", "category": "藏象", "definition": "位於中焦，主運化、主升清、主統血，為後天之本、氣血生化之源，稱「倉廩之官」。", "keyPoints": ["脾為後天之本、氣血生化之源", "在體合肌肉、主四肢，開竅於口，其華在唇，在志為思，在液為涎", "脾喜燥惡濕，與胃相表裡"]}, {"id": "t029", "term": "脾主運化", "category": "藏象", "definition": "脾具有消化飲食、吸收轉輸水谷精微的生理功能，包括運化水谷和運化水液兩方面。", "keyPoints": ["運化水谷：消化吸收轉輸精微", "運化水液：轉輸排泄水液，防止濕痰飲停聚", "脾失健運則食少腹脹、便溏、痰飲、水腫"]}, {"id": "t030", "term": "脾主升清", "category": "藏象", "definition": "脾氣以升為順，將水谷精微上輸心肺頭目，並維持內臟位置恆定。", "keyPoints": ["升輸精微上奉心肺化生氣血", "升舉內臟，維持位置恆定", "脾氣下陷則腹瀉、脫肛、內臟下垂"]}, {"id": "t031", "term": "脾主統血", "category": "藏象", "definition": "脾氣有統攝控制血液在脈中運行、防止逸出脈外的功能。統血實為氣攝血作用的體現。", "keyPoints": ["氣能攝血的具體體現", "脾不統血則便血、尿血、崩漏、肌衄等慢性出血", "治法：補氣攝血，代表方歸脾湯"]}, {"id": "t032", "term": "肝", "category": "藏象", "definition": "位於右脅，主疏洩、主藏血，主筋、開竅於目，為「將軍之官」，體陰而用陽，肝為剛臟。", "keyPoints": ["肝為將軍之官，主謀慮", "在體合筋，其華在爪，開竅於目，在志為怒，在液為淚", "肝體陰而用陽，喜條達而惡抑鬱"]}, {"id": "t033", "term": "肝主疏洩", "category": "藏象", "definition": "肝氣具有疏通、暢達、升發的全身氣機調節作用。體現在調暢氣機、促進消化、調節情志、促進生殖等方面。", "keyPoints": ["調暢氣機：氣機通暢依賴肝的疏洩", "促進消化：協調脾胃升降、分泌排泄膽汁", "調節情志：疏洩失則情志抑鬱或急躁易怒"]}, {"id": "t034", "term": "肝主藏血", "category": "藏象", "definition": "肝具有貯藏血液、調節血量的功能。人臥血歸於肝，活動時血供外周；肝血不足可見目澀、肢麻、月經量少。", "keyPoints": ["貯血與調節血量", "肝收斂陰血，防止出血", "肝血不足：兩目乾澀、夜盲、筋攣、月經量少或閉經"]}, {"id": "t035", "term": "腎", "category": "藏象", "definition": "位於腰裡，藏精、主水、主納氣，主骨生髓通於腦，為先天之本、陰陽之根，稱「作強之官」。", "keyPoints": ["腎為先天之本，五臟陰陽之根", "在體主骨、生髓、通於腦，其華在髮，開竅於耳及二陰", "在志為恐，在液為唾"]}, {"id": "t036", "term": "腎藏精", "category": "藏象", "definition": "腎貯藏先天之精與後天之精，主生長、發育與生殖。腎精化氣，腎陰腎陽為各臟陰陽之本。", "keyPoints": ["精：先天之精稟受於父母，後天之精源於脾胃", "腎精化腎氣，分腎陰腎陽，為五臟陰陽之本", "腎精不足：小兒生長遲緩、成人早衰、不孕不育"]}, {"id": "t037", "term": "胃", "category": "藏象", "definition": "位於中焦，主受納腐熟水谷，主通降，以和降為順，為「水谷之海」「倉廩之官」（與脾合稱後天之本）。", "keyPoints": ["胃主受納腐熟：接受容納初步消化飲食", "胃氣主降，降則和、降則通", "胃氣為後天之本的象徵：「有胃氣則生，無胃氣則死」"]}, {"id": "t038", "term": "氣", "category": "氣血津液", "definition": "氣是人體中最基本的精微物質，也是人體功能活動的統稱。氣運行全身，推動、溫煦、防禦、固攝、氣化。", "keyPoints": ["氣是活力很強的精微物質", "五大功能：推動、溫煦、防禦、固攝、氣化", "氣的來源：先天精氣＋水谷精氣＋自然清氣"]}, {"id": "t039", "term": "元氣", "category": "氣血津液", "definition": "元氣（原氣）由腎中先天之精化生，以三焦為通道流行全身，是人體生命活動的原動力。", "keyPoints": ["根於腎，以三焦為通道", "推動人體生長發育與各臟腑功能", "元氣虛損則生長遲緩、早衰、臟腑功能低下"]}, {"id": "t040", "term": "宗氣", "category": "氣血津液", "definition": "宗氣由肺吸入的清氣與脾胃水谷精氣結合生於胸中，走息道以行呼吸、貫心脈以行氣血。", "keyPoints": ["積於胸中（氣海）", "功能：行呼吸、行血氣、資先天", "宗氣不足：呼吸氣短、聲音低微、血行滯澀、脈弱"]}, {"id": "t041", "term": "營氣", "category": "氣血津液", "definition": "營氣行於脈中，由水谷精氣中的精專部分化生，具有營養作用和化生血液的功能。", "keyPoints": ["行於脈中，與血關係密切（營血常並稱）", "化生血液、營養周身", "營氣不足：血虛、營養障礙"]}, {"id": "t042", "term": "衛氣", "category": "氣血津液", "definition": "衛氣行於脈外，由水谷精氣中的慓悍滑利部分化生，功能是護表御邪、溫養臟腑肌膚、調節腠理開合。", "keyPoints": ["行於脈外，慓悍滑利", "防御外邪、溫養周身、調節汗孔開闔", "衛氣虛則易感冒、自汗、畏風"]}, {"id": "t043", "term": "氣機", "category": "氣血津液", "definition": "氣在體內流行運行及其升降出入的运动。氣機調暢指升降出入協調平衡；氣機失調則氣滯、氣逆、氣陷、氣閉、氣脫。", "keyPoints": ["升降出入是氣運動的基本形式", "臟腑氣機各有特點：脾升胃降、肝升肺降", "氣機失調的病機：氣滯、氣逆、氣陷、氣脫"]}, {"id": "t044", "term": "氣化", "category": "氣血津液", "definition": "通過气的運動而產生的變化，包括精、氣、血、津液之間的相互轉化及代謝產物的排出，是生命活動的基本特徵。", "keyPoints": ["氣化即物質與能量的代謝轉化", "氣化失常：水濕痰飲停聚、精血津液代謝障礙", "氣化依賴於臟腑功能，尤重脾腎"]}, {"id": "t045", "term": "血", "category": "氣血津液", "definition": "血是行於脈中、紅而黏稠的液體，由營氣和津液注入脈中化生，功能是營養和滋润全身及神志活動的物質基礎。", "keyPoints": ["血的生成：水谷精微＋腎精，奉心化赤", "血為神志活動的主要物質基礎", "血虛：面色淡白、眩暈心悸、失眠多夢、脈細"]}, {"id": "t046", "term": "氣為血之帥", "category": "氣血津液", "definition": "氣對血的生、行、攝起主導作用：氣能生血、氣能行血、氣能攝血。故治血病常配伍治氣之藥。", "keyPoints": ["氣能生血：氣虛血虛當補氣生血", "氣能行血：氣滯血瘀當行氣活血", "氣能攝血：氣不攝血當補氣攝血"]}, {"id": "t047", "term": "血為氣之母", "category": "氣血津液", "definition": "血能養氣、載氣：血為氣提供營養，氣附著於血而不逸脫。大量失血可致氣隨血脫。", "keyPoints": ["血能養氣：血足則氣旺", "血能載氣：血脫則氣無所附", "血脫者禁汗；大失血宜益氣固脫（當歸補血湯）"]}, {"id": "t048", "term": "津液", "category": "氣血津液", "definition": "機體一切正常水液的總稱，包括各臟腑組織的內在液體及正常分泌液。津質清稀，注於體表縫理，液質稠厚注骨髓腦竅。", "keyPoints": ["津：清稀， 佈散於體表肌肉縫理，滋潤", "液：稠厚，灌注骨髓腦竅關節，濡養", "津血同源：津液滲入脈中為血之組成"]}, {"id": "t049", "term": "血汗同源", "category": "氣血津液", "definition": "血與津液同源於水谷精氣且相互轉化，汗為津液所化，故失血者不可發汗，多汗者不可傷血。", "keyPoints": ["津血同源互化", "汗為心液、血之液", "臨牀禁例：奪血者無汗、汗家不可放血"]}, {"id": "t050", "term": "痰飲", "category": "氣血津液", "definition": "人體水液代謝障礙而停聚所形成的病理產物。質稠濁者為痰，質清稀者為飲。痰飲形成後又成為新的致病因素。", "keyPoints": ["「脾為生痰之源，肺為貯痰之器」", "痰無所不至：百病多由痰作祟", "飲分四飲：痰飲、懸飲、溢飲、支飲"]}, {"id": "t051", "term": "瘀血", "category": "氣血津液", "definition": "血液運行遲緩、滯留脈中，或離脈之血積存體內所形成的病理產物。瘀血既是病理產物又是致病因素。", "keyPoints": ["成因：氣虛、氣滯、寒凝、熱灼、外傷、出血", "致病特點：痛有定處、刺痛夜甚、腫塊、出血色紫暗、舌紫瘀斑、脈澀", "治則：活血化瘀，「治風先治血，血行風自滅」"]}, {"id": "t052", "term": "精", "category": "氣血津液", "definition": "精是構成人體和維持生命活動的本原精微物質，包括腎藏先天之精與受於脾胃的後天之精。", "keyPoints": ["精分先天與後天，皆藏於腎", "精主生長發育生殖，精能化氣生血", "精虧則生长发育生殖功能減退"]}, {"id": "t053", "term": "經絡", "category": "經絡", "definition": "經脈和絡脈的總稱，是人體運行氣血、聯絡臟腑肢節、溝通内外上下、傳導感應的系統。經脈為主幹縱行，絡脈為分支網狀。", "keyPoints": ["經脈：主幹，縱行，較深", "絡脈：分支，網狀，較淺", "經絡系統：經脈＋絡脈＋經別、經筋、皮部等"]}, {"id": "t054", "term": "十二經脈", "category": "經絡", "definition": "手足三陰三陽十二條經脈的總稱，是經絡系統的主體。對稱分布於左右兩側，內屬臟腑、外絡肢節。", "keyPoints": ["手三陰：肺、心包、心；手三陽：大腸、三焦、小腸", "足三陽：胃、膽、膀胱；足三陰：脾、肝、腎", "陰經行內側、陽經行外側；太陰少陰厥陰、陽明太陽少陽次序"]}, {"id": "t055", "term": "經气流注", "category": "經絡", "definition": "氣血在十二經脈中依一定順序循環流注，如環無端。流注次序起於手太陰肺經，終足厥陰肝經復注肺中。", "keyPoints": ["流注次序：肺→大腸→胃→脾→心→小腸→膀胱→腎→心包→三焦→膽→肝→肺", "陰陽表裡經之間在四肢末端交接", "同名陽經在頭面部交接，同名陰經在胸中交接"]}, {"id": "t056", "term": "奇經八脈", "category": "經絡", "definition": "十二經脈之外具有特殊分布與功能的八條經脈：督、任、沖、帶、陰維、陽維、陰蹺、陽蹺脈。不直屬臟腑，無表裡配合。", "keyPoints": ["奇經八脈：督任沖帶陰維陽維陰蹺陽蹺", "作用：密切經絡聯系、蓄積調節氣血（別儲之湖）", "「十二經氣滿，入奇經中」"]}, {"id": "t057", "term": "任脈", "category": "經絡", "definition": "行於軀幹前面正中线，總任萬脈，稱「陰脈之海」；主胞胎，與女子月經、妊娠密切相關。", "keyPoints": ["行於腹胸正中線", "「任主胞胎」：與月經、妊娠、孕育相關", "「陰脈之海」：總任諸陰經"]}, {"id": "t058", "term": "督脈", "category": "經絡", "definition": "行於軀幹後面正中线，上行頭項，入絡腦。總督萬脈，稱「陽脈之海」，與腦、脊髓、腎關係密切。", "keyPoints": ["行於背腰正中線", "「陽脈之海」：統攝全身陽經", "絡腎貫脊入腦：與神志病、脊柱病相關"]}, {"id": "t059", "term": "十五絡脈", "category": "經絡", "definition": "十五條主要絡脈的總稱：十二經各一絡，加任脈之尾翳、督脈之長強、脾之大絡。加強表裡兩經在體表的聯繫。", "keyPoints": ["十二經絡＋任督脾大絡", "自經脈分出處稱「絡穴」", "病理：表裡兩經同病"]}, {"id": "t060", "term": "十二經別", "category": "經絡", "definition": "十二經脈分出的支脈，多行於深部，加強表裡經在體內深部的聯繫，並擴大經絡循行分布範圍。", "keyPoints": ["離、合、入、出為其循行特點", "使表裡兩經在体内深部進一步聯絡", "某些經別補充了十二經脈循行未至之處"]}, {"id": "t061", "term": "經筋", "category": "經絡", "definition": "十二經脈之氣結聚於筋肉骨節的系統，主司關節運動、約束骨骼、聯屬筋肉。", "keyPoints": ["主束骨而利機關", "病則筋肉攣急、痛、關節不利", "經筋病候多表現於循行所過的筋肉關節"]}, {"id": "t062", "term": "皮部", "category": "經絡", "definition": "十二經脈及其別絡在體表的皮膚分區，是經絡系統的最外層，有抗衛外邪、反映臟腑病變的作用。", "keyPoints": ["十二皮部與十二經脈相應", "外邪入侵的途徑：皮→絡→經→腑→臟", "臨牀：皮膚針、灸法、外敷皆依據皮部理論"]}, {"id": "t063", "term": "六淫", "category": "病因", "definition": "風、寒、暑、濕、燥、火六種外感病邪的總稱。六氣異常（太過不及或非其時而有其氣）或人體正氣不足時，六氣成為致病因素稱六淫。", "keyPoints": ["六淫：風寒暑濕燥火", "致病特點：外感性、季節性、地域性、相兼性、轉化性", "六淫可單獨或相兼發病，以風邪為先導"]}, {"id": "t064", "term": "風邪", "category": "病因", "definition": "風為六淫之首、百病之長，其性開泄、善動、上行、輕揚，為陽邪。致病具有發病急、變化快、病位游走不定的特點。", "keyPoints": ["風為百病之長、陽邪", "善行而數變：病位遊走、發病迅速", "風性開泄：腠理開、汗出、惡風"]}, {"id": "t065", "term": "寒邪", "category": "病因", "definition": "寒為陰邪，其性凝滯、收引，易傷陽氣。致病多见疼痛、筋脈攣急、無汗、分泌物清冷。", "keyPoints": ["寒為陰邪，易傷陽氣", "寒性凝滯：氣血凝澀，不通則痛", "寒性收引：筋脈收縮攣急、毛竅閉塞無汗"]}, {"id": "t066", "term": "暑邪", "category": "病因", "definition": "暑為夏季主氣，純屬陽邪，其性炎上。暑性升散，易耗氣傷津；暑多挾濕。暑邪致病有明顯的季節性。", "keyPoints": ["暑為陽邪，獨見於夏季", "暑性升散：耗氣傷津，見汗多、口渴、氣短", "暑多挾濕：兼胸悶、四肢睏倦、便溏"]}, {"id": "t067", "term": "濕邪", "category": "病因", "definition": "濕為陰邪，其性重濁、黏膩、趨下，易阻滯氣機、損傷脾陽。致病病程長、症狀黏膩滯著。", "keyPoints": ["濕性重濁：頭身睏重、分泌物濁濁", "濕性黏膩：病程長、便黏、苔膩、脈濡", "濕易困脾：阻滯氣機、損傷脾陽"]}, {"id": "t068", "term": "燥邪", "category": "病因", "definition": "燥性乾澀，易傷津液，易傷肺臟。有溫燥、涼燥之分，多見口鼻乾燥、皮膚乾澀、干咳少痰。", "keyPoints": ["燥性乾澀，傷津：口鼻唇乾燥、尿少便乾", "燥易傷肺：肺為嬌臟，喜潤惡燥", "溫燥見於初秋，涼燥見於深秋"]}, {"id": "t069", "term": "火（熱）邪", "category": "病因", "definition": "火熱為陽邪，其性炎上、生風動血、易擾神明、易腐肉成膿、易傷津耗氣。", "keyPoints": ["火為陽邪，其性炎上：見高熱、面紅、目赤", "熱極生風、迫血妄行、擾及心神", "易腐血肉成瘡瘍癰腫"]}, {"id": "t070", "term": "疠氣", "category": "病因", "definition": "一類具有強烈傳染性的外感病邪，又稱疫氣、戾氣。发病急驟、病情危重、症状相似、傳染性強。", "keyPoints": ["傳染性強、流行性", "發病急、病情重、症状相似", "不受季節氣候限制，從口鼻或接觸侵入"]}, {"id": "t071", "term": "七情內傷", "category": "病因", "definition": "喜、怒、憂、思、悲、恐、驚七種情志變化異常（突然、強烈、持久）直接損傷內臟而致病，是內傷病的主要病因。", "keyPoints": ["怒則氣上、喜則氣緩、思則氣結、悲憂則氣消、恐則氣下、驚則氣亂", "直接傷臟：怒傷肝、喜傷心、思傷脾、悲憂傷肺、恐驚傷腎", "情志致病首先影響氣機"]}, {"id": "t072", "term": "飲食勞倦", "category": "病因", "definition": "飲食不節（過飽過飢、飲食不潔、偏嗜）、勞逸失度（過勞、過逸）損傷脾胃與正氣而致病。", "keyPoints": ["飲食不節先傷脾胃", "過勞：勞力傷氣、房勞傷腎、勞神傷血", "過逸：氣機不暢、脾胃功能減退、體虛發胖"]}, {"id": "t073", "term": "正治", "category": "治則治法", "definition": "逆疾病證候性質而治的法則，又稱「逆治」。寒者熱之、熱者寒之、虛則補之、實則瀉之，適用於疾病現象與本質一致者。", "keyPoints": ["「微者逆之」", "寒者熱之、熱者寒之、虛則補之、實則瀉之", "臨牀最常用治則"]}, {"id": "t074", "term": "反治", "category": "治則治法", "definition": "順從疾病假象而治的法則，又稱「從治」。熱因熱用、寒因寒用、塞因塞用、通因通用，適用於疾病出現假象者，本質仍是治病求本。", "keyPoints": ["「甚者從之」", "熱因熱用（真熱假寒）、寒因寒用（真寒假熱）", "塞因塞用（真虛假實）、通因通用（真實假虛）"]}, {"id": "t075", "term": "治標與治本", "category": "治則治法", "definition": "標本是相對概念，一般正气為本、邪氣為標，病因為本、症狀為標。急則治其標，緩則治其本，標本俱急則標本同治。", "keyPoints": ["「急則標而緩則本」", "標本俱急則標本同治", "治病求本是總原則"]}, {"id": "t076", "term": "扶正祛邪", "category": "治則治法", "definition": "扶持正氣、祛除病邪的治則。虛則補之以扶正，實則瀉之以祛邪；正虛為主扶正兼祛邪，邪盛為主祛邪兼扶正。", "keyPoints": ["扶正：益氣、養血、滋陰、溫陽", "祛邪：發汗、湧吐、攻下、清熱、活血化瘀等", "原則是「扶正而不留邪，祛邪而不傷正」"]}, {"id": "t077", "term": "調整陰陽", "category": "治則治法", "definition": "補其不足、損其有餘，使陰陽恢復平衡協調的治病總則。「陽病治陰，陰病治陽」，「壯水之主以制陽光，益火之源以消陰翳」。", "keyPoints": ["陰虛滋陰以配陽（壯水制陽光）", "陽虛補陽以配陰（益火消陰翳）", "陰陽偏盛則瀉其有餘：陽盛熱者寒之、陰盛寒者熱之"]}, {"id": "t078", "term": "三因制宜", "category": "治則治法", "definition": "因時、因地、因人制宜，根據季節氣候、地理環境、患者體質年齡性別等制定适宜治法的法則。", "keyPoints": ["因時：「用熱遠熱，用寒遠寒」", "因地：西北氣寒宜散而寒之，東南氣溫宜收而溫之", "因人：年老體虛宜補、小兒忌攻，男女異治"]}, {"id": "t079", "term": "八法", "category": "治則治法", "definition": "汗、吐、下、和、溫、清、消、補八種治法的總稱，是針對不同病證的基本治法體系。", "keyPoints": ["汗法解表、吐法湧吐、下法攻下、和法和解", "溫法祛寒、清法清熱、消法消積、補法補虛", "「汗者散其表，吐者引其高，下者導其下……」"]}, {"id": "t080", "term": "因勢利導", "category": "治則治法", "definition": "順應病勢與正氣抗邪趨向，因勢驅邪外出的治則。其高者因而越之，其下者引而竭之，在皮者汗而發之。", "keyPoints": ["「其高者，因而越之」——病位在上用吐法", "「其下者，引而竭之」——病位在下用通利二便", "「其在皮者，汗而發之」——表證用汗法"]}]}, "herbs": {"herbs": [{"id": "h001", "name": "麻黃", "category": "解表藥", "nature": "溫", "flavor": "辛、微苦", "channels": ["肺", "膀胱"], "dose": "2–10g", "efficacy": "發汗解表，宣肺平喘，利水消腫", "indications": "風寒表實證，咳嗽氣喘，風水水腫", "caution": "體虛自汗、腎上腺素類藥物使用者忌用", "memo": "發汗解表第一藥，宣肺平喘要藥"}, {"id": "h002", "name": "桂枝", "category": "解表藥", "nature": "溫", "flavor": "辛、甘", "channels": ["心", "肺", "膀胱"], "dose": "3–10g", "efficacy": "發汗解肌，溫通經脈，助陽化氣", "indications": "風寒表虛或表實證，寒凝血滯諸痛證，痰飲、蓄水證", "caution": "溫病熱盛、陰虛火旺、血熱妄行者忌用", "memo": "解肌發表，溫經通脈"}, {"id": "h003", "name": "紫蘇葉", "category": "解表藥", "nature": "溫", "flavor": "辛", "channels": ["肺", "脾"], "dose": "5–10g", "efficacy": "解表散寒，行氣寬中，安胎", "indications": "風寒感冒，脾胃氣滯，妊娠嘔吐，魚蝦中毒", "caution": "氣虛及陰虛者慎服", "memo": "解表行氣兼安胎"}, {"id": "h004", "name": "生薑", "category": "解表藥", "nature": "微溫", "flavor": "辛", "channels": ["肺", "脾", "胃"], "dose": "3–10g", "efficacy": "發汗解表，溫中止嘔，溫肺止咳，解毒", "indications": "風寒感冒，胃寒嘔吐，肺寒咳嗽，解魚蟹及生半夏生南星毒", "caution": "陰虛內熱、熱盛者忌服", "memo": "嘔家聖藥"}, {"id": "h005", "name": "荊芥", "category": "解表藥", "nature": "微溫", "flavor": "辛", "channels": ["肺", "肝"], "dose": "5–10g", "efficacy": "祛風解表，透疹消瘡，止血", "indications": "外感表證（風寒風熱皆可），麻疹不透，風疹瘙癢，吐衄下血", "caution": "表虛自汗、陰虛頭暈者忌用", "memo": "風藥之潤品，本經治風要藥"}, {"id": "h006", "name": "防風", "category": "解表藥", "nature": "微溫", "flavor": "辛、甘", "channels": ["膀胱", "肝", "脾"], "dose": "5–10g", "efficacy": "祛風解表，勝濕止痛，止痙", "indications": "外感表證，風寒濕痹，破傷風，肝風內動", "caution": "陰虛火旺、血虛發暈者慎用", "memo": "治風通用之藥，風藥之潤剂"}, {"id": "h007", "name": "薄荷", "category": "解表藥", "nature": "涼", "flavor": "辛", "channels": ["肺", "肝"], "dose": "3–6g（後下）", "efficacy": "疏散風熱，清利頭目，利咽透疹，疏肝行氣", "indications": "風熱感冒，風溫初起，頭目不清，咽喉腫痛，麻疹不透，肝鬱氣滯", "caution": "氣虛多汗者不宜單用", "memo": "疏散風熱要藥，清凉利咽"}, {"id": "h008", "name": "牛蒡子", "category": "解表藥", "nature": "寒", "flavor": "辛、苦", "channels": ["肺", "胃"], "dose": "6–12g", "efficacy": "疏散風熱，宣肺透疹，清熱利咽，解毒消腫", "indications": "風熱感冒，咽喉腫痛，咳痰不利，麻疹不透，風疹瘙癢", "caution": "脾虛便溏者忌用", "memo": "利咽消腫要藥，性滑利"}, {"id": "h009", "name": "桑葉", "category": "解表藥", "nature": "寒", "flavor": "苦、甘", "channels": ["肺", "肝"], "dose": "5–15g", "efficacy": "疏散風熱，清肺潤燥，平抑肝陽，清肝明目", "indications": "風熱感冒或溫病初起，肺熱燥咳，肝陽上亢，目赤昏花", "caution": "脾胃虛寒者不宜", "memo": "清肺潤燥，平肝明目"}, {"id": "h010", "name": "菊花", "category": "解表藥", "nature": "微寒", "flavor": "辛、甘、苦", "channels": ["肺", "肝"], "dose": "5–15g", "efficacy": "疏散風熱，平抑肝陽，清肝明目，清熱解毒", "indications": "風熱感冒，肝陽上亢，目赤昏花，瘡瘍腫毒", "caution": "氣虛胃寒者慎用", "memo": "明目要藥，黃菊花解毒、白菊花平肝"}, {"id": "h011", "name": "石膏", "category": "清熱藥", "nature": "大寒", "flavor": "甘、辛", "channels": ["肺", "胃"], "dose": "15–60g（先煎）", "efficacy": "清熱瀉火，除煩止渴，收濕斂瘡", "indications": "氣分實熱證（高熱煩渴），肺熱喘咳，胃火牙痛", "caution": "脾胃虛寒及陰虛發熱者忌服", "memo": "清氣分實熱要藥"}, {"id": "h012", "name": "知母", "category": "清熱藥", "nature": "寒", "flavor": "苦、甘", "channels": ["肺", "胃", "腎"], "dose": "6–12g", "efficacy": "清熱瀉火，滋陰潤燥", "indications": "熱病煩渴，肺熱燥咳，骨蒸潮熱，內熱消渴", "caution": "脾虛便溏者忌用", "memo": "上清肺熱、中瀉胃火、下潤腎燥"}, {"id": "h013", "name": "栀子", "category": "清熱藥", "nature": "寒", "flavor": "苦", "channels": ["心", "肺", "三焦"], "dose": "3–10g", "efficacy": "瀉火除煩，清熱利濕，涼血解毒", "indications": "熱病心烦，黃疸尿赤，血熱吐衄，目赤腫痛", "caution": "脾虛便溏者忌服", "memo": "瀉三焦火邪，導熱下行"}, {"id": "h014", "name": "夏枯草", "category": "清熱藥", "nature": "寒", "flavor": "辛、苦", "channels": ["肝", "膽"], "dose": "10–15g", "efficacy": "清肝瀉火，明目，散結消腫", "indications": "肝火上炎之目赤腫痛，癭癰腫痛，乳痈", "caution": "脾胃氣弱者慎用", "memo": "清肝散結要藥，治癭瘤要藥"}, {"id": "h015", "name": "黃芩", "category": "清熱藥", "nature": "寒", "flavor": "苦", "channels": ["肺", "膽", "脾", "大腸", "小腸"], "dose": "3–10g", "efficacy": "清熱燥濕，瀉火解毒，止血，安胎", "indications": "濕熱痞滿，肺熱咳嗽，壯熱煩渴，痈腫瘡瘍，胎熱不安", "caution": "脾胃虛寒者忌用", "memo": "清上焦濕熱要藥"}, {"id": "h016", "name": "黃連", "category": "清熱藥", "nature": "寒", "flavor": "苦", "channels": ["心", "脾", "胃", "膽", "大腸"], "dose": "2–5g", "efficacy": "清熱燥濕，瀉火解毒", "indications": "濕熱痞滿，嘔吐吞酸，高熱神昏，心火亢盛，痈腫瘡瘍", "caution": "脾胃虛寒、陰虛煩熱者忌用", "memo": "清中焦濕熱要藥，瀉心火"}, {"id": "h017", "name": "黃柏", "category": "清熱藥", "nature": "寒", "flavor": "苦", "channels": ["腎", "膀胱", "大腸"], "dose": "3–12g", "efficacy": "清熱燥濕，瀉火除蒸，解毒療瘡", "indications": "濕熱瀉痢，黃疸帶下，骨蒸勞熱，瘡瘍癰腫", "caution": "脾胃虛寒者忌用", "memo": "清下焦濕熱要藥"}, {"id": "h018", "name": "金銀花", "category": "清熱藥", "nature": "寒", "flavor": "甘", "channels": ["肺", "心", "胃"], "dose": "6–15g", "efficacy": "清熱解毒，疏散風熱", "indications": "癰腫瘡瘍，熱毒血痢，風熱感冒，溫病發熱", "caution": "脾胃虛寒及氣虛瘡瘍不膿者忌用", "memo": "瘡瘍要藥，清解血毒"}, {"id": "h019", "name": "連翹", "category": "清熱藥", "nature": "微寒", "flavor": "苦", "channels": ["肺", "心", "小腸"], "dose": "6–15g", "efficacy": "清熱解毒，消癰散結，疏散風熱", "indications": "痈肿瘡瘍，癭瘤癰癬，風熱感冒，溫病初起", "caution": "脾胃虛弱及膿已成者不宜", "memo": "疮家聖藥，消癰散結"}, {"id": "h020", "name": "板藍根", "category": "清熱藥", "nature": "寒", "flavor": "苦", "channels": ["心", "胃"], "dose": "15–30g", "efficacy": "清熱解毒，涼血利咽", "indications": "瘟毒發斑，喉嚨腫痛，痄腮，癰腫癬瘡", "caution": "脾胃虛寒者忌用", "memo": "利咽解毒要藥，治大头瘟"}, {"id": "h021", "name": "大黃", "category": "瀉下藥", "nature": "寒", "flavor": "苦", "channels": ["脾", "胃", "大腸", "肝", "心包"], "dose": "3–15g（後下）", "efficacy": "瀉下攻積，清熱瀉火，涼血解毒，逐瘀通經", "indications": "實熱積滯便秘，血熱吐衄，瘀血經閉，癰腫疔瘡", "caution": "月經期、妊娠期、哺乳期及脾胃虛寒者忌用", "memo": "將軍，下法要藥，生用後下攻下力強"}, {"id": "h022", "name": "芒硝", "category": "瀉下藥", "nature": "寒", "flavor": "鹹、苦", "channels": ["胃", "大腸"], "dose": "6–12g（沖服）", "efficacy": "瀉下通便，潤燥軟堅，清熱消腫", "indications": "實熱積聚，大便燥結，咽痛口瘡，目赤腫痛", "caution": "孕婦及脾胃虛寒者忌用", "memo": "軟堅潤燥，配合大黃"}, {"id": "h023", "name": "火麻仁", "category": "瀉下藥", "nature": "平", "flavor": "甘", "channels": ["脾", "胃", "大腸"], "dose": "10–30g", "efficacy": "潤腸通便", "indications": "血虛津虧之腸燥便秘", "caution": "脾虛便溏者不宜", "memo": "潤下要藥，老人產後津枯便秘"}, {"id": "h024", "name": "巴豆", "category": "瀉下藥", "nature": "熱；有大毒", "flavor": "辛", "channels": ["胃", "大腸"], "dose": "0.1–0.3g，入丸散", "efficacy": "峻下冷積，逐水退腫，祛痰利咽，蝕瘡", "indications": "寒積便秘，腹脹暴急，喉風痰阻，瘡瘍成膿不破", "caution": "孕婦及體弱者禁用；畏牽牛子", "memo": "峻下冷積要藥，有大毒"}, {"id": "h025", "name": "獨活", "category": "祛風濕藥", "nature": "微溫", "flavor": "辛、苦", "channels": ["腎", "膀胱"], "dose": "3–10g", "efficacy": "祛風勝濕，通絡止痛", "indications": "風寒濕痹，腰脊強痛，風頭腰痛", "caution": "陰血虧虛者慎用", "memo": "治腰以下風濕要藥"}, {"id": "h026", "name": "威靈仙", "category": "祛風濕藥", "nature": "溫", "flavor": "辛、鹹", "channels": ["膀胱"], "dose": "6–10g", "efficacy": "祛風濕，通絡止痛", "indications": "風濕痹痛，肢節疼痛，屈伸不利", "caution": "氣血虧虛者慎用", "memo": "通行十二經脈，風濕痹痛要藥"}, {"id": "h027", "name": "秦艽", "category": "祛風濕藥", "nature": "平", "flavor": "辛、苦", "channels": ["胃", "肝", "膽"], "dose": "3–10g", "efficacy": "祛風濕，通絡止痛，退虛熱，清濕熱", "indications": "風濕痹痛，筋攣攣急，骨蒸潮熱，小兒癆熱，黃疸", "caution": "久痛虛寒者不宜", "memo": "風藥中之潤藥，不燥不烈"}, {"id": "h028", "name": "桑寄生", "category": "祛風濕藥", "nature": "平", "flavor": "苦、甘", "channels": ["肝", "腎"], "dose": "9–15g", "efficacy": "祛風濕，補肝腎，強筋骨，安胎", "indications": "風濕痹痛，腰膝酸痛，筋骨無力，胎漏下血，胎動不安", "caution": "無", "memo": "祛風濕兼補肝腎，風濕痹證兼肝腎虛者宜"}, {"id": "h029", "name": "廣藿香", "category": "化濕藥", "nature": "微溫", "flavor": "辛", "channels": ["脾", "胃", "肺"], "dose": "3–10g", "efficacy": "藿香正氣，化濕醒脾，和中止嘔，解暑", "indications": "濕阻中焦之胸脘痞悶，嘔吐，暑濕證", "caution": "陰虛火旺者不宜", "memo": "芳香化濕要藥，治濕溫初起"}, {"id": "h030", "name": "厚朴", "category": "化濕藥", "nature": "溫", "flavor": "苦、辛", "channels": ["脾", "胃", "肺", "大腸"], "dose": "3–10g", "efficacy": "燥濕消積，下氣除滿", "indications": "濕阻氣滯之脘腹脹滿，食積氣滯，痰飲喘咳", "caution": "孕婦慎用", "memo": "消脹除滿要藥"}, {"id": "h031", "name": "蒼朮", "category": "化濕藥", "nature": "溫", "flavor": "辛、苦", "channels": ["脾", "胃"], "dose": "3–10g", "efficacy": "燥濕健脾，祛風散寒，明目", "indications": "濕阻中焦之脘腹痞滿，風寒濕痹，外感風寒，夜盲", "caution": "陰虛內熱、氣虛多汗者慎服", "memo": "燥濕健脾要藥"}, {"id": "h032", "name": "砂仁", "category": "化濕藥", "nature": "溫", "flavor": "辛", "channels": ["脾", "胃", "腎"], "dose": "3–6g（後下）", "efficacy": "化濕行氣，溫脾開胃，安胎", "indications": "濕阻氣滯之脘腹脹滿，嘔吐食瀉，妊娠惡阻", "caution": "陰虛火旺者慎服", "memo": "行氣醒脾，和胃安胎"}, {"id": "h033", "name": "茯苓", "category": "利水滲濕藥", "nature": "平", "flavor": "甘、淡", "channels": ["心", "脾", "腎"], "dose": "10–15g", "efficacy": "利水滲濕，健脾寧心安神", "indications": "水腫，小便不利，脾虛食少，便溏泄瀉，驚悸失眠", "caution": "虛寒精滑、虛寒遺尿者慎用", "memo": "利水不傷正，健脾要藥"}, {"id": "h034", "name": "薏苡仁", "category": "利水滲濕藥", "nature": "涼", "flavor": "甘、淡", "channels": ["脾", "胃", "肺"], "dose": "9–30g", "efficacy": "利水滲濕，健脾止瀉，除痹，清熱排膿", "indications": "水腫腳氣，小便不利，脾虛泄瀉，濕熱痹證，肺癰", "caution": "孕婦慎用", "memo": "健脾滲濕，清熱排膿"}, {"id": "h035", "name": "澤瀉", "category": "利水滲濕藥", "nature": "寒", "flavor": "甘、淡", "channels": ["腎", "膀胱"], "dose": "6–10g", "efficacy": "利水滲濕，瀉熱，化濁降脂", "indications": "小便不利，水腫瀉瀉，濕熱下注，淋濁", "caution": "腎虛遺精、滑精無濕熱者忌用", "memo": "瀉膀胱濕熱"}, {"id": "h036", "name": "豬苓", "category": "利水滲濕藥", "nature": "微寒", "flavor": "甘、淡", "channels": ["腎", "膀胱"], "dose": "6–10g", "efficacy": "利水滲濕通淋", "indications": "水腫，小便不利，瀉瀉，淋濁", "caution": "腎虛氣虛之遺尿、小便不禁者忌用", "memo": "利水力量較茯苓強"}, {"id": "h037", "name": "車前子", "category": "利水滲濕藥", "nature": "微寒", "flavor": "甘", "channels": ["腎", "肺", "肝", "小腸"], "dose": "9–15g（包煎）", "efficacy": "利水通淋，渗濕止瀉，明目，祛痰", "indications": "淋證，水腫，瀉瀉，目赤腫痛，痰熱咳嗽", "caution": "內無濕熱、虛證遺精者不宜用", "memo": "利水通淋，分清濁"}, {"id": "h038", "name": "附子", "category": "溫裡藥", "nature": "大熱；有大毒", "flavor": "辛、甘", "channels": ["心", "腎", "脾"], "dose": "3–15g（先煎、久煎）", "efficacy": "回陽救逆，補火助陽，散寒止痛", "indications": "亡陽虛脫，陽虛證，寒痹", "caution": "孕婦禁用；陰虛陽亢者禁用；半蔞貝白芨及白蘞反烏頭", "memo": "回陽救逆第一品"}, {"id": "h039", "name": "乾薑", "category": "溫裡藥", "nature": "熱", "flavor": "辛", "channels": ["脾", "胃", "腎", "心", "肺"], "dose": "3–10g", "efficacy": "溫中散寒，回陽通脈，溫肺化飲", "indications": "脾胃虛寒之腹痛嘔瀉，亡陽證，寒飲喘咳", "caution": "陰虛有熱、血熱妄行者忌用", "memo": "溫中散寒要藥，守而不走"}, {"id": "h040", "name": "肉桂", "category": "溫裡藥", "nature": "大熱", "flavor": "辛、甘", "channels": ["腎", "脾", "心", "肝"], "dose": "1–5g", "efficacy": "補火助陽，引火歸元，散寒止痛，溫通經脈", "indications": "陽虛證，陰寒內盛之冷痛，癰疽日久不斂，寒凝血滯經閉", "caution": "孕婦慎用；陰盛有火、陰虛有熱者忌用", "memo": "引火歸元要藥"}, {"id": "h041", "name": "吳茱萸", "category": "溫裡藥", "nature": "熱；有小毒", "flavor": "辛、苦", "channels": ["肝", "脾", "胃", "腎"], "dose": "2–5g", "efficacy": "散寒止痛，降逆止嘔，助陽止瀉", "indications": "寒凝疼痛，胃寒嘔吐，虛寒泄瀉", "caution": "陰虛有熱者忌用", "memo": "溫肝胃，降逆氣，治厥陰頭痛"}, {"id": "h042", "name": "小茴香", "category": "溫裡藥", "nature": "溫", "flavor": "辛", "channels": ["肝", "腎", "脾", "胃"], "dose": "3–6g", "efficacy": "散寒止痛，理氣和胃", "indications": "寒疝腹痛，睾丸偏墜，經行腹痛，脘腹冷痛", "caution": "陰虛火旺者慎用", "memo": "暖肝散寒，治寒疝要藥"}, {"id": "h043", "name": "陳皮", "category": "理氣藥", "nature": "溫", "flavor": "辛、苦", "channels": ["脾", "肺"], "dose": "3–10g", "efficacy": "理氣健脾，燥濕化痰", "indications": "脾虛氣滯之食少便溏，濕痰阻肺之咳嗽痰多", "caution": "氣虛、陰虛燥咳及咳血者慎用", "memo": "理氣健脾要藥，治痰要藥"}, {"id": "h044", "name": "枳實", "category": "理氣藥", "nature": "微寒", "flavor": "苦、辛、酸", "channels": ["脾", "胃"], "dose": "3–10g", "efficacy": "破氣消積，化痰散痞", "indications": "食積停滯，瀉痢不爽，胸脘痞悶，胃下垂", "caution": "孕婦慎用", "memo": "破氣力猛，枳殼力緩"}, {"id": "h045", "name": "木香", "category": "理氣藥", "nature": "溫", "flavor": "辛、苦", "channels": ["脾", "胃", "大腸", "膽", "三焦"], "dose": "3–9g", "efficacy": "行氣止痛，調中消導", "indications": "脾胃氣滯之脘腹胀痛，瀉痢後重", "caution": "陰虛津虧者慎用", "memo": "行氣止痛要藥，瀉痢後重用之"}, {"id": "h046", "name": "香附", "category": "理氣藥", "nature": "平", "flavor": "辛、微苦、微甘", "channels": ["肝", "脾", "三焦"], "dose": "6–10g", "efficacy": "疏肝解鬱，調經止痛，理氣寬中", "indications": "肝鬱氣滯之脅肋脘腹疼痛，月經不調，經閉痛經", "caution": "氣虛血虛者慎用", "memo": "氣病之總司，婦科氣病要藥"}, {"id": "h047", "name": "沉香", "category": "理氣藥", "nature": "微溫", "flavor": "辛、苦", "channels": ["脾", "胃", "腎"], "dose": "1–3g（後下或磨汁服）", "efficacy": "行氣止痛，溫中止嘔，納氣平喘", "indications": "胸腹胀痛，嘔吐呃逆，氣逆喘息", "caution": "陰虛火旺、氣虛下陷及孕妇慎用", "memo": "納氣平喘，溫而不燥"}, {"id": "h048", "name": "山楂", "category": "消食藥", "nature": "微溫", "flavor": "酸、甘", "channels": ["脾", "胃", "肝"], "dose": "9–12g", "efficacy": "消食化積，行氣散瘀", "indications": "肉食積滯，产后瘀阻腹痛，瀉痢腹痛", "caution": "胃酸過多者慎用", "memo": "消肉食油膩之積"}, {"id": "h049", "name": "神麴", "category": "消食藥", "nature": "溫", "flavor": "甘、辛", "channels": ["脾", "胃"], "dose": "6–15g", "efficacy": "消食和胃", "indications": "食積不化，脘腹脹滿，脾虛食少", "caution": "脾胃無積滯及哺乳期慎用", "memo": "消食化積兼解表"}, {"id": "h050", "name": "麥芽", "category": "消食藥", "nature": "平", "flavor": "甘", "channels": ["脾", "胃", "肝"], "dose": "10–15g（回乳30–60g）", "efficacy": "行氣消食，健脾開胃，回乳消脹", "indications": "食積不消，乳汁積滯、乳房脹痛，妇女断乳", "caution": "哺乳期無積滯者不宜", "memo": "消米面薯蕩之積，回乳"}, {"id": "h051", "name": "萊菔子", "category": "消食藥", "nature": "平", "flavor": "辛、甘", "channels": ["脾", "胃", "肺"], "dose": "6–10g", "efficacy": "消食除脹，降氣化痰", "indications": "食積氣滯之脹滿腹痛，咳嗽痰多", "caution": "氣虛無積滯者慎服", "memo": "消食化痰，降氣"}, {"id": "h052", "name": "大薊", "category": "止血藥", "nature": "涼", "flavor": "甘、苦", "channels": ["心", "肝"], "dose": "9–15g（鮮品30–60g）", "efficacy": "涼血止血，散瘀解毒消癰", "indications": "血熱妄行之吐血、咯血、尿血、崩漏，癰腫", "caution": "無瘀滯者慎用", "memo": "涼血止血兼散瘀"}, {"id": "h053", "name": "小薊", "category": "止血藥", "nature": "涼", "flavor": "甘、苦", "channels": ["心", "肝"], "dose": "9–15g（鮮品30–60g）", "efficacy": "涼血止血，散瘀解毒消癰", "indications": "血熱出血諸證，尤善治尿血、血淋", "caution": "無瘀滯者慎用", "memo": "治尿血血淋要藥"}, {"id": "h054", "name": "白及", "category": "止血藥", "nature": "微寒", "flavor": "苦、甘、澀", "channels": ["肺", "胃", "肝"], "dose": "6–15g", "efficacy": "收斂止血，消腫生肌", "indications": "肺胃出血，外傷出血，燒烫伤，瘡瘍", "caution": "外有風熱、内有實火者忌用", "memo": "收斂止血要藥，治肺胃出血"}, {"id": "h055", "name": "三七", "category": "止血藥", "nature": "溫", "flavor": "甘、微苦", "channels": ["肝", "胃"], "dose": "3–10g；研粉1–3g沖服", "efficacy": "化瘀止血，活血定痛", "indications": "出血諸證，跌打損傷，瘀腫疼痛", "caution": "孕婦慎用", "memo": "止血不留瘀，傷科要藥"}, {"id": "h056", "name": "仙鶴草", "category": "止血藥", "nature": "溫", "flavor": "苦、澀", "channels": ["肝", "脾"], "dose": "6–12g（大劑30–60g）", "efficacy": "收斂止血，補虛，殺蟲", "indications": "出血諸證（寒熱虛實皆可），崩漏下血", "caution": "無", "memo": "止血範圍廣，寒熱虛實皆宜"}, {"id": "h057", "name": "川芎", "category": "活血祛瘀藥", "nature": "溫", "flavor": "辛", "channels": ["肝", "膽", "心包"], "dose": "3–10g", "efficacy": "活血行氣，祛風止痛", "indications": "血滯氣滯之經閉痛經，頭痛，風濕痹痛，胸脅刺痛", "caution": "月經量多及孕婦慎用", "memo": "血中之氣藥，治頭痛要藥"}, {"id": "h058", "name": "延胡索", "category": "活血祛瘀藥", "nature": "溫", "flavor": "辛、苦", "channels": ["肝", "脾"], "dose": "3–10g", "efficacy": "活血，行氣，止痛", "indications": "氣血滯留之經閉痛經，胸痹心痛，皖腹疼痛，跌打損傷", "caution": "孕婦慎用", "memo": "專治氣血滯留諸痛"}, {"id": "h059", "name": "丹參", "category": "活血祛瘀藥", "nature": "微寒", "flavor": "苦", "channels": ["心", "肝"], "dose": "10–15g", "efficacy": "活血祛瘀，通經止痛，清心除煩，涼血消癰", "indications": "月經不調，胸痹心痛，脘腹脅痛，心烦不眠，癰腫疼痛", "caution": "孕婦慎用", "memo": "活血調經要藥，一味丹參功同四物"}, {"id": "h060", "name": "益母草", "category": "活血祛瘀藥", "nature": "微寒", "flavor": "苦、辛", "channels": ["肝", "心包", "膀胱"], "dose": "9–30g", "efficacy": "活血調經，利水消腫，清熱解毒", "indications": "月經不調，痛經閉經，水腫尿少，瘡癰腫痛", "caution": "孕婦禁用", "memo": "婦科經產要藥"}, {"id": "h061", "name": "牛膝", "category": "活血祛瘀藥", "nature": "平", "flavor": "苦、甘、酸", "channels": ["肝", "腎"], "dose": "5–12g", "efficacy": "活血祛瘀，補肝腎，強筋骨，利水通淋，引火（血）下行", "indications": "經閉痛經，腰膝酸痛，淋證，頭痛眩晕", "caution": "孕婦及月經過多者慎用", "memo": "引血下行，補肝腎強筋骨"}, {"id": "h062", "name": "紅花", "category": "活血祛瘀藥", "nature": "溫", "flavor": "辛", "channels": ["心", "肝"], "dose": "3–10g", "efficacy": "活血通經，散瘀止痛", "indications": "經閉痛經，恶露不下，跌打損傷，癰腫", "caution": "孕婦忌用", "memo": "活血通經要藥"}, {"id": "h063", "name": "桃仁", "category": "活血祛瘀藥", "nature": "平；有小毒", "flavor": "苦、甘", "channels": ["心", "肝", "大腸"], "dose": "5–10g", "efficacy": "活血祛瘀，潤腸通便，止咳平喘", "indications": "經閉痛經，跌打損傷，肺癰腸癰，腸燥便秘", "caution": "孕婦忌用", "memo": "活血祛瘀兼潤腸"}, {"id": "h064", "name": "半夏", "category": "化痰止咳平喘藥", "nature": "溫；有毒", "flavor": "辛", "channels": ["脾", "胃", "肺"], "dose": "3–10g", "efficacy": "燥濕化痰，降逆止嘔，消痞散結", "indications": "濕痰寒痰嘔吐，心下痞，梅核氣，外治癰腫", "caution": "陰虛燥咳、血證及熱痰忌用；孕妇慎用；烏頭反半夏", "memo": "燥濕化痰要藥，止嘔要藥"}, {"id": "h065", "name": "川貝母", "category": "化痰止咳平喘藥", "nature": "微寒", "flavor": "苦、甘", "channels": ["肺", "心"], "dose": "3–10g", "efficacy": "清熱潤肺，化痰止咳，散消腫", "indications": "肺熱燥咳，虛勞咳嗽，瘰癧", "caution": "寒痰及濕痰不宜；乌頭反貝母", "memo": "清熱潤肺化痰"}, {"id": "h066", "name": "浙貝母", "category": "化痰止咳平喘藥", "nature": "寒", "flavor": "苦", "channels": ["肺", "心"], "dose": "5–10g", "efficacy": "清熱化痰，散結消癰", "indications": "痰熱咳嗽，瘰癧，乳癰，肺癰", "caution": "寒痰嗽及虛勞咳嗽不宜；乌頭反貝母", "memo": "清熱化痰散結"}, {"id": "h067", "name": "桔梗", "category": "化痰止咳平喘藥", "nature": "平", "flavor": "苦、辛", "channels": ["肺"], "dose": "3–10g", "efficacy": "宣肺祛痰，利咽排膿", "indications": "咳嗽痰多，咽喉腫痛，肺癰吐膿", "caution": "用量過大可致嘔吐", "memo": "宣肺利咽，載藥上行，舟楫之劑"}, {"id": "h068", "name": "苦杏仁", "category": "化痰止咳平喘藥", "nature": "微溫；有小毒", "flavor": "苦", "channels": ["肺", "大腸"], "dose": "5–10g", "efficacy": "降氣止咳平喘，潤腸通便", "indications": "咳嗽氣喘，腸燥便秘", "caution": "嬰兒慎用；小量中毒", "memo": "止咳平喘要藥"}, {"id": "h069", "name": "紫蘇子", "category": "化痰止咳平喘藥", "nature": "溫", "flavor": "辛", "channels": ["肺", "脾"], "dose": "5–10g", "efficacy": "降氣化痰止咳，潤腸通便", "indications": "痰壅氣逆之咳嗽氣喘，腸燥便秘", "caution": "脾虛便溏者慎服", "memo": "降氣化痰"}, {"id": "h070", "name": "朱砂", "category": "安神藥", "nature": "微寒；有毒", "flavor": "甘", "channels": ["心"], "dose": "0.1–0.5g，研末沖服或入丸散", "efficacy": "清心鎮驚，安神解毒", "indications": "心火亢盛之心神不寧，驚悸失眠，癲癇發狂", "caution": "有毒，不可過量或持續服用；孕妇及肝腎功能不全者禁用", "memo": "重鎮安神要藥"}, {"id": "h071", "name": "磁石", "category": "安神藥", "nature": "寒", "flavor": "鹹", "channels": ["肝", "心", "腎"], "dose": "9–30g（先煎）", "efficacy": "鎮驚安神，益腎納氣，平肝潛陽，聰耳明目", "indications": "驚悸失眠，目昏耳聾，腎虛氣喘，肝陽眩暈", "caution": "脾胃虛弱者不宜多服久服", "memo": "益腎納氣平肝"}, {"id": "h072", "name": "酸棗仁", "category": "安神藥", "nature": "平", "flavor": "甘、酸", "channels": ["心", "肝", "膽"], "dose": "10–15g", "efficacy": "養心安神，斂汗", "indications": "虛煩不眠，驚悸多夢，體虛多汗", "caution": "有實火鬱熱者慎服", "memo": "養心安神要藥"}, {"id": "h073", "name": "遠志", "category": "安神藥", "nature": "微溫", "flavor": "辛、苦", "channels": ["心", "腎", "肺"], "dose": "3–10g", "efficacy": "安神益智，交通心腎，祛痰開竅", "indications": "失眠多夢，心悸健忘，痰多咳喘", "caution": "實熱癲狂者忌服", "memo": "交通心腎，祛痰益智"}, {"id": "h074", "name": "石決明", "category": "平肝息風藥", "nature": "微寒", "flavor": "鹹", "channels": ["肝"], "dose": "6–20g（先煎）", "efficacy": "平肝潛陽，清肝明目，鎮痙", "indications": "肝陽上亢之頭痛眩暈，目赤翳障，風熱目赤", "caution": "脾胃虛寒者慎服", "memo": "平肝潛陽要藥"}, {"id": "h075", "name": "珍珠母", "category": "平肝息風藥", "nature": "寒", "flavor": "鹹", "channels": ["肝", "心"], "dose": "15–30g（先煎）", "efficacy": "平肝潛陽，定驚明目", "indications": "肝陽上亢之頭暈目眩，心驚失眠，目赤雲翳", "caution": "無", "memo": "平肝安神明目"}, {"id": "h076", "name": "鉤藤", "category": "平肝息風藥", "nature": "涼", "flavor": "甘", "channels": ["肝", "心包"], "dose": "3–12g（後下）", "efficacy": "息風止痉，清熱平肝，定驚", "indications": "肝風內動之驚癇抽搐，小兒驚風，肝陽上亢之頭暈", "caution": "無", "memo": "息風止痉要藥，平肝不傷正"}, {"id": "h077", "name": "天麻", "category": "平肝息風藥", "nature": "平", "flavor": "甘", "channels": ["肝"], "dose": "3–10g", "efficacy": "息風止痉，平抑肝陽，祛風通絡", "indications": "肝風內動之驚癇抽搐，肝陽上亢之頭暈眩暈，風濕痹痛", "caution": "氣血虛甚者慎用", "memo": "治風神藥，定風草"}, {"id": "h078", "name": "全蠍", "category": "平肝息風藥", "nature": "平；有毒", "flavor": "辛", "channels": ["肝"], "dose": "3–6g", "efficacy": "息風鎮痙，通絡止痛，攻毒散結", "indications": "肝風內動之攣搐痙攣，中風口眼喎斜，風濕痹痛，瘡瘍", "caution": "孕妇禁用", "memo": "息風止痉要藥，搜風通絡"}, {"id": "h079", "name": "麝香", "category": "開竅藥", "nature": "溫", "flavor": "辛", "channels": ["心", "脾"], "dose": "0.03–0.1g，入丸散", "efficacy": "開窍醒神，活血通經，消腫止痛", "indications": "閉證神昏，經閉癓瘕，跌打損傷，瘡瘍", "caution": "孕妇禁用", "memo": "開窍醒神要藥，通諸竅"}, {"id": "h080", "name": "冰片", "category": "開竅藥", "nature": "微寒", "flavor": "辛、苦", "channels": ["心", "脾", "肺"], "dose": "0.15–0.3g，入丸散", "efficacy": "開窍醒神，清熱止痛", "indications": "閉證神昏，目赤腫痛，喉痹口瘡", "caution": "孕妇慎用", "memo": "性涼，開竅兼清熱"}, {"id": "h081", "name": "石菖蒲", "category": "開竅藥", "nature": "溫", "flavor": "辛、苦", "channels": ["心", "胃"], "dose": "3–10g", "efficacy": "開窍寧神，化濕和胃", "indications": "痰蒙清竅之神志昏亂，健忘耳聾，濕阻中焦", "caution": "陰虛陽亢、大汗、咳血者慎服", "memo": "化濕豁痰開竅"}, {"id": "h082", "name": "人參", "category": "補虛藥", "nature": "微溫", "flavor": "甘、微苦", "channels": ["脾", "肺", "心", "腎"], "dose": "3–9g（另煎兌服）", "efficacy": "大補元氣，復脈固脫，補脾益肺，生津安神", "indications": "元氣虛脫，脾肺虛弱，津傷口渴，心神不安", "caution": "反藜蘆，畏五靈脂，惡皂莢；實證熱證不宜", "memo": "大補元氣第一要藥"}, {"id": "h083", "name": "黨參", "category": "補虛藥", "nature": "平", "flavor": "甘", "channels": ["脾", "肺"], "dose": "9–30g", "efficacy": "補脾益肺，養血生津", "indications": "脾肺气虛，氣血兩虛，津傷口渴", "caution": "反藜蘆", "memo": "人參之代用品，力較緩"}, {"id": "h084", "name": "黃芪", "category": "補虛藥", "nature": "微溫", "flavor": "甘", "channels": ["脾", "肺"], "dose": "9–30g", "efficacy": "補氣升陽，益衛固表，托毒生肌，利水退腫", "indications": "脾胃虛弱，中氣下陷，表虛自汗，氣虛水腫", "caution": "表實邪旺、陰虛陽旺者不宜", "memo": "補氣長藥，氣中升陽之品"}, {"id": "h085", "name": "白朮", "category": "補虛藥", "nature": "溫", "flavor": "苦、甘", "channels": ["脾", "胃"], "dose": "6–12g", "efficacy": "補氣健脾，燥濕利水，止汗，安胎", "indications": "脾虛食少，便溏泄瀉，水腫，自汗，胎動不安", "caution": "陰津虧燥、氣滯胀滿者忌用", "memo": "補氣健脾燥濕要藥"}, {"id": "h086", "name": "山藥", "category": "補虛藥", "nature": "平", "flavor": "甘", "channels": ["脾", "肺", "腎"], "dose": "15–30g", "efficacy": "補脾養胃，生津益肺，補腎澀精", "indications": "脾虛食少，久瀉，肺虛喘咳，腎虛遺精", "caution": "濕盛中滿或有實邪者不宜", "memo": "平補脾肺腎三焦"}, {"id": "h087", "name": "甘草", "category": "補虛藥", "nature": "平", "flavor": "甘", "channels": ["心", "肺", "脾", "胃"], "dose": "2–10g", "efficacy": "補脾益氣，祛痰止咳，緩急止痛，解毒調和", "indications": "心氣虛弱之脈結代，脾胃虛弱，脘腹四肢攣急疼痛，咽痛咳喘", "caution": "濕盛脹滿、水腫及嘔吐者慎用", "memo": "國老，調和諸藥"}, {"id": "h088", "name": "當歸", "category": "補虛藥", "nature": "溫", "flavor": "甘、辛", "channels": ["肝", "心", "脾"], "dose": "6–12g", "efficacy": "補血調經，活血止痛，潤腸通便", "indications": "血虛萎黃，月經不調，經閉痛經，跌打損傷，腸燥便秘", "caution": "濕阻中满及大便溏泄者慎服", "memo": "補血活血要藥，婦科調經要藥"}, {"id": "h089", "name": "熟地黃", "category": "補虛藥", "nature": "微溫", "flavor": "甘", "channels": ["肝", "腎"], "dose": "9–15g", "efficacy": "補血滋陰，益精填髓", "indications": "血虛萎黃，月經不調，肝腎陰虛，腰膝酸軟", "caution": "氣滞痰多、腹滿便溏者忌服", "memo": "補血養血要藥"}, {"id": "h090", "name": "白芍", "category": "補虛藥", "nature": "微寒", "flavor": "苦、酸", "channels": ["肝", "脾"], "dose": "6–15g", "efficacy": "養血調經，斂陰止汗，柔肝止痛，平抑肝陽", "indications": "月經不調，自汗盜汗，脅肋脘腹痛，四肢攣痛", "caution": "虛寒腹痛泄瀉者慎用", "memo": "養血柔肝止痛要藥"}, {"id": "h091", "name": "阿膠", "category": "補虛藥", "nature": "平", "flavor": "甘", "channels": ["肺", "肝", "腎"], "dose": "3–9g（烊化兌服）", "efficacy": "補血滋陰，潤燥，止血", "indications": "血虛萎黃，眩暈心悸，肺燥咳嗽，出血證", "caution": "脾胃虛弱、消化不良者慎用", "memo": "補血止血潤燥"}, {"id": "h092", "name": "何首烏", "category": "補虛藥", "nature": "微溫", "flavor": "苦、甘、澀", "channels": ["肝", "腎", "心"], "dose": "6–12g", "efficacy": "補益精血，烏鬚髮，強筋骨，解毒截瘧", "indications": "精血虧虛之鬚髮早白，頭暈耳鳴，腰膝酸軟", "caution": "大便溏泄及濕痰重者不宜", "memo": "制首烏補精血，生首烏解毒通便"}, {"id": "h093", "name": "北沙參", "category": "補虛藥", "nature": "微寒", "flavor": "甘、微苦", "channels": ["肺", "胃"], "dose": "5–12g", "efficacy": "養陰清肺，益胃生津", "indications": "肺熱燥咳，胃陰不足之口渴食少", "caution": "風寒畏寒者不宜", "memo": "養肺胃陰"}, {"id": "h094", "name": "麥冬", "category": "補虛藥", "nature": "微寒", "flavor": "甘、微苦", "channels": ["心", "肺", "胃"], "dose": "6–12g", "efficacy": "養陰潤肺，益胃生津，清心除煩", "indications": "肺胃陰傷之燥咳口渴，心陰不足之心烦失眠", "caution": "脾虛濕盛或風寒未解者不宜", "memo": "養心肺胃三焦之陰"}, {"id": "h095", "name": "枸杞子", "category": "補虛藥", "nature": "平", "flavor": "甘", "channels": ["肝", "腎"], "dose": "6–12g", "efficacy": "滋補肝腎，益精明目", "indications": "肝腎精虧之腰膝酸痛、眩暈耳鳴、目昏不明", "caution": "外邪實熱、脾虛濕盛及便溏者慎用", "memo": "滋補肝腎明目要藥"}, {"id": "h096", "name": "鹿茸", "category": "補虛藥", "nature": "溫", "flavor": "甘、鹹", "channels": ["腎", "肝"], "dose": "1–3g（研末沖服）", "efficacy": "壯腎陽，益精血，強筋骨，調沖任，托瘡毒", "indications": "腎陽不足之腰脊冷痛、陽痿早泄，精血虧虛，小兒五遲", "caution": "腎陰有火、血熱及外感熱病者忌服", "memo": "補陽益精血要藥"}, {"id": "h097", "name": "五味子", "category": "收澀藥", "nature": "溫", "flavor": "酸、甘", "channels": ["肺", "心", "腎"], "dose": "2–6g", "efficacy": "收斂固澀，益氣生津，補腎寧心安神", "indications": "久咳虛喘，津傷口渴，自汗盜汗，遺精久瀉，失眠", "caution": "表邪未解、實熱、麻疹未透者不宜", "memo": "收斂肺腎，生津斂汗"}, {"id": "h098", "name": "山茱萸", "category": "收澀藥", "nature": "微溫", "flavor": "酸、澀", "channels": ["肝", "腎"], "dose": "6–12g", "efficacy": "補益肝腎，收澀固脫", "indications": "遺精滑精，遺尿尿频，月經不止，崩漏，虛脫", "caution": "命門火熾、濕熱者不宜", "memo": "補肝腎兼固澀"}, {"id": "h099", "name": "蓮子", "category": "收澀藥", "nature": "平", "flavor": "甘、澀", "channels": ["脾", "腎", "心"], "dose": "10–15g", "efficacy": "補脾止瀉，益腎澀精，養心安神", "indications": "脾虛泄瀉，遺精滑精，心悸失眠", "caution": "中滿痞膈、便干者不宜", "memo": "補脾腎養心安神"}, {"id": "h100", "name": "金櫻子", "category": "收澀藥", "nature": "平", "flavor": "酸、甘、澀", "channels": ["腎", "膀胱", "大腸"], "dose": "6–12g", "efficacy": "固精縮尿，澀腸止瀉，止帶", "indications": "遺精滑精，遺尿尿频，久瀉久痢，白帶下", "caution": "有實火、壯熱者不宜", "memo": "澀精止帶要藥"}]}, "formulas": {"formulas": [{"id": "f001", "name": "麻黃湯", "category": "解表劑", "composition": [{"herb": "麻黃", "role": "君"}, {"herb": "桂枝", "role": "臣"}, {"herb": "杏仁", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "發汗解表，宣肺平喘", "indications": "外感風寒表實證。惡寒發熱，頭身疼痛，無喘，脈浮緊", "analysis": "麻黃發汗解表、宣肺平喘為君；桂枝溫經散寒助麻黃發汗為臣；杏仁降利肺气協同平喘為佐；甘草調和諸藥為使", "song": "麻黃湯中用桂枝，杏仁甘草四般施，發汗解表平喘咳，表實無汗服之宜"}, {"id": "f002", "name": "桂枝湯", "category": "解表劑", "composition": [{"herb": "桂枝", "role": "君"}, {"herb": "白芍", "role": "臣"}, {"herb": "生薑", "role": "佐"}, {"herb": "大棗", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "解肌發表，調和營衛", "indications": "外感風寒表虛證。發熱頭痛，汗出惡風，脈浮緩", "analysis": "桂枝解肌發表、溫經散寒為君；白芍斂陰和營為臣；生薑助桂枝散邪，大棗助白芍和營為佐；甘草調和諸藥為使", "song": "桂枝湯中芍藥等，桂枝三兩芍三兩，調和營衛解肌表，表虛自汗此方良"}, {"id": "f003", "name": "香蘇散", "category": "解表劑", "composition": [{"herb": "紫蘇葉", "role": "君"}, {"herb": "香附", "role": "臣"}, {"herb": "陳皮", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "生薑", "role": "佐"}, {"herb": "大棗", "role": "佐"}], "function": "疏散風寒，行氣和中", "indications": "外感風寒，氣滯胸悶", "analysis": "紫蘇葉散寒解表、行氣寬中為君；香附疏肝理氣為臣；陳皮理氣和中為佐", "song": "香蘇散是和平劑，陳皮甘草生薑引，疏散風寒兼行氣，四時感冒皆可施"}, {"id": "f004", "name": "銀翹散", "category": "解表劑", "composition": [{"herb": "金銀花", "role": "君"}, {"herb": "連翹", "role": "君"}, {"herb": "桔梗", "role": "臣"}, {"herb": "薄荷", "role": "臣"}, {"herb": "牛蒡子", "role": "佐"}, {"herb": "荊芥穗", "role": "佐"}, {"herb": "淡豆豉", "role": "佐"}, {"herb": "竹葉", "role": "佐"}, {"herb": "蘆根", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "辛涼透表，清熱解毒", "indications": "溫病初起。發熱微惡風寒，口微渴", "analysis": "金銀花、連翹清熱解毒、輕宣透表為君；薄荷、牛蒡子疏散風熱為臣", "song": "銀翹散最神，辛涼透表珍，桔薄甘蘆葉，牛荊豆豉均"}, {"id": "f005", "name": "桑菊飲", "category": "解表劑", "composition": [{"herb": "桑葉", "role": "君"}, {"herb": "菊花", "role": "君"}, {"herb": "杏仁", "role": "臣"}, {"herb": "桔梗", "role": "臣"}, {"herb": "連翹", "role": "佐"}, {"herb": "蘆根", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "薄荷", "role": "佐"}], "function": "疏風清熱，宣肺止咳", "indications": "風溫犯肺。但咳，身熱不甚，口微渴", "analysis": "桑葉、菊花疏散上焦風熱、清肺止咳為君；杏仁、桔梗宣降肺气止咳為臣", "song": "桑菊飲中用杏苡，甘翹薄荷蘆根聯，辛涼解表宣肺止咳，風溫初起效如仙"}, {"id": "f006", "name": "九味羌活湯", "category": "解表劑", "composition": [{"herb": "羌活", "role": "君"}, {"herb": "防風", "role": "臣"}, {"herb": "蒼朮", "role": "臣"}, {"herb": "細辛", "role": "佐"}, {"herb": "川芎", "role": "佐"}, {"herb": "白芷", "role": "佐"}, {"herb": "生地黃", "role": "佐"}, {"herb": "黃芩", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "發汗祛濕，兼清裏熱", "indications": "外感風寒濕邪。惡寒發熱，無汗，頭項項痛，肢体酸楚", "analysis": "羌活散太陽經風寒濕邪為君；防風、蒼朮助君祛風勝濕為臣", "song": "九味羌活蒼防芎，細辛黃芩地草同，發汗祛濕兼清熱，解表除濕效最雄"}, {"id": "f007", "name": "參蘇飲", "category": "解表劑", "composition": [{"herb": "紫蘇葉", "role": "君"}, {"herb": "葛根", "role": "臣"}, {"herb": "前胡", "role": "臣"}, {"herb": "半夏", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "陳皮", "role": "佐"}, {"herb": "枳殼", "role": "佐"}, {"herb": "桔梗", "role": "佐"}, {"herb": "人參", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "益氣解表，散寒祛濕", "indications": "氣虛外感風寒濕證", "analysis": "紫蘇葉散寒解表為君；人參扶正益氣為佐", "song": "參蘇飲用二陳湯，薑棗柴枳桔梗良，氣虛外感風寒濕，益氣解表效最彰"}, {"id": "f008", "name": "白虎湯", "category": "清熱劑", "composition": [{"herb": "石膏", "role": "君"}, {"herb": "知母", "role": "臣"}, {"herb": "甘草", "role": "佐"}, {"herb": "粳米", "role": "使"}], "function": "清氣分熱", "indications": "氣分熱證。四大症：大熱、大汗、大渴、脈洪大", "analysis": "石膏辛甘大寒，清氣分實熱為君；知母苦寒質潤，助石膏清熱滋陰為臣", "song": "白虎湯用石膏艱，知母甘草粳米攙，四大症見服之退，清氣泄熱莫等閑"}, {"id": "f009", "name": "清瘟敗毒飲", "category": "清熱劑", "composition": [{"herb": "水牛角", "role": "君"}, {"herb": "生地黃", "role": "臣"}, {"herb": "赤芍", "role": "臣"}, {"herb": "牡丹皮", "role": "臣"}, {"herb": "玄參", "role": "佐"}, {"herb": "石膏", "role": "佐"}, {"herb": "知母", "role": "佐"}, {"herb": "金銀花", "role": "佐"}, {"herb": "連翹", "role": "佐"}, {"herb": "板藍根", "role": "佐"}, {"herb": "大青葉", "role": "佐"}, {"herb": "薄荷", "role": "佐"}, {"herb": "竹葉", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "清熱解毒，涼血瀉火", "indications": "瘟熱時毒，氣血兩燔。大熱煩躁，吐血發斑", "analysis": "水牛角清涼血分之熱、解毒為君", "song": "清瘟敗毒羚芍地，玄梔芩翹甘石膏，涼血清瘟解毒妙，疫癘熱毒此方消"}, {"id": "f010", "name": "黃連解毒湯", "category": "清熱劑", "composition": [{"herb": "黃連", "role": "君"}, {"herb": "黃芩", "role": "臣"}, {"herb": "黃柏", "role": "佐"}, {"herb": "梔子", "role": "佐"}], "function": "瀉火解毒", "indications": "三焦火毒熱盛證。大熱煩躁，錯語不眠", "analysis": "黃連清心瀉火解毒為君；黃芩清上焦熱為臣", "song": "黃連解毒柏梔芩，三焦火毒此方尋，大熱煩躁不能寐，瀉火解毒直折因"}, {"id": "f011", "name": "導赤散", "category": "清熱劑", "composition": [{"herb": "生地黃", "role": "君"}, {"herb": "木通", "role": "臣"}, {"herb": "竹葉", "role": "佐"}, {"herb": "甘草梢", "role": "使"}], "function": "清心利水養陰", "indications": "心經移熱於小腸證。心胸煩熱，口舌生瘡，小便赤澀", "analysis": "生地黃涼血滋陰清心為君；木通上清心熱、下利小便為臣", "song": "導赤散中地竹通，甘草梢稍利竅通，心經有熱移小腸，清心利水見奇功"}, {"id": "f012", "name": "龍膽瀉肝湯", "category": "清熱劑", "composition": [{"herb": "龍膽草", "role": "君"}, {"herb": "黃芩", "role": "臣"}, {"herb": "梔子", "role": "臣"}, {"herb": "澤瀉", "role": "佐"}, {"herb": "木通", "role": "佐"}, {"herb": "車前子", "role": "佐"}, {"herb": "當歸", "role": "佐"}, {"herb": "生地黃", "role": "佐"}, {"herb": "柴胡", "role": "佐使"}, {"herb": "甘草", "role": "使"}], "function": "清瀉肝經實熱濕火", "indications": "肝經實熱火盛或濕熱下注", "analysis": "龍膽草大苦大寒，瀉肝經實火除濕熱為君", "song": "龍膽瀉肝梔柏芩，柴胡生地歸澤淋，肝經濕火此方瀉，目赤耳腫見奇功"}, {"id": "f013", "name": "五味消毒飲", "category": "清熱劑", "composition": [{"herb": "金銀花", "role": "君"}, {"herb": "野菊花", "role": "臣"}, {"herb": "蒲公英", "role": "臣"}, {"herb": "紫花地丁", "role": "佐"}, {"herb": "紫背天葵", "role": "佐"}], "function": "清熱解毒，消散癰疔", "indications": "火毒結聚之疔瘡癰腫", "analysis": "金銀花清熱解毒消散痈瘍為君", "song": "五味消毒飲金銀，菊丁葵蒡共相親，疔瘡癰瘍服之散，清熱解毒效通神"}, {"id": "f014", "name": "犀角地黃湯（清營湯類）", "category": "清熱劑", "composition": [{"herb": "水牛角", "role": "君"}, {"herb": "生地黃", "role": "臣"}, {"herb": "赤芍", "role": "佐"}, {"herb": "牡丹皮", "role": "佐"}], "function": "清熱解毒，涼血散瘀", "indications": "熱入血分證。吐血、衄血、便血、尿血，斑色紫黑", "analysis": "水牛角咸寒清心涼血解毒為君；生地黃涼血滋陰為臣", "song": "犀角地黃芍丹隨，涼血散瘀毒熱追，熱入血分吐衄血，清營涼血最相宜"}, {"id": "f015", "name": "清營湯", "category": "清熱劑", "composition": [{"herb": "水牛角", "role": "君"}, {"herb": "生地黃", "role": "臣"}, {"herb": "玄參", "role": "臣"}, {"herb": "竹葉心", "role": "佐"}, {"herb": "麥冬", "role": "佐"}, {"herb": "丹參", "role": "佐"}, {"herb": "黄连", "role": "佐"}, {"herb": "銀花", "role": "佐"}, {"herb": "連翹", "role": "佐"}, {"herb": "金汁", "role": "佐"}, {"herb": "玳瑁", "role": "佐"}], "function": "清營解毒，養陰活血", "indications": "熱入營分證。身熱夜甚，心煩不寐，斑疹隱約", "analysis": "水牛角清營涼血解毒為君", "song": "清營湯用水牛角，芩連玄參竹連翹，地麥丹參金玳瑁，清營解毒退熱超"}, {"id": "f016", "name": "大承氣湯", "category": "瀉下劑", "composition": [{"herb": "大黃", "role": "君"}, {"herb": "芒硝", "role": "臣"}, {"herb": "厚朴", "role": "佐"}, {"herb": "枳實", "role": "佐"}], "function": "峻下熱結", "indications": "陽明腑實證。痞、滿、燥、實", "analysis": "大黃苦寒瀉熱通便、蕩滌腸胃積滯為君；芒硝咸寒軟堅潤燥為臣", "song": "大承氣湯枳硝黃，痞滿燥實一劑攘，峻下熱結通腑氣，急下存陰效力強"}, {"id": "f017", "name": "小承氣湯", "category": "瀉下劑", "composition": [{"herb": "大黃", "role": "君"}, {"herb": "厚朴", "role": "臣"}, {"herb": "枳實", "role": "佐"}], "function": "輕下熱結", "indications": "陽明腑實證輕證。痞、滿、實而燥不甚", "analysis": "大黃瀉熱通便、消積蕩滯為君；厚朴行氣散滿除痞為臣", "song": "小承氣湯大黃枳，厚朴三味輕下剂，痞滿實而燥未甚，通腑泄熱此方宜"}, {"id": "f018", "name": "麻子仁丸", "category": "瀉下劑", "composition": [{"herb": "火麻仁", "role": "君"}, {"herb": "杏仁", "role": "臣"}, {"herb": "大黃", "role": "佐"}, {"herb": "枳實", "role": "佐"}, {"herb": "厚朴", "role": "佐"}, {"herb": "芍藥", "role": "佐"}], "function": "潤腸瀉熱，小承氣合麻子仁", "indications": "脾約證。腸熱津傷，大便乾結，小便數", "analysis": "火麻仁潤腸通便為君；杏仁潤肺降氣為臣", "song": "麻子仁丸治脾約，麻杏芍藥大黄芍，枳樸丸劑潤腸通，腸燥便秘服之卻"}, {"id": "f019", "name": "獨活寄生湯", "category": "祛風濕劑", "composition": [{"herb": "獨活", "role": "君"}, {"herb": "桑寄生", "role": "君"}, {"herb": "秦艽", "role": "臣"}, {"herb": "防風", "role": "臣"}, {"herb": "細辛", "role": "臣"}, {"herb": "當歸", "role": "佐"}, {"herb": "川芎", "role": "佐"}, {"herb": "白芍", "role": "佐"}, {"herb": "熟地黃", "role": "佐"}, {"herb": "人參", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "杜仲", "role": "佐"}, {"herb": "牛膝", "role": "佐"}, {"herb": "肉桂", "role": "佐"}], "function": "祛風濕，止痹痛，益肝腎，補氣血", "indications": "久痹正虛，腰膝疼痛，屈伸不利", "analysis": "獨活、桑寄生祛風勝濕、通絡止痛兼補肝腎為君", "song": "獨活寄生湯八珍，秦防桂辛共相親，祛風勝濕補肝腎，久痹正虛此方珍"}, {"id": "f020", "name": "蠲痺湯", "category": "祛風濕劑", "composition": [{"herb": "川烏", "role": "君"}, {"herb": "草烏", "role": "君"}, {"herb": "沒藥", "role": "臣"}, {"herb": "乳香", "role": "臣"}, {"herb": "沒药", "role": "佐"}, {"herb": "當歸", "role": "佐"}, {"herb": "川芎", "role": "佐"}, {"herb": "白芍", "role": "佐"}, {"herb": "地龍", "role": "佐"}, {"herb": "南星", "role": "佐"}], "function": "祛風濕痰，開鬱行滯止痛", "indications": "風寒濕痰瘀血阻絡痹證", "analysis": "川烏、草烏大辛大熱，搜風散寒除濕止痛為君", "song": "蠲痺湯中草川烏，南星濕痰此方能，沒藥乳香地龍歸，行瘀通絡止痛增"}, {"id": "f021", "name": "安宮牛黃丸", "category": "開竅劑", "composition": [{"herb": "牛黃", "role": "君"}, {"herb": "麝香", "role": "臣"}, {"herb": "水牛角", "role": "臣"}, {"herb": "硃砂", "role": "佐"}, {"herb": "珍珠", "role": "佐"}, {"herb": "雄黃", "role": "佐"}, {"herb": "連翹", "role": "佐"}, {"herb": "黃芩", "role": "佐"}, {"herb": "梔子", "role": "佐"}, {"herb": "鬱金", "role": "佐"}, {"herb": "冰片", "role": "佐"}, {"herb": "金箔", "role": "佐"}], "function": "清熱開竅，豁痰解毒", "indications": "溫病熱閉心包證。高熱煩躁，神昏譫語", "analysis": "牛黃清心豁痰、開竅涼肝為君", "song": "安宮牛黃麝共珠，芩連梔鬰雄金箔，清熱開竅豁痰毒，熱入心包此方能"}, {"id": "f022", "name": "蘇合香丸", "category": "開竅劑", "composition": [{"herb": "蘇合香", "role": "君"}, {"herb": "冰片", "role": "臣"}, {"herb": "麝香", "role": "臣"}, {"herb": "安息香", "role": "佐"}, {"herb": "青木香", "role": "佐"}, {"herb": "沉香", "role": "佐"}, {"herb": "丁香", "role": "佐"}, {"herb": "檀香", "role": "佐"}, {"herb": "乳香", "role": "佐"}, {"herb": "香附", "role": "佐"}, {"herb": "白朮", "role": "佐"}, {"herb": "訶子", "role": "佐"}, {"herb": "蓽茇", "role": "佐"}, {"herb": "朱砂", "role": "佐"}], "function": "芳香開竅，行氣止痛", "indications": "寒閉證。中氣卒然昏倒，牙關緊閉", "analysis": "蘇合香芳香開竅辟穢為君", "song": "蘇合香丸蔻木丁香，沉檀安息乳香香附，寒閉神昏此方能，溫通開竅化濕濁"}, {"id": "f023", "name": "四磨湯", "category": "理氣劑", "composition": [{"herb": "人參", "role": "佐"}, {"herb": "槟榔", "role": "臣"}, {"herb": "沉香", "role": "臣"}, {"herb": "烏藥", "role": "君"}], "function": "行氣降逆，補益元氣", "indications": "肝氣鬱滯证。上氣喘急，胸膈痞滿", "analysis": "烏藥行氣疏肝降逆為君", "song": "四磨飲支持飲子，人沉槟烏四般施，行氣降逆兼益氣，喘急胸悶服之宜"}, {"id": "f024", "name": "越鞠丸", "category": "理氣劑", "composition": [{"herb": "香附", "role": "君"}, {"herb": "川芎", "role": "臣"}, {"herb": "蒼朮", "role": "佐"}, {"herb": "神麴", "role": "佐"}, {"herb": "山梔", "role": "佐"}], "function": "行氣解鬱", "indications": "六鬱（氣、血、痰、火、濕、食）", "analysis": "香附行氣解氣鬱為君；川芎活血開血鬱為臣", "song": "越鞠丸治六般鬱，氣血痰火濕食因，芎附蒼神梔，行氣解鬱效如神"}, {"id": "f025", "name": "半夏厚朴湯", "category": "理氣劑", "composition": [{"herb": "半夏", "role": "君"}, {"herb": "厚朴", "role": "臣"}, {"herb": "茯苓", "role": "佐"}, {"herb": "生薑", "role": "佐"}, {"herb": "蘇葉", "role": "佐"}], "function": "行氣散結，降逆化痰", "indications": "梅核氣。咽中如有炙臠，咯之不出，咽之不下", "analysis": "半夏化痰散結、降逆和胃為君；厚朴行氣開鬱除滿為臣", "song": "半夏厚朴與茯蘇，生薑五味共相須，咽中炙臠如有物，行氣化痰散結俱"}, {"id": "f026", "name": "枳實薤白白酒湯", "category": "理氣劑", "composition": [{"herb": "枳實", "role": "君"}, {"herb": "薤白", "role": "臣"}, {"herb": "白酒", "role": "使"}], "function": "通陽散結，破氣除痞", "indications": "胸痹。胸中痹塞不通，心痛徹背", "analysis": "枳實行氣破結除痞為君；薤白通陽散結行氣滯為臣", "song": "枳實薤白白酒湯，胸痹通陽散結方，行氣除痞通胸陽，心痛徹背服之康"}, {"id": "f027", "name": "保和丸", "category": "消食劑", "composition": [{"herb": "山楂", "role": "君"}, {"herb": "神麴", "role": "臣"}, {"herb": "萊菔子", "role": "臣"}, {"herb": "半夏", "role": "佐"}, {"herb": "陳皮", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "連翹", "role": "佐"}], "function": "消食和胃", "indications": "食積證。脘腹痞滿脹痛，噯腐吞酸", "analysis": "山楂善消肉食油膩之積為君", "song": "保和神麴與山楂，半夏陳皮菔子翹，消食和胃服之安，食積脹痛此方能"}, {"id": "f028", "name": "健脾丸", "category": "消食劑", "composition": [{"herb": "白朮", "role": "君"}, {"herb": "人參", "role": "臣"}, {"herb": "茯苓", "role": "臣"}, {"herb": "山藥", "role": "佐"}, {"herb": "肉豆蔻", "role": "佐"}, {"herb": "木香", "role": "佐"}, {"herb": "黃連", "role": "佐"}, {"herb": "神麴", "role": "佐"}, {"herb": "麥芽", "role": "佐"}, {"herb": "山楂", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "健脾和胃，消食止瀉", "indications": "脾虛食積證", "analysis": "白朮健脾燥濕為君", "song": "健脾參朮草山藥，肉蔻木連神麥查，健脾和胃消食積，虛痞不食服之佳"}, {"id": "f029", "name": "十灰散", "category": "止血劑", "composition": [{"herb": "大薊", "role": "君"}, {"herb": "小薊", "role": "君"}, {"herb": "側柏葉", "role": "臣"}, {"herb": "白茅根", "role": "臣"}, {"herb": "蓮子殼", "role": "佐"}, {"herb": "山栀", "role": "佐"}, {"herb": "大黄", "role": "佐"}, {"herb": "荷葉", "role": "佐"}, {"herb": "白薺", "role": "佐"}, {"herb": "棕櫚皮", "role": "佐"}], "function": "涼血收斂止血", "indications": "血熱妄行之嘔血、吐血、咯血、嗽血", "analysis": "大薊、小薊涼血止血為君", "song": "十灰散用小薊蒲，荷梔茅柏薺棕樺，凉血收斂止吐血，血熱妄行服之無"}, {"id": "f030", "name": "咳血方", "category": "止血劑", "composition": [{"herb": "青黛", "role": "君"}, {"herb": "山梔", "role": "臣"}, {"herb": "瓜蔞仁", "role": "佐"}, {"herb": "海浮石", "role": "佐"}, {"herb": "誯石", "role": "佐"}], "function": "清肝寧肺，止咳止血", "indications": "肝火犯肺證。咳嗽咳痰帶血", "analysis": "青黛清肝涼血為君；山梔瀉火清熱涼血為臣", "song": "咳血方中誯浮石，瓜蔞青黛山栀施，清肝寧肺止血妙，肝火犯肺咳血宜"}, {"id": "f031", "name": "小薊飲子", "category": "止血劑", "composition": [{"herb": "小薊", "role": "君"}, {"herb": "生地黄", "role": "臣"}, {"herb": "滑石", "role": "佐"}, {"herb": "木通", "role": "佐"}, {"herb": "蒲黃", "role": "佐"}, {"herb": "藕節", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "大薊", "role": "佐"}, {"herb": "薏苡仁", "role": "佐"}], "function": "涼血利水，養陰止血", "indications": "血淋。小便帶血，熱澀疼痛", "analysis": "小薊涼血止血兼利水為君", "song": "小薊飲子用地黃，滑石木通蒲藕節，凉血利水養陰妙，血淋尿血服之卻"}, {"id": "f032", "name": "桃核承氣湯", "category": "理血劑", "composition": [{"herb": "桃仁", "role": "君"}, {"herb": "大黃", "role": "臣"}, {"herb": "桂枝", "role": "佐"}, {"herb": "芒硝", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "逐瘀瀉熱", "indications": "下焦蓄血證。少腹急結，神志如狂", "analysis": "桃仁破血祛瘀為君；大黃瀉熱祛瘀為臣", "song": "桃核承氣用硝黃，桂枝甘草共煎嘗，下焦蓄血少腹結，逐瘀瀉熱服之康"}, {"id": "f033", "name": "血府逐瘀湯", "category": "理血劑", "composition": [{"herb": "桃仁", "role": "君"}, {"herb": "紅花", "role": "臣"}, {"herb": "川芎", "role": "臣"}, {"herb": "赤芍", "role": "臣"}, {"herb": "牛膝", "role": "臣"}, {"herb": "當歸", "role": "佐"}, {"herb": "生地黃", "role": "佐"}, {"herb": "柴胡", "role": "佐"}, {"herb": "枳殼", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "桔梗", "role": "使"}], "function": "活血祛瘀，行氣止痛", "indications": "胸中血瘀證。胸痛日久，內熱煩躁", "analysis": "桃仁活血祛瘀為君；紅花助君活血為臣", "song": "血府逐瘀生地桃，紅花枳殼赤芍草，柴胡桔梗牛歸芎，胸中血瘀服之消"}, {"id": "f034", "name": "補陽還五湯", "category": "理血劑", "composition": [{"herb": "黃芪", "role": "君"}, {"herb": "當歸尾", "role": "臣"}, {"herb": "赤芍", "role": "佐"}, {"herb": "川芎", "role": "佐"}, {"herb": "紅花", "role": "佐"}, {"herb": "桃仁", "role": "佐"}, {"herb": "地龍", "role": "佐"}], "function": "補氣活血通絡", "indications": "中風后遗症。半身不遂，口眼喎斜", "analysis": "黃芪大補元氣，使氣旺而行血為君", "song": "補陽還五芪歸尾，川芎紅花桃赤芍，地龍通絡補氣血，中風偏枯服之卻"}, {"id": "f035", "name": "復元活絡飲", "category": "理血劑", "composition": [{"herb": "黃芪", "role": "君"}, {"herb": "當歸", "role": "臣"}, {"herb": "赤芍", "role": "佐"}, {"herb": "川芎", "role": "佐"}, {"herb": "紅花", "role": "佐"}, {"herb": "桃仁", "role": "佐"}, {"herb": "地龍", "role": "佐"}, {"herb": "全蠍", "role": "佐"}, {"herb": "蜈蚣", "role": "佐"}, {"herb": "天麻", "role": "佐"}], "function": "補氣活血，搜風通絡", "indications": "中風後遺症，半身不遂日久", "analysis": "黃芪大補元氣為君", "song": "復元活絡芪歸芍，川芎紅桃地龍全，蜈蚣天麻共煎服，偏枯不用服之痊"}, {"id": "f036", "name": "溫經湯", "category": "理血劑", "composition": [{"herb": "吳茱萸", "role": "君"}, {"herb": "桂枝", "role": "臣"}, {"herb": "當歸", "role": "臣"}, {"herb": "川芎", "role": "臣"}, {"herb": "芍藥", "role": "臣"}, {"herb": "人參", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "牡丹皮", "role": "佐"}, {"herb": "半夏", "role": "佐"}, {"herb": "阿膠", "role": "佐"}, {"herb": "麥冬", "role": "佐"}, {"herb": "生薑", "role": "佐"}], "function": "溫經散寒，養血祛瘀", "indications": "沖任虛寒，瘀血阻滯證。月經不調，經行腹痛", "analysis": "吳茱萸溫經散寒暖宮為君；桂枝溫經通脈為臣", "song": "溫經湯中桂茱萸，芎芍歸地冬阿膠，半參丹皮甘草生，沖任虛寒此方能"}, {"id": "f037", "name": "桂枝茯苓丸", "category": "理血劑", "composition": [{"herb": "桂枝", "role": "君"}, {"herb": "茯苓", "role": "臣"}, {"herb": "牡丹皮", "role": "佐"}, {"herb": "桃仁", "role": "佐"}, {"herb": "芍藥", "role": "佐"}], "function": "活血化瘀，緩消癰塊", "indications": "瘀血阻閉癥块。月經不調，少腹癥块", "analysis": "桂枝溫通血脈、行氣散滯為君；茯苓健脾滲濕安神為臣", "song": "桂枝茯苓丸芍藥，桃仁丹皮活血化瘀，緩消癥块調經血，婦人癥病服之卻"}, {"id": "f038", "name": "二陳湯", "category": "化痰止咳平喘劑", "composition": [{"herb": "半夏", "role": "君"}, {"herb": "橘紅", "role": "臣"}, {"herb": "茯苓", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "燥濕化痰，理氣和中", "indications": "濕痰證。咳嗽痰多，色白易咯", "analysis": "半夏燥濕化痰、降逆和胃為君；橘紅理氣行氣、燥濕化痰為臣", "song": "二陳湯用陳皮半夏，茯苓甘草和中也，濕痰咳嗽服之安，燥濕化痰調脾胃"}, {"id": "f039", "name": "溫膽湯", "category": "化痰止咳平喘劑", "composition": [{"herb": "半夏", "role": "君"}, {"herb": "竹茹", "role": "臣"}, {"herb": "枳實", "role": "佐"}, {"herb": "陳皮", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "生薑", "role": "佐"}, {"herb": "大棗", "role": "佐"}], "function": "理氣化痰，和胃利膽", "indications": "膽鬱痰熱證。心烦不寐，驚悸不寧，嘔吐呃逆", "analysis": "半夏燥濕化痰、和胃降逆為君；竹茹清熱化痰為臣", "song": "溫膽湯中用半夏，陳枳茹苓草棗薑，理氣化痰和膽胃，煩悸嘔逆此方能"}, {"id": "f040", "name": "止嗽散", "category": "化痰止咳平喘劑", "composition": [{"herb": "紫菀", "role": "臣"}, {"herb": "百部", "role": "臣"}, {"herb": "白前", "role": "臣"}, {"herb": "桔梗", "role": "臣"}, {"herb": "荊芥", "role": "君"}, {"herb": "甘草", "role": "使"}, {"herb": "陳皮", "role": "佐"}], "function": "宣利肺气，疏風止咳", "indications": "風邪犯肺證。咳嗽咽痒，咯痰不爽", "analysis": "紫菀、百部、白前止咳化痰為臣；荊芥疏風解表為君", "song": "止嗽散用桔陳前，菀百荊芥甘草研，咳嗽咽痒咯不爽，宣肺疏風止咳痊"}, {"id": "f041", "name": "小靛湯", "category": "化痰止咳平喘劑", "composition": [{"herb": "射干", "role": "君"}, {"herb": "麻黃", "role": "臣"}, {"herb": "細辛", "role": "佐"}, {"herb": "紫菀", "role": "佐"}, {"herb": "款冬花", "role": "佐"}, {"herb": "半夏", "role": "佐"}, {"herb": "大棗", "role": "佐"}, {"herb": "生薑", "role": "佐"}, {"herb": "五味子", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "發汗解表，化痰止咳", "indications": "風寒客肺，痰濁內阻證", "analysis": "射干降火利咽、消痰行水為君", "song": "射干麻黃湯細辛，紫苑冬花半夏薑，大棗五味草共煎，痰飲咳喘服之康"}, {"id": "f042", "name": "定喘湯", "category": "化痰止咳平喘劑", "composition": [{"herb": "麻黃", "role": "君"}, {"herb": "白果", "role": "臣"}, {"herb": "石膏", "role": "臣"}, {"herb": "蘇子", "role": "佐"}, {"herb": "杏仁", "role": "佐"}, {"herb": "半夏", "role": "佐"}, {"herb": "款冬花", "role": "佐"}, {"herb": "桑白皮", "role": "佐"}, {"herb": "黃芩", "role": "佐"}], "function": "宣肺降氣，祛痰平喘", "indications": "哮喘。咳嗽氣喘，痰多氣急", "analysis": "麻黃宣肺平喘、散邪解表為君；白果斂肺定喘、祛痰利氣為臣", "song": "定喘湯中白果麻，蘇杏石膏芩夏桑，冬花共煎平喘嗽，痰多氣急效堪誇"}, {"id": "f043", "name": "朱砂安神丸", "category": "安神劑", "composition": [{"herb": "朱砂", "role": "君"}, {"herb": "黄连", "role": "臣"}, {"herb": "生地黃", "role": "佐"}, {"herb": "當歸", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "鎮心安神，清熱養血", "indications": "心火亢盛，陰血不足證。心烦神亂，失眠多夢", "analysis": "朱砂重鎮安神、清心火為君；黄连清心瀉火為臣", "song": "朱砂安神連地歸，甘草共煎鎮心安，心烦不寐服之定，清熱養血鎮心神"}, {"id": "f044", "name": "天王補心丹", "category": "安神劑", "composition": [{"herb": "生地黃", "role": "君"}, {"herb": "天冬", "role": "臣"}, {"herb": "麥冬", "role": "臣"}, {"herb": "当归", "role": "佐"}, {"herb": "丹參", "role": "佐"}, {"herb": "玄參", "role": "佐"}, {"herb": "人參", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "遠志", "role": "佐"}, {"herb": "酸棗仁", "role": "佐"}, {"herb": "柏子仁", "role": "佐"}, {"herb": "五味子", "role": "佐"}, {"herb": "桔梗", "role": "使"}], "function": "滋陰補血，清心安神", "indications": "陰虛血少，虛火上炎證。心悸失寐，虛煩少夢", "analysis": "生地黃滋陰清熱涼血為君；天冬麥冬滋陰清心安神為臣", "song": "天王補心用地黃，天麥歸參丹玄參，茯神遠志棗柏味，桔梗為使舟楫方"}, {"id": "f045", "name": "酸棗仁湯", "category": "安神劑", "composition": [{"herb": "酸棗仁", "role": "君"}, {"herb": "茯苓", "role": "臣"}, {"herb": "知母", "role": "臣"}, {"herb": "川芎", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "養心安神，清熱除煩", "indications": "肝血不足，虛熱內擾證。虛虛不眠，心悸不安", "analysis": "酸棗仁養肝血、安心神為君；茯苓寧心安神為臣", "song": "酸棗仁湯草茯苓，知母川芎共煎成，養心安神清熱煩，虛煩不寐服之寧"}, {"id": "f046", "name": "天麻鉤藤飲", "category": "平肝息風劑", "composition": [{"herb": "天麻", "role": "君"}, {"herb": "鉤藤", "role": "君"}, {"herb": "石決明", "role": "臣"}, {"herb": "牛膝", "role": "臣"}, {"herb": "杜仲", "role": "佐"}, {"herb": "桑寄生", "role": "佐"}, {"herb": "黃芩", "role": "佐"}, {"herb": "山梔", "role": "佐"}, {"herb": "益母草", "role": "佐"}, {"herb": "夜交藤", "role": "佐"}, {"herb": "茯神", "role": "佐"}], "function": "平肝息風，清熱養血，補益肝腎", "indications": "肝陽上亢證。頭痛眩暈，失眠多夢", "analysis": "天麻息風止痉、平肝潜陽為君；鉤藤清热平肝為臣", "song": "天麻鉤藤飲石決，牛膝杜仲桑寄生，芩梴益母夜交藤，平肝息風補肝腎"}, {"id": "f047", "name": "鎮肝息風湯", "category": "平肝息風劑", "composition": [{"herb": "當歸", "role": "佐"}, {"herb": "生杭芍", "role": "佐"}, {"herb": "玄參", "role": "佐"}, {"herb": "天麻", "role": "佐"}, {"herb": "龍膽草", "role": "佐"}, {"herb": "山萸肉", "role": "佐"}, {"herb": "生赭石", "role": "臣"}, {"herb": "淮牛膝", "role": "臣"}, {"herb": "茵陳", "role": "佐"}, {"herb": "川楝子", "role": "佐"}, {"herb": "生牡蠣", "role": "佐"}, {"herb": "生龜板", "role": "佐"}], "function": "鎮肝息風，養陰清熱", "indications": "類中風。肝陽上亢，氣血逆亂", "analysis": "重用代赭石鎮肝降逆為臣", "song": "鎮肝息風芍龜板，玄參牡蠣代赭石，天麻胆草山萸肉，茵陳川楝牛膝草"}, {"id": "f048", "name": "大定風珠", "category": "平肝息風劑", "composition": [{"herb": "白芍", "role": "臣"}, {"herb": "麥冬", "role": "臣"}, {"herb": "生龜板", "role": "臣"}, {"herb": "麻仁", "role": "佐"}, {"herb": "生雞子黃", "role": "佐"}, {"herb": "生鱉甲", "role": "君"}, {"herb": "牡蠣", "role": "佐"}], "function": "滋陰壯水，柔肝息風", "indications": "熱病後期，虛風內動證", "analysis": "生鱉甲滋陰潛陽、柔肝息風為君", "song": "大定風珠用鱉甲，牡蠣龜芍麥冬麻，雞子黃滋陰息風，虛風內動服之安"}, {"id": "f049", "name": "四君子湯", "category": "補益劑", "composition": [{"herb": "人參", "role": "君"}, {"herb": "白朮", "role": "臣"}, {"herb": "茯苓", "role": "佐"}, {"herb": "甘草", "role": "使"}], "function": "益氣健脾", "indications": "脾胃氣虛證。面色㿠白，語聲低微，氣短乏力", "analysis": "人參甘溫益氣、健脾養胃為君；白朮苦溫健脾燥濕為臣", "song": "四君子湯中和義，參朮甘草共煎成，益氣健脾基礎方，氣虛諸證效堪誇"}, {"id": "f050", "name": "補中益氣湯", "category": "補益劑", "composition": [{"herb": "黃芪", "role": "君"}, {"herb": "人參", "role": "臣"}, {"herb": "白朮", "role": "佐"}, {"herb": "甘草", "role": "使"}, {"herb": "當歸", "role": "佐"}, {"herb": "陳皮", "role": "佐"}, {"herb": "升麻", "role": "佐"}, {"herb": "柴胡", "role": "佐"}], "function": "補中益氣，升陽舉陷", "indications": "脾胃氣虛及中氣下陷證", "analysis": "黃芪補中益氣、升陽固表為君；人參補益脾肺之氣為臣", "song": "補中益氣芪參草，歸朮陳皮升柴找，補中益氣升清陽，氣虛下陷服之好"}, {"id": "f051", "name": "生脈散", "category": "補益劑", "composition": [{"herb": "人參", "role": "君"}, {"herb": "麥冬", "role": "臣"}, {"herb": "五味子", "role": "佐"}], "function": "益氣生津，斂陰止汗", "indications": "氣陰兩虛證。汗多神疲，體倦乏力，口渴", "analysis": "人參補肺益氣、生津止渴為君；麥冬養陰清熱、生津潤燥為臣", "song": "生脈散中麥冬黃，五味子共煎湯，益氣生津斂陰汗，氣陰兩虛此方能"}, {"id": "f052", "name": "六味地黃丸", "category": "補益劑", "composition": [{"herb": "熟地黃", "role": "君"}, {"herb": "山茱萸", "role": "臣"}, {"herb": "山藥", "role": "臣"}, {"herb": "澤瀉", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "牡丹皮", "role": "佐"}], "function": "滋補肝腎", "indications": "肝腎陰虛證。腰膝酸軟，頭暈耳鳴", "analysis": "熟地黃滋腎陰、填骨髓為君；山茱萸滋補肝腎澀精為臣", "song": "六味地黃飲，萸藥澤苓丹，三補三瀉法，陰虛服之安"}, {"id": "f053", "name": "左歸丸", "category": "補益劑", "composition": [{"herb": "熟地黃", "role": "君"}, {"herb": "山藥", "role": "臣"}, {"herb": "山茱萸", "role": "臣"}, {"herb": "枸杞子", "role": "佐"}, {"herb": "鹿角膠", "role": "佐"}, {"herb": "龜板膠", "role": "佐"}, {"herb": "當歸", "role": "佐"}, {"herb": "菟絲子", "role": "佐"}], "function": "補腎填精，陰中補陽", "indications": "真陰不足，腎中精虧虛證", "analysis": "熟地黃滋陰填精益髓為君", "song": "左歸丸中地黃多，萸藥枸杞鹿龜膠，當歸菟絲補精血，陰中補陽效最妙"}, {"id": "f054", "name": "右歸丸", "category": "補益劑", "composition": [{"herb": "附子", "role": "君"}, {"herb": "肉桂", "role": "君"}, {"herb": "鹿角膠", "role": "臣"}, {"herb": "熟地黃", "role": "臣"}, {"herb": "山藥", "role": "佐"}, {"herb": "山茱萸", "role": "佐"}, {"herb": "枸杞子", "role": "佐"}, {"herb": "當歸", "role": "佐"}, {"herb": "杜仲", "role": "佐"}, {"herb": "菟絲子", "role": "佐"}], "function": "補腎助陽，填精益髓", "indications": "腎陽不足，命門火衰證", "analysis": "附子、肉桂補腎助陽、溫補命門為君", "song": "右歸丸中桂附黃，鹿角萸藥杞歸菟，補腎助陽填精髓，命門火衰服之補"}, {"id": "f055", "name": "四物湯", "category": "補益劑", "composition": [{"herb": "熟地黃", "role": "君"}, {"herb": "當歸", "role": "臣"}, {"herb": "白芍", "role": "佐"}, {"herb": "川芎", "role": "佐"}], "function": "補血調血", "indications": "營血虧虛證。面色無華，頭暈目眩", "analysis": "熟地黃滋陰養血補腎為君；當歸補養肝血、和血調經為臣", "song": "四物湯中歸地芍，川芎四物調經妙，補養營血基本方，婦人血證服之好"}, {"id": "f056", "name": "歸脾湯", "category": "補益劑", "composition": [{"herb": "人參", "role": "君"}, {"herb": "黃芪", "role": "君"}, {"herb": "白朮", "role": "臣"}, {"herb": "茯神", "role": "臣"}, {"herb": "酸棗仁", "role": "佐"}, {"herb": "龍眼肉", "role": "佐"}, {"herb": "當歸", "role": "佐"}, {"herb": "遠志", "role": "佐"}, {"herb": "木香", "role": "佐"}, {"herb": "炙甘草", "role": "使"}], "function": "益氣補血，健脾養心", "indications": "心脾兩虛證。心悸怔忡，失眠健忘", "analysis": "人參、黃芪補脾養心為君", "song": "歸脾湯中參芪草，朮苓棗遠歸龍眼木香，益氣補血養心脾，心悸失眠服之安"}, {"id": "f057", "name": "炙甘草湯", "category": "補益劑", "composition": [{"herb": "炙甘草", "role": "君"}, {"herb": "人參", "role": "臣"}, {"herb": "生地黄", "role": "臣"}, {"herb": "桂枝", "role": "佐"}, {"herb": "麥冬", "role": "佐"}, {"herb": "阿膠", "role": "佐"}, {"herb": "麻仁", "role": "佐"}, {"herb": "芍藥", "role": "佐"}, {"herb": "生薑", "role": "佐"}, {"herb": "大棗", "role": "佐"}], "function": "益氣滋陰，結代脈復，通經復脈", "indications": "陰虛氣怯證。脈結代，心動悸", "analysis": "炙甘草益氣補中、通經復脈為君", "song": "炙甘草湯參桂草，生地麥冬麻仁膠，芍藥薑棗共煎煮，結代脈復心悸消"}, {"id": "f058", "name": "金鎖固精丸", "category": "固澀劑", "composition": [{"herb": "沙苑子", "role": "君"}, {"herb": "芡實", "role": "臣"}, {"herb": "蓮鬚", "role": "臣"}, {"herb": "龍骨", "role": "佐"}, {"herb": "牡蠣", "role": "佐"}, {"herb": "蓮子", "role": "佐"}, {"herb": "茯苓", "role": "佐"}, {"herb": "山藥", "role": "佐"}], "function": "固腎澀精", "indications": "下元虛虧證。精頻滑精，腰膝痠軟", "analysis": "沙苑子溫補腎陽、固精澀泄為君", "song": "金鎖固精龍骨麝，蓮鬚芡實茯苓藥，下元虛虧精滑泄，固腎澀精服之卻"}, {"id": "f059", "name": "縮泉丸", "category": "固澀劑", "composition": [{"herb": "山藥", "role": "君"}, {"herb": "益智仁", "role": "臣"}, {"herb": "烏藥", "role": "佐"}, {"herb": "人參", "role": "佐"}, {"herb": "桑螵蛸", "role": "佐"}], "function": "益氣溫腎，澀精縮尿", "indications": "下元虛冷證。小便頻數或遺尿", "analysis": "山藥補腎健脾固澀為君；益智仁溫腎固精縮尿為臣", "song": "縮泉丸中參朮智，烏藥桑螵蛸共煎嘗，下元虛冷小便數，益氣溫腎固澀良"}, {"id": "f060", "name": "消瘰丸", "category": "腫瘍劑等其他", "composition": [{"herb": "玄參", "role": "君"}, {"herb": "牡蠣", "role": "臣"}, {"herb": "貝母", "role": "佐"}], "function": "清熱化痰，軟堅散結", "indications": "痰火鬱結之瘰癧", "analysis": "玄參滋阴降火、軟堅散結為君；牡蠣咸寒軟堅散結為臣", "song": "消瘰丸用貝母參，牡蠣軟堅散結痰，痰火瘰癧服之散，清熱化痰結核安"}]}, "acupoints": {"meridians": [{"id": "m01", "name": "手太陰肺經", "short": "肺經", "count": 11, "note": "起於中焦，下絡大腸，還循胃口，上膈屬肺"}, {"id": "m02", "name": "手厥陰心包經", "short": "心包經", "count": 9, "note": "起於胸中，出屬心包絡，下膈絡三焦"}, {"id": "m03", "name": "手少陰心經", "short": "心經", "count": 9, "note": "起於心中，出屬心系，下膈絡小腸"}, {"id": "m04", "name": "手陽明大腸經", "short": "大腸經", "count": 20, "note": "起於食指橈側端，上行循臂上肩"}, {"id": "m05", "name": "手少陽三焦經", "short": "三焦經", "count": 23, "note": "起於無名指尺側端，上行循臂上肩"}, {"id": "m06", "name": "手太陽小腸經", "short": "小腸經", "count": 19, "note": "起於小指尺側端，上行循臂上肩"}, {"id": "m07", "name": "足陽明胃經", "short": "胃經", "count": 45, "note": "起於鼻旁，上行至頭，下行至足次趾"}, {"id": "m08", "name": "足少陽膽經", "short": "膽經", "count": 44, "note": "起於目外眥，繞耳前後，下行至足四趾"}, {"id": "m09", "name": "足太陽膀胱經", "short": "膀胱經", "count": 67, "note": "起於目內眥，上額交巔，下行背兩側至足小趾"}, {"id": "m10", "name": "足太陰脾經", "short": "脾經", "count": 21, "note": "起於足大趾端，沿內踝前上行至腹胸"}, {"id": "m11", "name": "足厥陰肝經", "short": "肝經", "count": 14, "note": "起於足大趾叢毛，沿內踝前上行至脅"}, {"id": "m12", "name": "足少陰腎經", "short": "腎經", "count": 27, "note": "起於足小趾下，斜走足心，循內踝後上行"}, {"id": "m13", "name": "任脈", "short": "任脈", "count": 24, "note": "起於胞中，循腹正中線上行至下頦"}, {"id": "m14", "name": "督脈", "short": "督脈", "count": 28, "note": "起於胞中，循背正中線上行至頭頂"}], "points": [{"id": "a001", "name": "中府", "meridian": "m01", "location": "鎖骨下窩外側端，前正中线旁開6寸", "indications": "咳嗽、氣喘、胸滿、肩背痛", "method": "斜刺或向外平刺0.5–0.8寸", "special": "肺之募穴"}, {"id": "a002", "name": "雲門", "meridian": "m01", "location": "鎖骨下窩凹陷中，距前正中线6寸", "indications": "咳嗽、氣喘、胸痹心痛、肩臂痛", "method": "向外斜刺0.5–0.8寸", "special": ""}, {"id": "a003", "name": "天府", "meridian": "m01", "location": "腋前紋頭下3寸，肱二頭肌橈側緣", "indications": "咳嗽、气喘、鼻衄、上臂內側痛", "method": "直刺0.5–1寸", "special": ""}, {"id": "a004", "name": "俠白", "meridian": "m01", "location": "腋前紋頭下1寸，肱二頭肌橈側緣", "indications": "咳嗽、氣逆、肩臂攣痛", "method": "直刺0.5–1寸", "special": ""}, {"id": "a005", "name": "尺澤", "meridian": "m01", "location": "肘橫紋中，肱二頭肌腱橈側凹陷處", "indications": "咳嗽、氣喘、咳血、咽喉腫痛", "method": "直刺1–1.5寸", "special": "合穴"}, {"id": "a006", "name": "孔最", "meridian": "m01", "location": "前臂掌面橈側，腕橫紋上7寸", "indications": "咯血、咳嗽、咽痛、熱病無汗", "method": "直刺0.5–1寸", "special": "郄穴"}, {"id": "a007", "name": "列缺", "meridian": "m01", "location": "橈骨莖突上方，腕橫紋上1.5寸", "indications": "咳嗽、氣喘、咽喉腫痛、頭項痛", "method": "向上斜刺0.3–0.5寸", "special": "絡穴，八脈交会通任脈"}, {"id": "a008", "name": "經渠", "meridian": "m01", "location": "腕橫紋橈側端，橈動脈搏動處", "indications": "咳嗽、氣喘、咽乾、腕痛", "method": "避開橈動脈直刺0.3–0.5寸", "special": "經穴"}, {"id": "a009", "name": "太淵", "meridian": "m01", "location": "腕前區橈側端，橈骨莖突與橈動脈之間凹陷中", "indications": "咳嗽、氣喘、無汗、咽痛", "method": "避開橈動脈直刺0.3–0.5寸", "special": "輸穴、原穴、脈會"}, {"id": "a010", "name": "魚際", "meridian": "m01", "location": "手拇指本節後橈側赤白肉際處", "indications": "咽喉腫痛、咳嗽、咳血、小兒驚風", "method": "直刺0.5–0.8寸", "special": "滎穴"}, {"id": "a011", "name": "少商", "meridian": "m01", "location": "拇指末節橈側，距指甲角0.1寸", "indications": "咽喉腫痛、鼻衄、發熱、昏迷", "method": "點刺出血", "special": "井穴"}, {"id": "a012", "name": "天池", "meridian": "m02", "location": "乳中旁開1寸，第4肋間隙", "indications": "胸悶、心烦、咳喘、腋下腫", "method": "斜刺0.3–0.5寸", "special": ""}, {"id": "a013", "name": "曲澤", "meridian": "m02", "location": "肘橫紋中，肱二頭肌腱尺側凹陷處", "indications": "心痛、心煩、嘔吐、肘臂痛", "method": "直刺1寸", "special": "合穴"}, {"id": "a014", "name": "郄門", "meridian": "m02", "location": "腕橫紋上5寸，掌長肌腱橈側緣", "indications": "心痛、驚悸、咯血、嘔血", "method": "直刺0.5–1寸", "special": "郄穴"}, {"id": "a015", "name": "間使", "meridian": "m02", "location": "腕橫紋上3寸，掌長肌腱橈側緣", "indications": "心烦、心痛、胃痛、嘔吐、癲狂", "method": "直刺0.5–1寸", "special": "經穴"}, {"id": "a016", "name": "內關", "meridian": "m02", "location": "腕橫紋上2寸，掌長肌腱橈側緣", "indications": "心痛、嘔吐、胃痛、失眠、暈車船", "method": "直刺0.5–1寸", "special": "絡穴，八脈交会通陰維"}, {"id": "a017", "name": "大陵", "meridian": "m02", "location": "腕掌橫紋中央，掌長肌腱與橈側腕屈肌腱之間", "indications": "心痛、心烦、胃痛、惊悸", "method": "直刺0.3–0.5寸", "special": "輸穴、原穴"}, {"id": "a018", "name": "勞宮", "meridian": "m02", "location": "掌中央，第2、3掌骨之間", "indications": "中風昏迷、中暑、小兒驚風、心烦", "method": "直刺0.3–0.5寸", "special": "滎穴"}, {"id": "a019", "name": "中衝", "meridian": "m02", "location": "中指尖端中央", "indications": "昏迷、中暑、心痛、煩悶", "method": "點刺出血", "special": "井穴"}, {"id": "a020", "name": "天泉", "meridian": "m02", "location": "腋前紋頭下2寸，肱二頭肌長短頭之間", "indications": "心痛、心悸、胸脅脹痛、肘臂痛", "method": "直刺0.5–1寸", "special": ""}, {"id": "a021", "name": "極泉", "meridian": "m03", "location": "腋窩中央，動脈搏動處", "indications": "心痛、心悸、胸脅疼痛、上臂內側痛", "method": "避開動脈直刺0.3–0.5寸", "special": ""}, {"id": "a022", "name": "青靈", "meridian": "m03", "location": "極泉下1.5寸，肱二頭肌內側緣", "indications": "心痛、心悸、胸脅痛", "method": "直刺0.5–1寸", "special": ""}, {"id": "a023", "name": "少海", "meridian": "m03", "location": "屈肘時肘橫紋尺側端與內上髁連線中點", "indications": "心痛、肘臂攣痛、頭項痛、癲狂", "method": "直刺1–1.5寸", "special": "合穴"}, {"id": "a024", "name": "靈道", "meridian": "m03", "location": "腕橫紋上1.5寸，尺側腕屈肌腱橈側緣", "indications": "心痛、心烦、癲狂、咽痛", "method": "直刺0.5–1寸", "special": "經穴"}, {"id": "a025", "name": "通里", "meridian": "m03", "location": "腕橫紋上1寸，尺側腕屈肌腱橈側緣", "indications": "心悸、怕驚、舌強不語、暴瘖", "method": "直刺0.3–0.5寸", "special": "絡穴"}, {"id": "a026", "name": "陰郄", "meridian": "m03", "location": "腕橫紋上0.5寸，尺側腕屈肌腱橈側緣", "indications": "心痛、心悸、咳嗽、盜汗", "method": "直刺0.3–0.5寸", "special": "郄穴"}, {"id": "a027", "name": "神門", "meridian": "m03", "location": "腕掌側橫紋尺側端，尺側腕屈肌腱橈側凹陷中", "indications": "心病、心烦、失眠、健忘、癲狂", "method": "直刺0.3–0.5寸", "special": "輸穴、原穴"}, {"id": "a028", "name": "少府", "meridian": "m03", "location": "手掌第4、5掌骨之間，握拳時小指尖處", "indications": "心悸、胸痛、小便不利、陰癢", "method": "直刺0.5–1寸", "special": "滎穴"}, {"id": "a029", "name": "少衝", "meridian": "m03", "location": "小指末節橈側，距指甲角0.1寸", "indications": "心痛、驚悸、昏迷、熱病", "method": "點刺出血", "special": "井穴"}, {"id": "a030", "name": "商陽", "meridian": "m04", "location": "食指末節橈側，距指甲角0.1寸", "indications": "咽喉腫痛、齒痛、鼻衄、熱病", "method": "點刺出血", "special": "井穴"}, {"id": "a031", "name": "合谷", "meridian": "m04", "location": "手背第1、2掌骨間，第2掌骨橈側中點", "indications": "頭痛、齒痛、面癱、發熱、閉經", "method": "直刺0.5–1寸", "special": "原穴，四總穴"}, {"id": "a032", "name": "陽溪", "meridian": "m04", "location": "腕背橫紋橈側，拇短伸肌腱與拇長伸肌腱之間凹陷中", "indications": "頭痛、目赤、齒痛、耳鳴、腕痛", "method": "直刺0.5–0.8寸", "special": "經穴"}, {"id": "a033", "name": "曲池", "meridian": "m04", "location": "屈肘成直角，肘橫紋外端", "indications": "熱病、咽喉腫痛、齒痛、上肢痿痹", "method": "直刺1–1.5寸", "special": "合穴"}, {"id": "a034", "name": "手三里", "meridian": "m04", "location": "陽溪下2寸", "indications": "腹痛、腹瀉、齒痛、上肢癱痹", "method": "直刺1–1.5寸", "special": ""}, {"id": "a035", "name": "肩髃", "meridian": "m04", "location": "肩峰前下方凹陷中", "indications": "肩臂攣痛、上肢不遂、風熱癮疹", "method": "直刺或向下斜刺0.8–1.5寸", "special": "手足陽明、蹻脈之會"}, {"id": "a036", "name": "天鼎", "meridian": "m04", "location": "缺盆上，直扶天突與肩井中點", "indications": "咽喉腫痛、暴瘖、肩背痛", "method": "直刺0.5–1寸", "special": ""}, {"id": "a037", "name": "扶突", "meridian": "m04", "location": "喉結旁3寸，胸鎖乳突肌前缘", "indications": "咳嗽、气喘、咽喉腫痛、暴瘖", "method": "直刺0.5–1寸", "special": ""}, {"id": "a038", "name": "迎香", "meridian": "m04", "location": "鼻翼外緣中點旁，鼻唇溝中", "indications": "鼻塞、鼻淵、鼻衄、面癱", "method": "斜刺或平刺0.3–0.5寸", "special": "手足陽明之會"}, {"id": "a039", "name": "中渚", "meridian": "m05", "location": "手背第4、5掌骨間，掌指關節後凹陷中", "indications": "頭痛、耳鳴耳聾、咽喉腫痛、指屈伸不利", "method": "直刺0.3–0.5寸", "special": "輸穴"}, {"id": "a040", "name": "外關", "meridian": "m05", "location": "腕背橫紋上2寸，尺橈骨之間", "indications": "耳鳴耳聾、偏頭痛、熱病、嘔吐", "method": "直刺0.5–1寸", "special": "絡穴，八脈交会通陽維"}, {"id": "a041", "name": "支溝", "meridian": "m05", "location": "腕背橫紋上3寸，尺橈骨之間", "indications": "耳鳴耳聾、咽喉腫痛、便秘、熱病", "method": "直刺0.5–1寸", "special": "經穴"}, {"id": "a042", "name": "天井", "meridian": "m05", "location": "屈肘時，肘尖直上1寸凹陷中", "indications": "偏頭痛、脅肋痛、肘臂痛", "method": "直刺0.5–1寸", "special": "合穴"}, {"id": "a043", "name": "肩井", "meridian": "m05", "location": "大椎與肩峰連線中點", "indications": "頭項強痛、肩背疼痛、上肢不遂、難產", "method": "直刺0.5–0.8寸，不可深刺", "special": "手足少陽、陽維之會"}, {"id": "a044", "name": "後溪", "meridian": "m06", "location": "手尺側，第5掌指關節後遠側赤白肉際", "indications": "頭項強痛、耳鳴耳聾、腰背痛、癲狂", "method": "直刺0.5–1寸", "special": "輸穴，八脈交会通督脈"}, {"id": "a045", "name": "小海", "meridian": "m06", "location": "屈肘時，尺骨鷹嘴與肱骨內上髁之間", "indications": "肘臂疼痛、頸項痛、癲癇", "method": "直刺0.5–1寸", "special": "合穴"}, {"id": "a046", "name": "天宗", "meridian": "m06", "location": "肩胛骨岡下窩中央", "indications": "肩背疼痛、上肢不遂、乳癰", "method": "直刺或斜刺0.5–1寸", "special": ""}, {"id": "a047", "name": "聽宮", "meridian": "m06", "location": "耳屏間，張口凹陷處", "indications": "耳鳴、耳聾、中耳炎", "method": "張口直刺1–1.5寸", "special": ""}, {"id": "a048", "name": "承泣", "meridian": "m07", "location": "目正視，瞳孔直下眼球與眶下緣之間", "indications": "目赤腫痛、流淚、夜盲、面癱", "method": "沿眶下壁緩慢進針0.3–0.7寸", "special": ""}, {"id": "a049", "name": "四白", "meridian": "m07", "location": "目正視，瞳孔直下眶下孔凹陷處", "indications": "目赤痛、面癱、頭痛、眩晕", "method": "直刺0.3–0.5寸", "special": ""}, {"id": "a050", "name": "地倉", "meridian": "m07", "location": "口角旁開0.4寸", "indications": "面癱、口角流涎、齒痛、牙關緊閉", "method": "斜刺或平刺0.5–0.8寸", "special": "手足陽明、陽蹻脈之會"}, {"id": "a051", "name": "大迎", "meridian": "m07", "location": "下頜角前下方，咬肌附著部凹陷中", "indications": "面癱、齒痛、頷腫", "method": "斜刺0.3–0.5寸", "special": ""}, {"id": "a052", "name": "下關", "meridian": "m07", "location": "耳屏間，顴弓下缘凹陷中", "indications": "耳鳴耳聾、齒痛、口噤、面癱", "method": "微張口直刺0.5–1寸", "special": ""}, {"id": "a053", "name": "頭維", "meridian": "m07", "location": "頭側前部，額角髮際", "indications": "頭痛、目眩、面癱", "method": "平刺0.5–0.8寸", "special": "足陽明、少陽、陽維之會"}, {"id": "a054", "name": "天樞", "meridian": "m07", "location": "臍中旁開2寸", "indications": "腹脹腸鳴、便秘、泄瀉、痢疾", "method": "直刺1–1.5寸", "special": "大腸募穴"}, {"id": "a055", "name": "髀關", "meridian": "m07", "location": "大腿前面，髂前上棘與髕底外側端連線上，股直肌下端", "indications": "腰腿痹痛、屈伸不利", "method": "直刺1–2寸", "special": ""}, {"id": "a056", "name": "梁丘", "meridian": "m07", "location": "髕底上2寸，股外側肌腱外側緣", "indications": "胃痛、乳癰、膝肿痛", "method": "直刺1寸", "special": "郄穴"}, {"id": "a057", "name": "犢鼻", "meridian": "m07", "location": "膝蓋骨下緣，髕韌帶兩側凹陷中", "indications": "膝腿痛、屈伸不利", "method": "向內側或外側斜刺0.5–1寸", "special": ""}, {"id": "a058", "name": "足三里", "meridian": "m07", "location": "犢鼻下3寸，脛骨前嵴外1横指", "indications": "胃痛、嘔吐、泄瀉、虛勞羸瘦", "method": "直刺1–2寸", "special": "合穴、下合穴"}, {"id": "a059", "name": "上巨虛", "meridian": "m07", "location": "足三里下3寸", "indications": "腸鳴腹痛、泄瀉、便秘", "method": "直刺1–1.5寸", "special": "大腸下合穴"}, {"id": "a060", "name": "下巨虛", "meridian": "m07", "location": "上巨虛下3寸", "indications": "小腸病、泄瀉、便秘", "method": "直刺1–1.5寸", "special": "小腸下合穴"}, {"id": "a061", "name": "豐隆", "meridian": "m07", "location": "外踝尖上8寸，條口穴外1寸", "indications": "咳嗽痰多、眩暈、胃痛", "method": "直刺0.5–1寸", "special": "絡穴"}, {"id": "a062", "name": "內庭", "meridian": "m07", "location": "足背第2、3趾間，趾蹼緣後", "indications": "齒痛、咽喉痛、胃熱、小兒驚風", "method": "直刺0.3–0.5寸", "special": "滎穴"}, {"id": "a063", "name": "厲兌", "meridian": "m07", "location": "第2趾末節外側，距指甲角0.1寸", "indications": "面浮腫、齒痛、鼻衄、夢境", "method": "點刺出血", "special": "井穴"}, {"id": "a064", "name": "瞳子髎", "meridian": "m08", "location": "目外眥後0.5寸凹陷中", "indications": "目赤痛、目翳、偏頭痛", "method": "平刺0.3–0.5寸", "special": "手太陽、手足少陽之會"}, {"id": "a065", "name": "聽會", "meridian": "m08", "location": "耳屏間，微張口凹陷處", "indications": "耳鳴、耳聾、中耳炎", "method": "微張口直刺0.5–1寸", "special": ""}, {"id": "a066", "name": "率谷", "meridian": "m08", "location": "耳尖直上入髮際1.5寸", "indications": "偏頭痛、眩暈、嘔吐、小兒急慢驚風", "method": "平刺0.5–0.8寸", "special": "足太陽少陽之會"}, {"id": "a067", "name": "風池", "meridian": "m08", "location": "後頸部，枕骨下兩側大筋外緣凹陷中", "indications": "頭痛、眩暈、頸項強痛、目赤腫痛", "method": "向鼻尖方向斜刺0.5–1寸", "special": "手足少陽、陽維、陽蹻之會"}, {"id": "a068", "name": "環跳", "meridian": "m08", "location": "股後部，股骨大轉子最突出點與尾骨尖連線外中1/3", "indications": "腰腿痛、下肢痿痹、坐骨神經痛", "method": "直刺2–3寸", "special": "足少陽太陽之會"}, {"id": "a069", "name": "陽陵泉", "meridian": "m08", "location": "腓骨頭前下方凹陷中", "indications": "脅痛、口苦、嘔吐、下肢痿痹", "method": "直刺1–1.5寸", "special": "合穴、八會之筋會、膽下合穴"}, {"id": "a070", "name": "光明", "meridian": "m08", "location": "外踝尖上5寸，腓骨前緣", "indications": "目痛夜盲、乳脹、下肢痿痹", "method": "直刺1–1.5寸", "special": "絡穴"}, {"id": "a071", "name": "足臨泣", "meridian": "m08", "location": "足背第4、5跖骨結合部前方凹陷中", "indications": "偏頭痛、目赤痛、脅肋痛、足跗痛", "method": "直刺0.5–1寸", "special": "輸穴、八脈交会通帶脈"}, {"id": "a072", "name": "竅陰", "meridian": "m08", "location": "第4趾末節外側，距指甲角0.1寸", "indications": "頭痛、目眩、目赤腫痛、咽喉腫痛", "method": "點刺出血", "special": "井穴"}, {"id": "a073", "name": "睛明", "meridian": "m09", "location": "目內眥角稍上方凹陷處", "indications": "目赤腫痛、流淚、視物不明、夜盲", "method": "緊閉眼瞼，緩慢進針0.3–0.5寸", "special": "手足太陽、陰陽蹻、足陽明之會"}, {"id": "a074", "name": "攢竹", "meridian": "m09", "location": "眉頭凹陷中", "indications": "頭痛、眩暈、目赤痛、視物不明", "method": "向下平刺0.5–1寸", "special": ""}, {"id": "a075", "name": "天柱", "meridian": "m09", "location": "後髮際正中旁開1.3寸，斜方肌外缘", "indications": "後頭痛、項強、目眩、鼻淵", "method": "直刺或斜刺0.5–0.8寸", "special": ""}, {"id": "a076", "name": "大杼", "meridian": "m09", "location": "第1胸椎棘突下，旁開1.5寸", "indications": "咳嗽、發熱、頸項強痛、肩背痛", "method": "斜刺0.5–0.8寸", "special": "八會之骨會"}, {"id": "a077", "name": "風門", "meridian": "m09", "location": "第2胸椎棘突下，旁開1.5寸", "indications": "傷風咳嗽、發熱頭痛、項強", "method": "斜刺0.5–0.8寸", "special": ""}, {"id": "a078", "name": "肺俞", "meridian": "m09", "location": "第3胸椎棘突下，旁開1.5寸", "indications": "咳嗽、氣喘、吐血、骨蒸潮熱", "method": "斜刺0.5–0.8寸", "special": "肺之背俞穴"}, {"id": "a079", "name": "心俞", "meridian": "m09", "location": "第5胸椎棘突下，旁開1.5寸", "indications": "心痛驚悸、失眠健忘", "method": "斜刺0.5–0.8寸", "special": "心之背俞穴"}, {"id": "a080", "name": "肝俞", "meridian": "m09", "location": "第9胸椎棘突下，旁開1.5寸", "indications": "脅痛、目赤、視物不明、肝風", "method": "斜刺0.5–0.8寸", "special": "肝之背俞穴"}, {"id": "a081", "name": "脾俞", "meridian": "m09", "location": "第11胸椎棘突下，旁開1.5寸", "indications": "胃痛、嘔吐、泄瀉、水腫", "method": "斜刺0.5–0.8寸", "special": "脾之背俞穴"}, {"id": "a082", "name": "腎俞", "meridian": "m09", "location": "第2腰椎棘突下，旁開1.5寸", "indications": "腰背痛、遺精陽痿、月經不調", "method": "直刺0.5–1寸", "special": "腎之背俞穴"}, {"id": "a083", "name": "委中", "meridian": "m09", "location": "膕橫紋中點", "indications": "腰背痛、下肢癱痹、腹痛吐瀉", "method": "直刺1–1.5寸", "special": "合穴、四總穴"}, {"id": "a084", "name": "承山", "meridian": "m09", "location": "腓腸肌肌腹下尖角處", "indications": "腰腿拘急疼痛、痔疾、便秘", "method": "直刺1–2寸", "special": ""}, {"id": "a085", "name": "昆仑", "meridian": "m09", "location": "外踝尖與跟腱之間凹陷中", "indications": "頭痛、目眩、腰痛、足跟痛", "method": "直刺0.5–1寸", "special": "經穴"}, {"id": "a086", "name": "申脈", "meridian": "m09", "location": "外踝正下方凹陷中", "indications": "腰腿痛、目眩、癲癇", "method": "直刺0.3–0.5寸", "special": "八脈交会通陽蹻"}, {"id": "a087", "name": "至陰", "meridian": "m09", "location": "足小趾外側，距指甲角0.1寸", "indications": "頭痛、目痛、鼻塞、胎位不正", "method": "淺刺0.1寸或艾灸", "special": "井穴"}, {"id": "a088", "name": "隱白", "meridian": "m10", "location": "足大趾末節內側，距指甲角0.1寸", "indications": "月經不調、崩漏、腹脹、小兒驚風", "method": "淺刺0.1寸", "special": "井穴"}, {"id": "a089", "name": "太白", "meridian": "m10", "location": "第1蹠骨小頭後下方赤白肉際", "indications": "胃痛、腹脹、泄瀉、體重節痛", "method": "直刺0.5–1寸", "special": "輸穴、原穴"}, {"id": "a090", "name": "公孫", "meridian": "m10", "location": "第1蹠骨基底部前下方赤白肉際", "indications": "胃痛、嘔吐、腹痛、泄瀉", "method": "直刺0.6–1.2寸", "special": "絡穴，八脈交会通衝脈"}, {"id": "a091", "name": "三陰交", "meridian": "m10", "location": "內踝尖上3寸，脛骨內側緣後方", "indications": "月經不調、痛經、消化不良、泌尿生殖病", "method": "直刺1–2寸", "special": "足三陰之會"}, {"id": "a092", "name": "陰陵泉", "meridian": "m10", "location": "脛骨內側髁下方凹陷中", "indications": "腹脹、泄瀉、水腫、小便不利", "method": "直刺1–2寸", "special": "合穴"}, {"id": "a093", "name": "血海", "meridian": "m10", "location": "髕底內側端上2寸", "indications": "月經不調、痛經、癮疹、皮膚瘙癢", "method": "直刺1–2寸", "special": ""}, {"id": "a094", "name": "大敦", "meridian": "m11", "location": "足大趾末節外側，距指甲角0.1寸", "indications": "疝氣、遺尿、崩漏、癲癇", "method": "淺刺0.1寸", "special": "井穴"}, {"id": "a095", "name": "太衝", "meridian": "m11", "location": "足背第1、2蹠骨結合部前方凹陷中", "indications": "頭痛眩暈、目赤、月經不調、胃痛", "method": "直刺0.5–1寸", "special": "輸穴、原穴"}, {"id": "a096", "name": "中封", "meridian": "m11", "location": "內踝前1寸，脛骨前肌腱內側凹陷中", "indications": "疝氣、小便不利、腹痛", "method": "直刺0.5–0.8寸", "special": "經穴"}, {"id": "a097", "name": "章門", "meridian": "m11", "location": "第11肋遊離端下", "indications": "脹滿、泄瀉、脅痛、黃疸", "method": "斜刺或平刺0.5–0.8寸", "special": "脾募穴，八會之臟會"}, {"id": "a098", "name": "湧泉", "meridian": "m12", "location": "足底第2、3趾蹼緣與足跟連線中點", "indications": "小兒驚風、昏迷、頭痛眩暈、咽喉痛", "method": "直刺0.5–1寸", "special": "井穴"}, {"id": "a099", "name": "太谿", "meridian": "m12", "location": "內踝尖與跟腱之間凹陷中", "indications": "頭痛眩暈、耳鸣耳聾、牙痛、咽喉痛", "method": "直刺0.5–1寸", "special": "輸穴、原穴"}, {"id": "a100", "name": "照海", "meridian": "m12", "location": "內踝尖正下方凹陷處", "indications": "咽喉乾痛、目赤、癲癇、失眠", "method": "直刺0.3–0.5寸", "special": "八脈交会通陰蹻"}, {"id": "a101", "name": "復溜", "meridian": "m12", "location": "太谿直上2寸", "indications": "腰脊強痛、陰痿、泄瀉、盗汗", "method": "直刺0.5–1寸", "special": "經穴"}, {"id": "a102", "name": "陰谷", "meridian": "m12", "location": "膕橫紋內側端", "indications": "陰痛、陰陽痿、小便不利、腰背痛", "method": "直刺1寸", "special": "合穴"}, {"id": "a103", "name": "俞府", "meridian": "m12", "location": "前正中線旁開2寸，鎖骨下緣", "indications": "咳嗽、氣喘、胸痛", "method": "斜刺0.5–0.8寸", "special": ""}, {"id": "a104", "name": "會陰", "meridian": "m13", "location": "會陰部中央", "indications": "遺精、陽痿、月經不調、痔疾", "method": "正坐提穴，直刺0.5–1寸", "special": "任督沖三脈之會"}, {"id": "a105", "name": "曲骨", "meridian": "m13", "location": "前正中線上，恥骨聯合上緣", "indications": "小腹痛、遺尿、月經不調", "method": "直刺0.5–1寸", "special": ""}, {"id": "a106", "name": "中極", "meridian": "m13", "location": "前正中線臍下4寸", "indications": "遺尿、小便不利、痛經", "method": "直刺0.5–1寸", "special": "膀胱募穴"}, {"id": "a107", "name": "關元", "meridian": "m13", "location": "前正中線臍下3寸", "indications": "腹痛、遺精陽痿、月經不調、虛勞", "method": "直刺0.5–1寸", "special": "小腸募穴，小兒先天之本"}, {"id": "a108", "name": "氣海", "meridian": "m13", "location": "前正中線臍下1.5寸", "indications": "腹脹、水腫、疝氣、經閉", "method": "直刺0.5–1寸", "special": ""}, {"id": "a109", "name": "陰交", "meridian": "m13", "location": "前正中線臍下1寸", "indications": "腹痛、月經不調、帶下", "method": "直刺0.5–1寸", "special": "任脈、沖脈、足少陰之會"}, {"id": "a110", "name": "神闕", "meridian": "m13", "location": "臍中央", "indications": "腹痛泄瀉、脫肛、虛脫", "method": "不針，艾灸", "special": ""}, {"id": "a111", "name": "水分", "meridian": "m13", "location": "前正中線臍上1寸", "indications": "腹痛、腹脹、水腫", "method": "直刺0.5–1寸", "special": ""}, {"id": "a112", "name": "下脘", "meridian": "m13", "location": "前正中線臍上2寸", "indications": "腹痛、嘔吐、食穀不化", "method": "直刺0.5–1寸", "special": "足太陰任脈之會"}, {"id": "a113", "name": "中脘", "meridian": "m13", "location": "前正中線臍上4寸", "indications": "胃痛、嘔吐、腹胀、食積", "method": "直刺1–1.5寸", "special": "胃募穴，腑會，八會之一"}, {"id": "a114", "name": "膻中", "meridian": "m13", "location": "前正中線，兩乳連線中點", "indications": "胸悶、氣短、咳喘、乳少", "method": "平刺0.3–0.5寸", "special": "心包募穴，氣會"}, {"id": "a115", "name": "天突", "meridian": "m13", "location": "胸骨上窩中央", "indications": "咳嗽、氣喘、咽喉腫痛、噎膈", "method": "先直刺0.2寸後轉向下方刺1–1.5寸", "special": "陰維任脈之會"}, {"id": "a116", "name": "承漿", "meridian": "m13", "location": "下唇中央下方凹陷中", "indications": "面癱、口齒、牙痛、消渴", "method": "斜刺0.3–0.5寸", "special": "任脈足陽明之會"}, {"id": "a117", "name": "長強", "meridian": "m14", "location": "尾骨尖端下", "indications": "痔疾、泄瀉、便秘、腰脊痛", "method": "向上斜刺0.5–1寸", "special": "督脈別絡，任督沖三脈之會"}, {"id": "a118", "name": "腰陽關", "meridian": "m14", "location": "後正中線第2腰椎棘突下", "indications": "腰脊強痛、遺精陽痿、月經不調", "method": "直刺0.5–1寸", "special": "腎氣所發"}, {"id": "a119", "name": "命門", "meridian": "m14", "location": "後正中線第2腰椎棘突下凹陷中", "indications": "腰脊強痛、陽痿遺精、腹冷泄瀉", "method": "直刺0.5–1寸", "special": "腎之俞"}, {"id": "a120", "name": "至陽", "meridian": "m14", "location": "後正中線第7胸椎棘突下", "indications": "嘔吐、呃逆、黃疸、背痛", "method": "斜刺0.5–1寸", "special": ""}, {"id": "a121", "name": "筋縮", "meridian": "m14", "location": "後正中線第3胸椎棘突下", "indications": "嘔血、咳嗽、肺癤", "method": "斜刺0.5–1寸", "special": ""}, {"id": "a122", "name": "大椎", "meridian": "m14", "location": "後正中線第7頸椎棘突下", "indications": "熱病、瘧疾、頸項強痛、癲癇", "method": "斜刺0.5–1寸", "special": "手足三陽、督脈之會"}, {"id": "a123", "name": "瘂門", "meridian": "m14", "location": "後髮際正中入1寸", "indications": "項強、嘔吐、癲癇、小兒驚風", "method": "伏枕緩慢刺入0.5–1寸", "special": "督脈陽維之會"}, {"id": "a124", "name": "風府", "meridian": "m14", "location": "後髮際正中上1寸", "indications": "頭痛、眩暈、項強、中風", "method": "直刺0.5–1寸", "special": "督脈陽維之會"}, {"id": "a125", "name": "百會", "meridian": "m14", "location": "頭頂正中线，前髮際正中上5寸", "indications": "頭痛眩暈、中風、脫肛、癲狂", "method": "平刺0.3–0.5寸", "special": "督脈足太陽肝經之會"}, {"id": "a126", "name": "前頂", "meridian": "m14", "location": "前髮際正中上3.5寸", "indications": "頭痛、眩暈、鼻塞", "method": "平刺0.3–0.5寸", "special": "督脈足太陽之會"}, {"id": "a127", "name": "上星", "meridian": "m14", "location": "前髮際正中上1寸", "indications": "頭痛、鼻淵、鼻衄、目赤", "method": "平刺0.3–0.5寸", "special": ""}, {"id": "a128", "name": "水溝", "meridian": "m14", "location": "人中溝上1/3與中1/3交點", "indications": "昏迷、暈厥、暑厥、腰脊強痛", "method": "向上斜刺0.3–0.5寸", "special": "督脈手足陽明之會"}]}, "quiz": {"questions": [{"id": "q001", "topic": "陰陽", "stem": "下列哪一項屬於陽的屬性？", "options": ["晦暗、下降", "滋潤、閉藏", "靜止、內守", "溫熱、上升"], "answer": 3, "explanation": "陽的屬性為運動、外向、上升、溫熱、明亮；靜止、內守、下降、寒冷、晦暗屬陰。"}, {"id": "q002", "topic": "陰陽", "stem": "「孤陰不生，獨陽不長」說明的陰陽關係是：", "options": ["陰陽消長平衡", "陰陽轉化", "陰陽對立制約", "陰陽互根互用"], "answer": 3, "explanation": "互根指陰陽各以對方為存在前提，互用指雙方相互促進資生；無根之陰陽不能生長化氣。"}, {"id": "q003", "topic": "陰陽", "stem": "「壯水之主，以制陽光」適用於何種病機？", "options": ["陰虛則熱", "陽盛則熱", "陰盛則寒", "陽虛則寒"], "answer": 0, "explanation": "陰液虧虛不能制陽而生虛熱，治當滋陰以配陽，即「陽病治陰」。"}, {"id": "q004", "topic": "陰陽", "stem": "「重陰必陽，重陽必陰」體現的陰陽關係是：", "options": ["陰陽對立", "陰陽互根", "陰陽消長", "陰陽轉化"], "answer": 3, "explanation": "消長變化達到極點發生向相反方向的轉化，是量變引起質變的過程。"}, {"id": "q005", "topic": "陰陽", "stem": "下列关于陰陽自和的敘述，正確的是：", "options": ["陰陽自和指陰陽永遠不會失調", "陰陽自和是機體自動調節恢復陰陽平衡的能力", "陰陽自和只存在於病理狀態", "陰陽自和即陰陽轉化"], "answer": 1, "explanation": "陰陽自和指機體具有自動調節陰陽趨於平衡的能力，是健康與疾病向愈的內在機制。"}, {"id": "q006", "topic": "五行", "stem": "「木曰曲直」體現的特性是：", "options": ["清涼、收斂", "溫熱、上升", "潤下、閉藏", "生長、升發、條達"], "answer": 3, "explanation": "木能屈能伸，喜條達，故以生長、升發、條達為木的特性。"}, {"id": "q007", "topic": "五行", "stem": "五行之中，具有「受納、生化、承載」特性的是：", "options": ["土", "火", "金", "水"], "answer": 0, "explanation": "土爰稼穡，有生化、承載、受納之性，故脾屬土而為後天之本。"}, {"id": "q008", "topic": "五行", "stem": "五行相剋的次序，正確的是：", "options": ["木→火→土→金→水", "木→土→水→火→金", "木→金→土→水→火", "木→水→火→金→土"], "answer": 1, "explanation": "木剋土、土剋水、水剋火、火剋金、金剋木，次序為木土水火金。"}, {"id": "q009", "topic": "五行", "stem": "「木火刑金」屬於五行病理傳變中的：", "options": ["子病犯母", "相乘", "相侮", "母病及子"], "answer": 2, "explanation": "金本剋木，肝木過旺反侮肺金，為反向克制，屬相侮（反克）。"}, {"id": "q010", "topic": "五行", "stem": "根據五行相生規律確立的治法是：", "options": ["瀉肝火以清心熱", "培土生金", "抑木扶土", "佐金平木"], "answer": 1, "explanation": "培土生金即補脾益肺，依「土生金」的相生規律而立；抑木扶土、佐金平木屬相剋規律。"}, {"id": "q011", "topic": "五行", "stem": "五臟配五行，腎屬：", "options": ["水", "木", "火", "金"], "answer": 0, "explanation": "腎主水、主藏精，有潤下閉藏之性，屬水；肝木、心火、脾土、肺金。"}, {"id": "q012", "topic": "藏象", "stem": "五臟的生理功能特點是：", "options": ["泻而不藏，實而不能滿", "亦藏亦瀉，實而能滿", "傳化水谷，實而不能滿", "藏而不瀉，滿而不能實"], "answer": 3, "explanation": "五臟主化生贮藏精氣，故「藏而不瀉」「滿而不能實」；六腑則「瀉而不藏」「實而不能滿」。"}, {"id": "q013", "topic": "藏象", "stem": "「君主之官」指哪個臟腑？", "options": ["肺", "肝", "心", "脾"], "answer": 2, "explanation": "心主血脈、主神志，為五臟六腑之大主，故稱君主之官。肺為相傅之官，肝為將軍之官。"}, {"id": "q014", "topic": "藏象", "stem": "脾主統血的生理基礎實為：", "options": ["氣能生血", "血能養氣", "血能載氣", "氣能攝血"], "answer": 3, "explanation": "脾統血即氣攝血作用具體體現，脾氣虛不能攝血則見各種慢性出血。"}, {"id": "q015", "topic": "藏象", "stem": "肝喜條達而惡抑鬱，與其何項功能關係最密切？", "options": ["肝主疏洩", "肝主筋", "肝開竅於目", "肝主藏血"], "answer": 0, "explanation": "疏洩即肝氣疏通暢達之性，條達則氣機和暢，抑鬱則肝失疏洩而病。"}, {"id": "q016", "topic": "藏象", "stem": "「先天之本」是指：", "options": ["肝", "腎", "心", "脾"], "answer": 1, "explanation": "腎藏先天之精，主生長發育生殖，為人身之本原，故稱先天之本；脾為後天之本。"}, {"id": "q017", "topic": "藏象", "stem": "肺為「水之上源」主要依據哪項功能？", "options": ["肺朝百脈", "肺主皮毛", "肺主氣司呼吸", "肺主宣發肅降、通調水道"], "answer": 3, "explanation": "肺氣宣發肅降推動水液運行與下輸膀胱，位置最高故稱水之上源。"}, {"id": "q018", "topic": "藏象", "stem": "胃的生理特性是：", "options": ["主升為順", "以通降為和", "體陰用陽", "喜燥惡濕"], "answer": 1, "explanation": "胃氣主降，降則和、降則通；脾喜燥惡濕、以升為順；體陰用陽屬肝。"}, {"id": "q019", "topic": "氣血津液", "stem": "根於腎、以三焦為通道流行全身的是：", "options": ["衛氣", "元氣", "宗氣", "營氣"], "answer": 1, "explanation": "元氣由腎中先天之精化生，經三焦通道流行全身，為人體生命活動原動力。"}, {"id": "q020", "topic": "氣血津液", "stem": "行於脈外、功能護表御邪的氣是：", "options": ["營氣", "衛氣", "宗氣", "元氣"], "answer": 1, "explanation": "衛氣慓悍滑利行脈外，溫分肉、肥腠理、司開闔、御外邪；營氣行脈中主營養。"}, {"id": "q021", "topic": "氣血津液", "stem": "「奪血者無汗，汗家不可放血」的理論依據是：", "options": ["血汗同源", "氣能攝血", "津能載氣", "氣能生血"], "answer": 0, "explanation": "血與津液同源互化，汗為津液所化，失血者發汗、多汗者動血皆重傷其陰液。"}, {"id": "q022", "topic": "氣血津液", "stem": "瘀血致病的特點，下列何者錯誤？", "options": ["腫塊固定不移", "疼痛游走不定", "舌質紫暗或有瘀斑", "痛有定處、刺痛夜甚"], "answer": 1, "explanation": "遊走性疼痛屬風邪（行痹）；瘀血疼痛特點為固定、刺痛、夜甚。"}, {"id": "q023", "topic": "氣血津液", "stem": "「脾為生痰之源」的機理是：", "options": ["脾主統血失職", "脾氣不升反下陷", "脾陰不足生虛熱", "脾主運化水液失職，水濕停聚成痰"], "answer": 3, "explanation": "脾失健運則水液停滯，濕聚為飲、凝結為痰，故治痰當健脾燥濕以絕其源。"}, {"id": "q024", "topic": "氣血津液", "stem": "宗氣的功能是：", "options": ["營養全身、化生血液", "護表御邪、調節腠理", "走息道行呼吸、貫心脈行氣血", "推動生長發育"], "answer": 2, "explanation": "宗氣積於胸中氣海，出喉咙司呼吸、貫心脈行氣血、並資先天元氣。"}, {"id": "q025", "topic": "經絡", "stem": "十二經脈氣血流注的起始經是：", "options": ["任脈", "手陽明大腸經", "足厥陰肝經", "手太陰肺經"], "answer": 3, "explanation": "流注起於手太陰肺經，傳足厥陰肝經後復注肺中，如環無端。"}, {"id": "q026", "topic": "經絡", "stem": "「陰脈之海」是指：", "options": ["沖脈", "帶脈", "督脈", "任脈"], "answer": 3, "explanation": "任脈行於身前正中线，總任諸陰經，故稱陰脈之海；督脈為陽脈之海。"}, {"id": "q027", "topic": "經絡", "stem": "十二經脈在四肢的分布規律，正確的是：", "options": ["陰經行內側，陽經行外側", "陰陽經皆行前方", "太陰在前、厥陰在中、少陰在後（內踝上八寸以下）", "陽經行內側，陰經行外側"], "answer": 0, "explanation": "陰經行於四肢內側、陽經行於外側；內踝上八寸以下，厥陰在前、太陰在中。"}, {"id": "q028", "topic": "經絡", "stem": "奇經八脈中「約束縱脈」的是：", "options": ["陰蹺脈", "沖脈", "陽維脈", "帶脈"], "answer": 3, "explanation": "帶脈環腰一周，約束縱行諸經脈，故稱「帶脈為病，諸脈皆緩」。"}, {"id": "q029", "topic": "經絡", "stem": "十二經別主要的循行特點是：", "options": ["離、合、入、出", "如環無端首尾相接", "只行於體表", "屬臟絡腑不離本經"], "answer": 0, "explanation": "經別從本經分出（離）、入胸腹臟腑（入）、出頸項（出）、與表裡經相合（合）。"}, {"id": "q030", "topic": "病因", "stem": "「百病之長」、常為外感病先導的邪氣是：", "options": ["風邪", "濕邪", "燥邪", "寒邪"], "answer": 0, "explanation": "風為六淫之首，善行數變、輕揚開泄，寒濕燥熱常依附於風侵犯人體。"}, {"id": "q031", "topic": "病因", "stem": "「寒性收引」在臨床上最能表現為：", "options": ["頭身睏重", "筋脈攣急、屈伸不利", "口渴喜飲", "痰多黏稠"], "answer": 1, "explanation": "收引即收縮牽引，寒客筋脈經絡則收縮攣急、疼痛拘緊。"}, {"id": "q032", "topic": "病因", "stem": "「濕性黏膩」的臨床表現是：", "options": ["高熱大汗大渴", "疼痛如刺、入夜尤甚", "大便黏滯不暢、舌苔膩", "病位遊走不定"], "answer": 2, "explanation": "黏膩指症状黏著滯重（便黏、苔膩）及病程纏綿難愈。"}, {"id": "q033", "topic": "病因", "stem": "「怒則氣上」說明七情致病的特點是：", "options": ["必由口鼻而入", "直接損傷臟腑", "首先影響氣機", "多傷心腎"], "answer": 2, "explanation": "七情內傷先擾氣機：怒則氣上、喜則氣緩、思則氣結、恐則氣下等，進而損傷臟腑。"}, {"id": "q034", "topic": "病因", "stem": "暑邪致病與他邪不同的特點是：", "options": ["屬陽邪", "可與濕相兼", "只在夏季發病", "易傷津液"], "answer": 2, "explanation": "暑為夏季主氣，純屬外感且季節性最強；傷津、陽邪、挾濕他邪亦可見。"}, {"id": "q035", "topic": "病因", "stem": "燥邪致病最易損傷：", "options": ["肝", "心", "肺", "腎"], "answer": 2, "explanation": "肺為嬌臟、喜潤惡燥，開竅於鼻外合皮毛，燥邪自口鼻而入最易傷肺。"}, {"id": "q036", "topic": "治則治法", "stem": "「寒因寒用」屬於：", "options": ["反治", "治本", "因勢利導", "正治"], "answer": 0, "explanation": "以寒治寒順從假象（真熱假寒），屬反治（從治），實為熱者寒之的變格。"}, {"id": "q037", "topic": "治則治法", "stem": "「塞因塞用」適用於：", "options": ["寒凝腹痛", "熱結旁流", "真實便秘", "真虛膨閉（脾虛腹滿）"], "answer": 3, "explanation": "以補開塞，用於至虛之證反見閉塞假象者，如脾虚腹滿當健脾以除脹。"}, {"id": "q038", "topic": "治則治法", "stem": "「急則治其標」適用於下列何種情況？", "options": ["大出血危急之候", "陰虛發熱", "食積腹脹", "慢性病調理"], "answer": 0, "explanation": "標本俱急或標證危急時（大出血、劇痛、二便不通），先救其急以治標。"}, {"id": "q039", "topic": "治則治法", "stem": "八法中「消法」的適應範圍是：", "options": ["陽虛寒證", "表證", "食積、痞塊、痰核等有形之積", "實熱燥屎內結"], "answer": 2, "explanation": "消法漸消漸散，適於氣、血、痰、食、水、蟲等漸積有形之證；燥屎內結當攻下。"}, {"id": "q040", "topic": "治則治法", "stem": "「用熱遠熱，用寒遠寒」體現的治則是：", "options": ["治病求本", "因時制宜", "因地制宜", "因人制宜"], "answer": 1, "explanation": "暑天慎用熱藥、寒冬慎用寒藥，屬三因制宜中的因時制宜。"}]}, "meta": {"app": "中醫自學", "generated": "2026-09-19", "counts": {"theory": 80, "herbs": 100, "formulas": 60, "meridians": 14, "points": 128, "quiz": 40}}}
+    </script>
+    <script>
+      const D = window.TCM_DATA;
+      const LS = "tcm.";
+      function get(k) {
+        try {
+          return JSON.parse(localStorage.getItem(LS + k));
+        } catch {
+          return null;
+        }
+      }
+      function set(k, v) {
+        localStorage.setItem(LS + k, JSON.stringify(v));
+      }
+
+      // Tab switching
+      document.querySelectorAll(".tab-bar button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-bar button")
+            .forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll(".page")
+            .forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          document
+            .getElementById("page-" + btn.dataset.tab)
+            .classList.add("active");
+        });
+      });
+
+      // === MODULE 1: 學習路徑 ===
+      function renderPath() {
+        const el = document.getElementById("path-content");
+        const prog = get("path_progress") || {};
+        let html = "";
+        D.curriculum.stages.forEach((s) => {
+          const done = prog[s.id] || [];
+          const pct = s.tasks.length
+            ? Math.round((done.length / s.tasks.length) * 100)
+            : 0;
+          html += `<div class="stage-card card">
+<h2>${s.title}</h2>
+<p class="text-muted text-sm">${s.goal}</p>
+<p class="text-sm" style="margin:4px 0">${s.duration}</p>
+<div class="progress-bar"><div style="width:${pct}%"></div></div>
+<p class="text-sm text-muted">${done.length}/${s.tasks.length} 完成</p>
+<div class="mt">`;
+          s.tasks.forEach((t, i) => {
+            const checked = done.includes(i) ? "checked" : "";
+            html += `<label style="display:block;margin:4px 0;cursor:pointer"><input type="checkbox" ${checked} data-stage="${s.id}" data-idx="${i}"> ${t.label}</label>`;
+          });
+          html += `</div><p class="text-sm mt" style="color:var(--green)">里程碑：${s.milestone}</p></div>`;
+        });
+        el.innerHTML = html;
+        el.addEventListener("change", (e) => {
+          if (e.target.matches("input[type=checkbox]")) {
+            const sid = e.target.dataset.stage,
+              idx = parseInt(e.target.dataset.idx);
+            const p = get("path_progress") || {};
+            if (!p[sid]) p[sid] = [];
+            if (e.target.checked) {
+              if (!p[sid].includes(idx)) p[sid].push(idx);
+            } else {
+              p[sid] = p[sid].filter((x) => x !== idx);
+            }
+            set("path_progress", p);
+            renderPath();
+          }
+        });
+      }
+
+      // === MODULE 2: 卡片記憶 ===
+      const cardTypes = [
+        {
+          key: "theory",
+          label: "基礎理論",
+          items: () =>
+            D.theory.concepts.map((c) => ({
+              id: c.id,
+              front: c.term,
+              back: `<dt>定義</dt><dd>${c.definition}</dd><dt>要點</dt><dd>${c.keyPoints.join("；")}</dd>`,
+              cat: c.category,
+            })),
+        },
+        {
+          key: "herbs",
+          label: "中藥",
+          items: () =>
+            D.herbs.herbs.map((h) => ({
+              id: h.id,
+              front: h.name,
+              back: `<dt>性味歸經</dt><dd>${h.nature}，${h.flavor}，入${h.channels.join("、")}</dd><dt>功效</dt><dd>${h.efficacy}</dd><dt>主治</dt><dd>${h.indications}</dd><dt>用量</dt><dd>${h.dose}</dd><dt>注意</dt><dd>${h.caution || "無"}</dd><dt>口訣</dt><dd>${h.memo}</dd>`,
+              cat: h.category,
+            })),
+        },
+        {
+          key: "formulas",
+          label: "方劑",
+          items: () =>
+            D.formulas.formulas.map((f) => ({
+              id: f.id,
+              front: f.name,
+              back: `<dt>組成</dt><dd>${f.composition.map((c) => c.herb + "(" + c.role + ")").join("、")}</dd><dt>功用</dt><dd>${f.function}</dd><dt>主治</dt><dd>${f.indications}</dd><dt>方解</dt><dd>${f.analysis}</dd><dt>方歌</dt><dd>${f.song}</dd>`,
+              cat: f.category,
+            })),
+        },
+        {
+          key: "acupoints",
+          label: "經絡穴位",
+          items: () =>
+            D.acupoints.points.map((p) => {
+              const m = D.acupoints.meridians.find((x) => x.id === p.meridian);
+              return {
+                id: p.id,
+                front: p.name + " (" + (m ? m.short : "") + ")",
+                back: `<dt>歸經</dt><dd>${m ? m.name : p.meridian}</dd><dt>定位</dt><dd>${p.location}</dd><dt>主治</dt><dd>${p.indications}</dd><dt>刺法</dt><dd>${p.method}</dd>${p.special ? "<dt>特異</dt><dd>" + p.special + "</dd>" : ""}`,
+                cat: m ? m.short : "其他",
+              };
+            }),
+        },
+      ];
+      let cardState = {
+        typeIdx: 0,
+        cats: [],
+        catFilter: "all",
+        deck: [],
+        idx: 0,
+        flipped: false,
+        known: 0,
+        unknown: 0,
+      };
+
+      function renderCardControls() {
+        const el = document.getElementById("card-controls");
+        let html = '<div class="flex flex-wrap mb">';
+        cardTypes.forEach((t, i) => {
+          html += `<button class="btn btn-sm ${i === cardState.typeIdx ? "" : "btn-outline"}" data-ct="${i}">${t.label}</button>`;
+        });
+        html += "</div>";
+        const allCats = [
+          ...new Set(cardTypes[cardState.typeIdx].items().map((x) => x.cat)),
+        ];
+        html += '<div class="flex flex-wrap mb">';
+        html += `<button class="btn btn-sm ${cardState.catFilter === "all" ? "" : "btn-outline"}" data-cf="all">全部</button>`;
+        allCats.forEach((c) => {
+          html += `<button class="btn btn-sm ${cardState.catFilter === c ? "" : "btn-outline"}" data-cf="${c}">${c}</button>`;
+        });
+        html += "</div>";
+        el.innerHTML = html;
+        el.querySelectorAll("[data-ct]").forEach((b) =>
+          b.addEventListener("click", () => {
+            cardState.typeIdx = parseInt(b.dataset.ct);
+            cardState.catFilter = "all";
+            initDeck();
+            renderCardControls();
+          }),
+        );
+        el.querySelectorAll("[data-cf]").forEach((b) =>
+          b.addEventListener("click", () => {
+            cardState.catFilter = b.dataset.cf;
+            initDeck();
+            renderCardControls();
+          }),
+        );
+      }
+      function initDeck() {
+        let items = cardTypes[cardState.typeIdx].items();
+        if (cardState.catFilter !== "all")
+          items = items.filter((x) => x.cat === cardState.catFilter);
+        // shuffle
+        const seed =
+          get("deck_seed_" + cardState.typeIdx + "_" + cardState.catFilter) ||
+          [];
+        if (!seed.length) {
+          for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+          }
+          set("deck_seed_" + cardState.typeIdx + "_" + cardState.catFilter, 1);
+        }
+        cardState.deck = items;
+        cardState.idx = 0;
+        cardState.flipped = false;
+        cardState.known = 0;
+        cardState.unknown = 0;
+      }
+      function renderCard() {
+        const el = document.getElementById("card-area");
+        if (!cardState.deck.length) {
+          el.innerHTML = '<p class="text-muted">無資料</p>';
+          return;
+        }
+        if (cardState.idx >= cardState.deck.length) {
+          el.innerHTML = `<div class="card text-center"><h2>本組完成</h2><p class="mt">記得：${cardState.known} 不記得：${cardState.unknown}</p><button class="btn mt" id="card-restart">重新開始</button></div>`;
+          document.getElementById("card-restart").onclick = () => {
+            initDeck();
+            renderCard();
+          };
+          return;
+        }
+        const c = cardState.deck[cardState.idx];
+        const progress = `${cardState.idx + 1}/${cardState.deck.length}`;
+        let html = `<p class="text-muted text-sm text-center mb">${progress}</p>`;
+        html += `<div class="flashcard" id="fc"><div class="front">${c.front}</div>`;
+        if (cardState.flipped) html += `<div class="back">${c.back}</div>`;
+        html += `</div>`;
+        if (cardState.flipped) {
+          html += `<div class="nav-controls"><button class="btn btn-outline" id="fc-no">不記得</button><button class="btn btn-green" id="fc-yes">記得</button></div>`;
+        } else {
+          html += `<div class="nav-controls"><button class="btn btn-outline" id="fc-flip">翻面</button><button class="btn" id="fc-next">下一張 →</button></div>`;
+        }
+        el.innerHTML = html;
+        const fc = document.getElementById("fc");
+        if (!cardState.flipped) {
+          document.getElementById("fc-flip").onclick = () => {
+            cardState.flipped = true;
+            renderCard();
+          };
+          document.getElementById("fc-next").onclick = () => {
+            cardState.idx++;
+            cardState.flipped = false;
+            renderCard();
+          };
+          fc.onclick = () => {
+            cardState.flipped = true;
+            renderCard();
+          };
+        } else {
+          document.getElementById("fc-no").onclick = () => {
+            cardState.unknown++;
+            cardState.idx++;
+            cardState.flipped = false;
+            renderCard();
+          };
+          document.getElementById("fc-yes").onclick = () => {
+            cardState.known++;
+            cardState.idx++;
+            cardState.flipped = false;
+            renderCard();
+          };
+        }
+      }
+
+      // === MODULE 3: 查詢工具書 ===
+      function renderRef() {
+        const el = document.getElementById("ref-content");
+        el.innerHTML = `<input type="text" id="ref-search" placeholder="搜尋藥名、方名、穴名、功效...">
+<div class="flex flex-wrap mb"><button class="btn btn-sm ref-filter active-f" data-type="all">全部</button><button class="btn btn-sm btn-outline ref-filter" data-type="theory">理論</button><button class="btn btn-sm btn-outline ref-filter" data-type="herbs">中藥</button><button class="btn btn-sm btn-outline ref-filter" data-type="formulas">方劑</button><button class="btn btn-sm btn-outline ref-filter" data-type="acupoints">穴位</button></div>
+<div class="search-results" id="ref-results"></div>`;
+        const searchInput = document.getElementById("ref-search");
+        const results = document.getElementById("ref-results");
+        let filterType = "all";
+        el.querySelectorAll(".ref-filter").forEach((b) =>
+          b.addEventListener("click", () => {
+            filterType = b.dataset.type;
+            el.querySelectorAll(".ref-filter").forEach((x) => {
+              x.classList.remove("active-f");
+              x.classList.add("btn-outline");
+            });
+            b.classList.add("active-f");
+            b.classList.remove("btn-outline");
+            doSearch();
+          }),
+        );
+        searchInput.addEventListener("input", doSearch);
+        function doSearch() {
+          const q = searchInput.value.trim().toLowerCase();
+          let items = [];
+          if (filterType === "all" || filterType === "theory") {
+            D.theory.concepts.forEach((c) => {
+              if (
+                !q ||
+                c.term.includes(q) ||
+                c.definition.includes(q) ||
+                c.category.includes(q)
+              )
+                items.push({
+                  type: "theory",
+                  name: c.term,
+                  cat: c.category,
+                  desc: c.definition,
+                });
+            });
+          }
+          if (filterType === "all" || filterType === "herbs") {
+            D.herbs.herbs.forEach((h) => {
+              if (
+                !q ||
+                h.name.includes(q) ||
+                h.efficacy.includes(q) ||
+                h.indications.includes(q) ||
+                h.category.includes(q)
+              )
+                items.push({
+                  type: "herb",
+                  name: h.name,
+                  cat: h.category,
+                  desc: h.efficacy,
+                });
+            });
+          }
+          if (filterType === "all" || filterType === "formulas") {
+            D.formulas.formulas.forEach((f) => {
+              if (
+                !q ||
+                f.name.includes(q) ||
+                f.function.includes(q) ||
+                f.indications.includes(q) ||
+                f.category.includes(q)
+              )
+                items.push({
+                  type: "formula",
+                  name: f.name,
+                  cat: f.category,
+                  desc: f.function,
+                });
+            });
+          }
+          if (filterType === "all" || filterType === "acupoints") {
+            D.acupoints.points.forEach((p) => {
+              const m = D.acupoints.meridians.find((x) => x.id === p.meridian);
+              const mname = m ? m.name : "";
+              if (
+                !q ||
+                p.name.includes(q) ||
+                p.indications.includes(q) ||
+                mname.includes(q)
+              )
+                items.push({
+                  type: "point",
+                  name: p.name,
+                  cat: mname,
+                  desc: p.indications,
+                });
+            });
+          }
+          if (!q) {
+            results.innerHTML = `<p class="text-muted" style="text-align:center;padding:40px 0">輸入關鍵字搜尋，或点击上方分類篩選</p>`;
+            return;
+          }
+          if (items.length > 200) items = items.slice(0, 200);
+          let html = `<p class="text-sm text-muted mb">${items.length} 條結果</p>`;
+          items.forEach((it) => {
+            html += `<div class="card"><strong>${it.name}</strong> <span class="badge">${it.cat}</span><p class="text-sm text-muted">${it.desc}</p></div>`;
+          });
+          results.innerHTML = html;
+        }
+        doSearch();
+      }
+
+      // === MODULE 4: 測驗考試 ===
+      function renderQuizSetup() {
+        const el = document.getElementById("quiz-content");
+        el.innerHTML = `<div class="card"><h3>選擇範圍</h3>
+<select id="qz-scope">
+<option value="all">全部題目（手動+自動）</option>
+<option value="manual">手動理論題</option>
+<option value="herbs">自動生成：中藥</option>
+<option value="formulas">自動生成：方劑</option>
+<option value="acupoints">自動生成：穴位</option>
+<option value="theory">自動生成：理論</option>
+</select>
+<label class="text-sm text-muted">題數</label>
+<select id="qz-count"><option value="10">10</option><option value="20">20</option><option value="30">30</option></select>
+<button class="btn mt" id="qz-start">開始測驗</button></div>`;
+        document.getElementById("qz-start").onclick = () => {
+          const scope = document.getElementById("qz-scope").value;
+          const count = parseInt(document.getElementById("qz-count").value);
+          startQuiz(scope, count);
+        };
+      }
+
+      function generateAutoQuestions(scope) {
+        let qs = [];
+        if (scope === "all" || scope === "herbs") {
+          D.herbs.herbs.forEach((h) => {
+            const others = D.herbs.herbs.filter((x) => x.id !== h.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_h_" + h.id,
+              stem: `${h.name} 的功效是？`,
+              options: [
+                h.efficacy,
+                wrong.efficacy,
+                D.herbs.herbs[Math.floor(Math.random() * others.length)]
+                  .efficacy,
+                D.herbs.herbs[Math.floor(Math.random() * others.length)]
+                  .efficacy,
+              ].slice(0, 4),
+              answer: 0,
+              explanation: `${h.name}：${h.efficacy}`,
+              _correct: h.efficacy,
+            });
+          });
+        }
+        if (scope === "all" || scope === "formulas") {
+          D.formulas.formulas.forEach((f) => {
+            const others = D.formulas.formulas.filter((x) => x.id !== f.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_f_" + f.id,
+              stem: `${f.name} 的功用是？`,
+              options: [f.function, wrong.function],
+              answer: 0,
+              _correct: f.function,
+            });
+            // need 4 options
+            const pool = [
+              f.function,
+              wrong.function,
+              D.formulas.formulas[
+                Math.floor(Math.random() * D.formulas.formulas.length)
+              ].function,
+              D.formulas.formulas[
+                Math.floor(Math.random() * D.formulas.formulas.length)
+              ].function,
+            ];
+            qs[qs.length - 1].options = pool.slice(0, 4);
+          });
+        }
+        if (scope === "all" || scope === "acupoints") {
+          D.acupoints.points.forEach((p) => {
+            const others = D.acupoints.points.filter((x) => x.id !== p.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_a_" + p.id,
+              stem: `${p.name} 的定位是？`,
+              options: [
+                p.location,
+                wrong.location,
+                D.acupoints.points[
+                  Math.floor(Math.random() * D.acupoints.points.length)
+                ].location,
+                D.acupoints.points[
+                  Math.floor(Math.random() * D.acupoints.points.length)
+                ].location,
+              ].slice(0, 4),
+              answer: 0,
+              _correct: p.location,
+            });
+          });
+        }
+        if (scope === "all" || scope === "theory") {
+          D.theory.concepts.forEach((c) => {
+            const others = D.theory.concepts.filter((x) => x.id !== c.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_t_" + c.id,
+              stem: `${c.term} 的定義是？`,
+              options: [
+                c.definition,
+                wrong.definition,
+                D.theory.concepts[
+                  Math.floor(Math.random() * D.theory.concepts.length)
+                ].definition,
+                D.theory.concepts[
+                  Math.floor(Math.random() * D.theory.concepts.length)
+                ].definition,
+              ].slice(0, 4),
+              answer: 0,
+              _correct: c.definition,
+            });
+          });
+        }
+        return qs;
+      }
+
+      function buildQuizSet(scope, count) {
+        let pool = [];
+        if (scope === "all" || scope === "manual")
+          pool = pool.concat(
+            D.quiz.questions.map((q) => ({ ...q, _source: "manual" })),
+          );
+        if (
+          scope === "all" ||
+          scope === "herbs" ||
+          scope === "formulas" ||
+          scope === "acupoints" ||
+          scope === "theory"
+        )
+          pool = pool.concat(
+            generateAutoQuestions(scope === "manual" ? "none" : scope),
+          );
+        // shuffle
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        return pool.slice(0, count);
+      }
+
+      function startQuiz(scope, count) {
+        const questions = buildQuizSet(scope, count);
+        let idx = 0,
+          score = 0,
+          wrongList = [];
+        function render() {
+          const el = document.getElementById("quiz-content");
+          if (idx >= questions.length) {
+            let pct = questions.length
+              ? Math.round((score / questions.length) * 100)
+              : 0;
+            let html = `<div class="card text-center"><h2>測驗結束</h2><p style="font-size:32px;color:${pct >= 60 ? "var(--green)" : "var(--accent)"}">${pct}%</p><p>${score}/${questions.length} 正確</p>`;
+            if (wrongList.length) {
+              html += '<h3 class="mt">錯題回顧</h3>';
+              wrongList.forEach((w) => {
+                html += `<div class="card"><p class="text-sm"><strong>${w.stem}</strong></p><p class="text-sm" style="color:var(--green)">正確：${w.options[w.answer]}</p><p class="text-sm" style="color:var(--accent)">你選：${w.options[w.selected]}</p></div>`;
+              });
+            }
+            html += '<button class="btn mt" id="qz-back">返回</button></div>';
+            el.innerHTML = html;
+            document.getElementById("qz-back").onclick = renderQuizSetup;
+            return;
+          }
+          const q = questions[idx];
+          // shuffle options while tracking correct
+          let optIndices = [0, 1, 2, 3];
+          for (let i = optIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [optIndices[i], optIndices[j]] = [optIndices[j], optIndices[i]];
+          }
+          const shuffled = optIndices.map((i) => q.options[i]);
+          const correctIdx = optIndices.indexOf(q.answer);
+
+          let html = `<div class="card"><p class="text-sm text-muted">${idx + 1}/${questions.length}</p><p class="mb" style="font-size:16px">${q.stem}</p>`;
+          shuffled.forEach((opt, i) => {
+            html += `<button class="quiz-option" data-oi="${i}" data-ci="${correctIdx}">${"ABCD"[i]}. ${opt}</button>`;
+          });
+          html += `<div id="qz-explain" style="display:none" class="mt"></div><div id="qz-nav" style="display:none" class="mt text-center"><button class="btn" id="qz-next">下一題 →</button></div></div>`;
+          el.innerHTML = html;
+          el.querySelectorAll(".quiz-option").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const sel = parseInt(btn.dataset.oi);
+              const ci = parseInt(btn.dataset.ci);
+              el.querySelectorAll(".quiz-option").forEach((b, i) => {
+                b.disabled = true;
+                if (i === ci) b.classList.add("correct");
+                if (i === sel && sel !== ci) b.classList.add("wrong");
+              });
+              if (sel === ci) score++;
+              else wrongList.push({ ...q, selected: sel });
+              const exp = document.getElementById("qz-explain");
+              if (q.explanation)
+                exp.innerHTML = `<p class="text-sm text-muted">解析：${q.explanation}</p>`;
+              exp.style.display = "block";
+              document.getElementById("qz-nav").style.display = "block";
+              document.getElementById("qz-next").onclick = () => {
+                idx++;
+                render();
+              };
+            });
+          });
+        }
+        render();
+      }
+
+      // Init
+      renderPath();
+      renderCardControls();
+      initDeck();
+      renderCard();
+      renderRef();
+      renderQuizSetup();
+    </script>
+  </body>
+</html>
