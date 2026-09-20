@@ -1,0 +1,1664 @@
+{
+  "herbs": [
+    {
+      "id": "h001",
+      "name": "麻黃",
+      "category": "解表藥",
+      "nature": "溫",
+      "flavor": "辛、微苦",
+      "channels": [
+        "肺",
+        "膀胱"
+      ],
+      "dose": "2–10g",
+      "efficacy": "發汗解表，宣肺平喘，利水消腫",
+      "indications": "風寒表實證，咳嗽氣喘，風水水腫",
+      "caution": "體虛自汗、腎上腺素類藥物使用者忌用",
+      "memo": "發汗解表第一藥，宣肺平喘要藥"
+    },
+    {
+      "id": "h002",
+      "name": "桂枝",
+      "category": "解表藥",
+      "nature": "溫",
+      "flavor": "辛、甘",
+      "channels": [
+        "心",
+        "肺",
+        "膀胱"
+      ],
+      "dose": "3–10g",
+      "efficacy": "發汗解肌，溫通經脈，助陽化氣",
+      "indications": "風寒表虛或表實證，寒凝血滯諸痛證，痰飲、蓄水證",
+      "caution": "溫病熱盛、陰虛火旺、血熱妄行者忌用",
+      "memo": "解肌發表，溫經通脈"
+    },
+    {
+      "id": "h003",
+      "name": "紫蘇葉",
+      "category": "解表藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "肺",
+        "脾"
+      ],
+      "dose": "5–10g",
+      "efficacy": "解表散寒，行氣寬中，安胎",
+      "indications": "風寒感冒，脾胃氣滯，妊娠嘔吐，魚蝦中毒",
+      "caution": "氣虛及陰虛者慎服",
+      "memo": "解表行氣兼安胎"
+    },
+    {
+      "id": "h004",
+      "name": "生薑",
+      "category": "解表藥",
+      "nature": "微溫",
+      "flavor": "辛",
+      "channels": [
+        "肺",
+        "脾",
+        "胃"
+      ],
+      "dose": "3–10g",
+      "efficacy": "發汗解表，溫中止嘔，溫肺止咳，解毒",
+      "indications": "風寒感冒，胃寒嘔吐，肺寒咳嗽，解魚蟹及生半夏生南星毒",
+      "caution": "陰虛內熱、熱盛者忌服",
+      "memo": "嘔家聖藥"
+    },
+    {
+      "id": "h005",
+      "name": "荊芥",
+      "category": "解表藥",
+      "nature": "微溫",
+      "flavor": "辛",
+      "channels": [
+        "肺",
+        "肝"
+      ],
+      "dose": "5–10g",
+      "efficacy": "祛風解表，透疹消瘡，止血",
+      "indications": "外感表證（風寒風熱皆可），麻疹不透，風疹瘙癢，吐衄下血",
+      "caution": "表虛自汗、陰虛頭暈者忌用",
+      "memo": "風藥之潤品，本經治風要藥"
+    },
+    {
+      "id": "h006",
+      "name": "防風",
+      "category": "解表藥",
+      "nature": "微溫",
+      "flavor": "辛、甘",
+      "channels": [
+        "膀胱",
+        "肝",
+        "脾"
+      ],
+      "dose": "5–10g",
+      "efficacy": "祛風解表，勝濕止痛，止痙",
+      "indications": "外感表證，風寒濕痹，破傷風，肝風內動",
+      "caution": "陰虛火旺、血虛發暈者慎用",
+      "memo": "治風通用之藥，風藥之潤剂"
+    },
+    {
+      "id": "h007",
+      "name": "薄荷",
+      "category": "解表藥",
+      "nature": "涼",
+      "flavor": "辛",
+      "channels": [
+        "肺",
+        "肝"
+      ],
+      "dose": "3–6g（後下）",
+      "efficacy": "疏散風熱，清利頭目，利咽透疹，疏肝行氣",
+      "indications": "風熱感冒，風溫初起，頭目不清，咽喉腫痛，麻疹不透，肝鬱氣滯",
+      "caution": "氣虛多汗者不宜單用",
+      "memo": "疏散風熱要藥，清凉利咽"
+    },
+    {
+      "id": "h008",
+      "name": "牛蒡子",
+      "category": "解表藥",
+      "nature": "寒",
+      "flavor": "辛、苦",
+      "channels": [
+        "肺",
+        "胃"
+      ],
+      "dose": "6–12g",
+      "efficacy": "疏散風熱，宣肺透疹，清熱利咽，解毒消腫",
+      "indications": "風熱感冒，咽喉腫痛，咳痰不利，麻疹不透，風疹瘙癢",
+      "caution": "脾虛便溏者忌用",
+      "memo": "利咽消腫要藥，性滑利"
+    },
+    {
+      "id": "h009",
+      "name": "桑葉",
+      "category": "解表藥",
+      "nature": "寒",
+      "flavor": "苦、甘",
+      "channels": [
+        "肺",
+        "肝"
+      ],
+      "dose": "5–15g",
+      "efficacy": "疏散風熱，清肺潤燥，平抑肝陽，清肝明目",
+      "indications": "風熱感冒或溫病初起，肺熱燥咳，肝陽上亢，目赤昏花",
+      "caution": "脾胃虛寒者不宜",
+      "memo": "清肺潤燥，平肝明目"
+    },
+    {
+      "id": "h010",
+      "name": "菊花",
+      "category": "解表藥",
+      "nature": "微寒",
+      "flavor": "辛、甘、苦",
+      "channels": [
+        "肺",
+        "肝"
+      ],
+      "dose": "5–15g",
+      "efficacy": "疏散風熱，平抑肝陽，清肝明目，清熱解毒",
+      "indications": "風熱感冒，肝陽上亢，目赤昏花，瘡瘍腫毒",
+      "caution": "氣虛胃寒者慎用",
+      "memo": "明目要藥，黃菊花解毒、白菊花平肝"
+    },
+    {
+      "id": "h011",
+      "name": "石膏",
+      "category": "清熱藥",
+      "nature": "大寒",
+      "flavor": "甘、辛",
+      "channels": [
+        "肺",
+        "胃"
+      ],
+      "dose": "15–60g（先煎）",
+      "efficacy": "清熱瀉火，除煩止渴，收濕斂瘡",
+      "indications": "氣分實熱證（高熱煩渴），肺熱喘咳，胃火牙痛",
+      "caution": "脾胃虛寒及陰虛發熱者忌服",
+      "memo": "清氣分實熱要藥"
+    },
+    {
+      "id": "h012",
+      "name": "知母",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "苦、甘",
+      "channels": [
+        "肺",
+        "胃",
+        "腎"
+      ],
+      "dose": "6–12g",
+      "efficacy": "清熱瀉火，滋陰潤燥",
+      "indications": "熱病煩渴，肺熱燥咳，骨蒸潮熱，內熱消渴",
+      "caution": "脾虛便溏者忌用",
+      "memo": "上清肺熱、中瀉胃火、下潤腎燥"
+    },
+    {
+      "id": "h013",
+      "name": "栀子",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "心",
+        "肺",
+        "三焦"
+      ],
+      "dose": "3–10g",
+      "efficacy": "瀉火除煩，清熱利濕，涼血解毒",
+      "indications": "熱病心烦，黃疸尿赤，血熱吐衄，目赤腫痛",
+      "caution": "脾虛便溏者忌服",
+      "memo": "瀉三焦火邪，導熱下行"
+    },
+    {
+      "id": "h014",
+      "name": "夏枯草",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "辛、苦",
+      "channels": [
+        "肝",
+        "膽"
+      ],
+      "dose": "10–15g",
+      "efficacy": "清肝瀉火，明目，散結消腫",
+      "indications": "肝火上炎之目赤腫痛，癭癰腫痛，乳痈",
+      "caution": "脾胃氣弱者慎用",
+      "memo": "清肝散結要藥，治癭瘤要藥"
+    },
+    {
+      "id": "h015",
+      "name": "黃芩",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "肺",
+        "膽",
+        "脾",
+        "大腸",
+        "小腸"
+      ],
+      "dose": "3–10g",
+      "efficacy": "清熱燥濕，瀉火解毒，止血，安胎",
+      "indications": "濕熱痞滿，肺熱咳嗽，壯熱煩渴，痈腫瘡瘍，胎熱不安",
+      "caution": "脾胃虛寒者忌用",
+      "memo": "清上焦濕熱要藥"
+    },
+    {
+      "id": "h016",
+      "name": "黃連",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "心",
+        "脾",
+        "胃",
+        "膽",
+        "大腸"
+      ],
+      "dose": "2–5g",
+      "efficacy": "清熱燥濕，瀉火解毒",
+      "indications": "濕熱痞滿，嘔吐吞酸，高熱神昏，心火亢盛，痈腫瘡瘍",
+      "caution": "脾胃虛寒、陰虛煩熱者忌用",
+      "memo": "清中焦濕熱要藥，瀉心火"
+    },
+    {
+      "id": "h017",
+      "name": "黃柏",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "腎",
+        "膀胱",
+        "大腸"
+      ],
+      "dose": "3–12g",
+      "efficacy": "清熱燥濕，瀉火除蒸，解毒療瘡",
+      "indications": "濕熱瀉痢，黃疸帶下，骨蒸勞熱，瘡瘍癰腫",
+      "caution": "脾胃虛寒者忌用",
+      "memo": "清下焦濕熱要藥"
+    },
+    {
+      "id": "h018",
+      "name": "金銀花",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "甘",
+      "channels": [
+        "肺",
+        "心",
+        "胃"
+      ],
+      "dose": "6–15g",
+      "efficacy": "清熱解毒，疏散風熱",
+      "indications": "癰腫瘡瘍，熱毒血痢，風熱感冒，溫病發熱",
+      "caution": "脾胃虛寒及氣虛瘡瘍不膿者忌用",
+      "memo": "瘡瘍要藥，清解血毒"
+    },
+    {
+      "id": "h019",
+      "name": "連翹",
+      "category": "清熱藥",
+      "nature": "微寒",
+      "flavor": "苦",
+      "channels": [
+        "肺",
+        "心",
+        "小腸"
+      ],
+      "dose": "6–15g",
+      "efficacy": "清熱解毒，消癰散結，疏散風熱",
+      "indications": "痈肿瘡瘍，癭瘤癰癬，風熱感冒，溫病初起",
+      "caution": "脾胃虛弱及膿已成者不宜",
+      "memo": "疮家聖藥，消癰散結"
+    },
+    {
+      "id": "h020",
+      "name": "板藍根",
+      "category": "清熱藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "心",
+        "胃"
+      ],
+      "dose": "15–30g",
+      "efficacy": "清熱解毒，涼血利咽",
+      "indications": "瘟毒發斑，喉嚨腫痛，痄腮，癰腫癬瘡",
+      "caution": "脾胃虛寒者忌用",
+      "memo": "利咽解毒要藥，治大头瘟"
+    },
+    {
+      "id": "h021",
+      "name": "大黃",
+      "category": "瀉下藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "脾",
+        "胃",
+        "大腸",
+        "肝",
+        "心包"
+      ],
+      "dose": "3–15g（後下）",
+      "efficacy": "瀉下攻積，清熱瀉火，涼血解毒，逐瘀通經",
+      "indications": "實熱積滯便秘，血熱吐衄，瘀血經閉，癰腫疔瘡",
+      "caution": "月經期、妊娠期、哺乳期及脾胃虛寒者忌用",
+      "memo": "將軍，下法要藥，生用後下攻下力強"
+    },
+    {
+      "id": "h022",
+      "name": "芒硝",
+      "category": "瀉下藥",
+      "nature": "寒",
+      "flavor": "鹹、苦",
+      "channels": [
+        "胃",
+        "大腸"
+      ],
+      "dose": "6–12g（沖服）",
+      "efficacy": "瀉下通便，潤燥軟堅，清熱消腫",
+      "indications": "實熱積聚，大便燥結，咽痛口瘡，目赤腫痛",
+      "caution": "孕婦及脾胃虛寒者忌用",
+      "memo": "軟堅潤燥，配合大黃"
+    },
+    {
+      "id": "h023",
+      "name": "火麻仁",
+      "category": "瀉下藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "脾",
+        "胃",
+        "大腸"
+      ],
+      "dose": "10–30g",
+      "efficacy": "潤腸通便",
+      "indications": "血虛津虧之腸燥便秘",
+      "caution": "脾虛便溏者不宜",
+      "memo": "潤下要藥，老人產後津枯便秘"
+    },
+    {
+      "id": "h024",
+      "name": "巴豆",
+      "category": "瀉下藥",
+      "nature": "熱；有大毒",
+      "flavor": "辛",
+      "channels": [
+        "胃",
+        "大腸"
+      ],
+      "dose": "0.1–0.3g，入丸散",
+      "efficacy": "峻下冷積，逐水退腫，祛痰利咽，蝕瘡",
+      "indications": "寒積便秘，腹脹暴急，喉風痰阻，瘡瘍成膿不破",
+      "caution": "孕婦及體弱者禁用；畏牽牛子",
+      "memo": "峻下冷積要藥，有大毒"
+    },
+    {
+      "id": "h025",
+      "name": "獨活",
+      "category": "祛風濕藥",
+      "nature": "微溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "腎",
+        "膀胱"
+      ],
+      "dose": "3–10g",
+      "efficacy": "祛風勝濕，通絡止痛",
+      "indications": "風寒濕痹，腰脊強痛，風頭腰痛",
+      "caution": "陰血虧虛者慎用",
+      "memo": "治腰以下風濕要藥"
+    },
+    {
+      "id": "h026",
+      "name": "威靈仙",
+      "category": "祛風濕藥",
+      "nature": "溫",
+      "flavor": "辛、鹹",
+      "channels": [
+        "膀胱"
+      ],
+      "dose": "6–10g",
+      "efficacy": "祛風濕，通絡止痛",
+      "indications": "風濕痹痛，肢節疼痛，屈伸不利",
+      "caution": "氣血虧虛者慎用",
+      "memo": "通行十二經脈，風濕痹痛要藥"
+    },
+    {
+      "id": "h027",
+      "name": "秦艽",
+      "category": "祛風濕藥",
+      "nature": "平",
+      "flavor": "辛、苦",
+      "channels": [
+        "胃",
+        "肝",
+        "膽"
+      ],
+      "dose": "3–10g",
+      "efficacy": "祛風濕，通絡止痛，退虛熱，清濕熱",
+      "indications": "風濕痹痛，筋攣攣急，骨蒸潮熱，小兒癆熱，黃疸",
+      "caution": "久痛虛寒者不宜",
+      "memo": "風藥中之潤藥，不燥不烈"
+    },
+    {
+      "id": "h028",
+      "name": "桑寄生",
+      "category": "祛風濕藥",
+      "nature": "平",
+      "flavor": "苦、甘",
+      "channels": [
+        "肝",
+        "腎"
+      ],
+      "dose": "9–15g",
+      "efficacy": "祛風濕，補肝腎，強筋骨，安胎",
+      "indications": "風濕痹痛，腰膝酸痛，筋骨無力，胎漏下血，胎動不安",
+      "caution": "無",
+      "memo": "祛風濕兼補肝腎，風濕痹證兼肝腎虛者宜"
+    },
+    {
+      "id": "h029",
+      "name": "廣藿香",
+      "category": "化濕藥",
+      "nature": "微溫",
+      "flavor": "辛",
+      "channels": [
+        "脾",
+        "胃",
+        "肺"
+      ],
+      "dose": "3–10g",
+      "efficacy": "藿香正氣，化濕醒脾，和中止嘔，解暑",
+      "indications": "濕阻中焦之胸脘痞悶，嘔吐，暑濕證",
+      "caution": "陰虛火旺者不宜",
+      "memo": "芳香化濕要藥，治濕溫初起"
+    },
+    {
+      "id": "h030",
+      "name": "厚朴",
+      "category": "化濕藥",
+      "nature": "溫",
+      "flavor": "苦、辛",
+      "channels": [
+        "脾",
+        "胃",
+        "肺",
+        "大腸"
+      ],
+      "dose": "3–10g",
+      "efficacy": "燥濕消積，下氣除滿",
+      "indications": "濕阻氣滯之脘腹脹滿，食積氣滯，痰飲喘咳",
+      "caution": "孕婦慎用",
+      "memo": "消脹除滿要藥"
+    },
+    {
+      "id": "h031",
+      "name": "蒼朮",
+      "category": "化濕藥",
+      "nature": "溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "脾",
+        "胃"
+      ],
+      "dose": "3–10g",
+      "efficacy": "燥濕健脾，祛風散寒，明目",
+      "indications": "濕阻中焦之脘腹痞滿，風寒濕痹，外感風寒，夜盲",
+      "caution": "陰虛內熱、氣虛多汗者慎服",
+      "memo": "燥濕健脾要藥"
+    },
+    {
+      "id": "h032",
+      "name": "砂仁",
+      "category": "化濕藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "脾",
+        "胃",
+        "腎"
+      ],
+      "dose": "3–6g（後下）",
+      "efficacy": "化濕行氣，溫脾開胃，安胎",
+      "indications": "濕阻氣滯之脘腹脹滿，嘔吐食瀉，妊娠惡阻",
+      "caution": "陰虛火旺者慎服",
+      "memo": "行氣醒脾，和胃安胎"
+    },
+    {
+      "id": "h033",
+      "name": "茯苓",
+      "category": "利水滲濕藥",
+      "nature": "平",
+      "flavor": "甘、淡",
+      "channels": [
+        "心",
+        "脾",
+        "腎"
+      ],
+      "dose": "10–15g",
+      "efficacy": "利水滲濕，健脾寧心安神",
+      "indications": "水腫，小便不利，脾虛食少，便溏泄瀉，驚悸失眠",
+      "caution": "虛寒精滑、虛寒遺尿者慎用",
+      "memo": "利水不傷正，健脾要藥"
+    },
+    {
+      "id": "h034",
+      "name": "薏苡仁",
+      "category": "利水滲濕藥",
+      "nature": "涼",
+      "flavor": "甘、淡",
+      "channels": [
+        "脾",
+        "胃",
+        "肺"
+      ],
+      "dose": "9–30g",
+      "efficacy": "利水滲濕，健脾止瀉，除痹，清熱排膿",
+      "indications": "水腫腳氣，小便不利，脾虛泄瀉，濕熱痹證，肺癰",
+      "caution": "孕婦慎用",
+      "memo": "健脾滲濕，清熱排膿"
+    },
+    {
+      "id": "h035",
+      "name": "澤瀉",
+      "category": "利水滲濕藥",
+      "nature": "寒",
+      "flavor": "甘、淡",
+      "channels": [
+        "腎",
+        "膀胱"
+      ],
+      "dose": "6–10g",
+      "efficacy": "利水滲濕，瀉熱，化濁降脂",
+      "indications": "小便不利，水腫瀉瀉，濕熱下注，淋濁",
+      "caution": "腎虛遺精、滑精無濕熱者忌用",
+      "memo": "瀉膀胱濕熱"
+    },
+    {
+      "id": "h036",
+      "name": "豬苓",
+      "category": "利水滲濕藥",
+      "nature": "微寒",
+      "flavor": "甘、淡",
+      "channels": [
+        "腎",
+        "膀胱"
+      ],
+      "dose": "6–10g",
+      "efficacy": "利水滲濕通淋",
+      "indications": "水腫，小便不利，瀉瀉，淋濁",
+      "caution": "腎虛氣虛之遺尿、小便不禁者忌用",
+      "memo": "利水力量較茯苓強"
+    },
+    {
+      "id": "h037",
+      "name": "車前子",
+      "category": "利水滲濕藥",
+      "nature": "微寒",
+      "flavor": "甘",
+      "channels": [
+        "腎",
+        "肺",
+        "肝",
+        "小腸"
+      ],
+      "dose": "9–15g（包煎）",
+      "efficacy": "利水通淋，渗濕止瀉，明目，祛痰",
+      "indications": "淋證，水腫，瀉瀉，目赤腫痛，痰熱咳嗽",
+      "caution": "內無濕熱、虛證遺精者不宜用",
+      "memo": "利水通淋，分清濁"
+    },
+    {
+      "id": "h038",
+      "name": "附子",
+      "category": "溫裡藥",
+      "nature": "大熱；有大毒",
+      "flavor": "辛、甘",
+      "channels": [
+        "心",
+        "腎",
+        "脾"
+      ],
+      "dose": "3–15g（先煎、久煎）",
+      "efficacy": "回陽救逆，補火助陽，散寒止痛",
+      "indications": "亡陽虛脫，陽虛證，寒痹",
+      "caution": "孕婦禁用；陰虛陽亢者禁用；半蔞貝白芨及白蘞反烏頭",
+      "memo": "回陽救逆第一品"
+    },
+    {
+      "id": "h039",
+      "name": "乾薑",
+      "category": "溫裡藥",
+      "nature": "熱",
+      "flavor": "辛",
+      "channels": [
+        "脾",
+        "胃",
+        "腎",
+        "心",
+        "肺"
+      ],
+      "dose": "3–10g",
+      "efficacy": "溫中散寒，回陽通脈，溫肺化飲",
+      "indications": "脾胃虛寒之腹痛嘔瀉，亡陽證，寒飲喘咳",
+      "caution": "陰虛有熱、血熱妄行者忌用",
+      "memo": "溫中散寒要藥，守而不走"
+    },
+    {
+      "id": "h040",
+      "name": "肉桂",
+      "category": "溫裡藥",
+      "nature": "大熱",
+      "flavor": "辛、甘",
+      "channels": [
+        "腎",
+        "脾",
+        "心",
+        "肝"
+      ],
+      "dose": "1–5g",
+      "efficacy": "補火助陽，引火歸元，散寒止痛，溫通經脈",
+      "indications": "陽虛證，陰寒內盛之冷痛，癰疽日久不斂，寒凝血滯經閉",
+      "caution": "孕婦慎用；陰盛有火、陰虛有熱者忌用",
+      "memo": "引火歸元要藥"
+    },
+    {
+      "id": "h041",
+      "name": "吳茱萸",
+      "category": "溫裡藥",
+      "nature": "熱；有小毒",
+      "flavor": "辛、苦",
+      "channels": [
+        "肝",
+        "脾",
+        "胃",
+        "腎"
+      ],
+      "dose": "2–5g",
+      "efficacy": "散寒止痛，降逆止嘔，助陽止瀉",
+      "indications": "寒凝疼痛，胃寒嘔吐，虛寒泄瀉",
+      "caution": "陰虛有熱者忌用",
+      "memo": "溫肝胃，降逆氣，治厥陰頭痛"
+    },
+    {
+      "id": "h042",
+      "name": "小茴香",
+      "category": "溫裡藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "肝",
+        "腎",
+        "脾",
+        "胃"
+      ],
+      "dose": "3–6g",
+      "efficacy": "散寒止痛，理氣和胃",
+      "indications": "寒疝腹痛，睾丸偏墜，經行腹痛，脘腹冷痛",
+      "caution": "陰虛火旺者慎用",
+      "memo": "暖肝散寒，治寒疝要藥"
+    },
+    {
+      "id": "h043",
+      "name": "陳皮",
+      "category": "理氣藥",
+      "nature": "溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "脾",
+        "肺"
+      ],
+      "dose": "3–10g",
+      "efficacy": "理氣健脾，燥濕化痰",
+      "indications": "脾虛氣滯之食少便溏，濕痰阻肺之咳嗽痰多",
+      "caution": "氣虛、陰虛燥咳及咳血者慎用",
+      "memo": "理氣健脾要藥，治痰要藥"
+    },
+    {
+      "id": "h044",
+      "name": "枳實",
+      "category": "理氣藥",
+      "nature": "微寒",
+      "flavor": "苦、辛、酸",
+      "channels": [
+        "脾",
+        "胃"
+      ],
+      "dose": "3–10g",
+      "efficacy": "破氣消積，化痰散痞",
+      "indications": "食積停滯，瀉痢不爽，胸脘痞悶，胃下垂",
+      "caution": "孕婦慎用",
+      "memo": "破氣力猛，枳殼力緩"
+    },
+    {
+      "id": "h045",
+      "name": "木香",
+      "category": "理氣藥",
+      "nature": "溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "脾",
+        "胃",
+        "大腸",
+        "膽",
+        "三焦"
+      ],
+      "dose": "3–9g",
+      "efficacy": "行氣止痛，調中消導",
+      "indications": "脾胃氣滯之脘腹胀痛，瀉痢後重",
+      "caution": "陰虛津虧者慎用",
+      "memo": "行氣止痛要藥，瀉痢後重用之"
+    },
+    {
+      "id": "h046",
+      "name": "香附",
+      "category": "理氣藥",
+      "nature": "平",
+      "flavor": "辛、微苦、微甘",
+      "channels": [
+        "肝",
+        "脾",
+        "三焦"
+      ],
+      "dose": "6–10g",
+      "efficacy": "疏肝解鬱，調經止痛，理氣寬中",
+      "indications": "肝鬱氣滯之脅肋脘腹疼痛，月經不調，經閉痛經",
+      "caution": "氣虛血虛者慎用",
+      "memo": "氣病之總司，婦科氣病要藥"
+    },
+    {
+      "id": "h047",
+      "name": "沉香",
+      "category": "理氣藥",
+      "nature": "微溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "脾",
+        "胃",
+        "腎"
+      ],
+      "dose": "1–3g（後下或磨汁服）",
+      "efficacy": "行氣止痛，溫中止嘔，納氣平喘",
+      "indications": "胸腹胀痛，嘔吐呃逆，氣逆喘息",
+      "caution": "陰虛火旺、氣虛下陷及孕妇慎用",
+      "memo": "納氣平喘，溫而不燥"
+    },
+    {
+      "id": "h048",
+      "name": "山楂",
+      "category": "消食藥",
+      "nature": "微溫",
+      "flavor": "酸、甘",
+      "channels": [
+        "脾",
+        "胃",
+        "肝"
+      ],
+      "dose": "9–12g",
+      "efficacy": "消食化積，行氣散瘀",
+      "indications": "肉食積滯，产后瘀阻腹痛，瀉痢腹痛",
+      "caution": "胃酸過多者慎用",
+      "memo": "消肉食油膩之積"
+    },
+    {
+      "id": "h049",
+      "name": "神麴",
+      "category": "消食藥",
+      "nature": "溫",
+      "flavor": "甘、辛",
+      "channels": [
+        "脾",
+        "胃"
+      ],
+      "dose": "6–15g",
+      "efficacy": "消食和胃",
+      "indications": "食積不化，脘腹脹滿，脾虛食少",
+      "caution": "脾胃無積滯及哺乳期慎用",
+      "memo": "消食化積兼解表"
+    },
+    {
+      "id": "h050",
+      "name": "麥芽",
+      "category": "消食藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "脾",
+        "胃",
+        "肝"
+      ],
+      "dose": "10–15g（回乳30–60g）",
+      "efficacy": "行氣消食，健脾開胃，回乳消脹",
+      "indications": "食積不消，乳汁積滯、乳房脹痛，妇女断乳",
+      "caution": "哺乳期無積滯者不宜",
+      "memo": "消米面薯蕩之積，回乳"
+    },
+    {
+      "id": "h051",
+      "name": "萊菔子",
+      "category": "消食藥",
+      "nature": "平",
+      "flavor": "辛、甘",
+      "channels": [
+        "脾",
+        "胃",
+        "肺"
+      ],
+      "dose": "6–10g",
+      "efficacy": "消食除脹，降氣化痰",
+      "indications": "食積氣滯之脹滿腹痛，咳嗽痰多",
+      "caution": "氣虛無積滯者慎服",
+      "memo": "消食化痰，降氣"
+    },
+    {
+      "id": "h052",
+      "name": "大薊",
+      "category": "止血藥",
+      "nature": "涼",
+      "flavor": "甘、苦",
+      "channels": [
+        "心",
+        "肝"
+      ],
+      "dose": "9–15g（鮮品30–60g）",
+      "efficacy": "涼血止血，散瘀解毒消癰",
+      "indications": "血熱妄行之吐血、咯血、尿血、崩漏，癰腫",
+      "caution": "無瘀滯者慎用",
+      "memo": "涼血止血兼散瘀"
+    },
+    {
+      "id": "h053",
+      "name": "小薊",
+      "category": "止血藥",
+      "nature": "涼",
+      "flavor": "甘、苦",
+      "channels": [
+        "心",
+        "肝"
+      ],
+      "dose": "9–15g（鮮品30–60g）",
+      "efficacy": "涼血止血，散瘀解毒消癰",
+      "indications": "血熱出血諸證，尤善治尿血、血淋",
+      "caution": "無瘀滯者慎用",
+      "memo": "治尿血血淋要藥"
+    },
+    {
+      "id": "h054",
+      "name": "白及",
+      "category": "止血藥",
+      "nature": "微寒",
+      "flavor": "苦、甘、澀",
+      "channels": [
+        "肺",
+        "胃",
+        "肝"
+      ],
+      "dose": "6–15g",
+      "efficacy": "收斂止血，消腫生肌",
+      "indications": "肺胃出血，外傷出血，燒烫伤，瘡瘍",
+      "caution": "外有風熱、内有實火者忌用",
+      "memo": "收斂止血要藥，治肺胃出血"
+    },
+    {
+      "id": "h055",
+      "name": "三七",
+      "category": "止血藥",
+      "nature": "溫",
+      "flavor": "甘、微苦",
+      "channels": [
+        "肝",
+        "胃"
+      ],
+      "dose": "3–10g；研粉1–3g沖服",
+      "efficacy": "化瘀止血，活血定痛",
+      "indications": "出血諸證，跌打損傷，瘀腫疼痛",
+      "caution": "孕婦慎用",
+      "memo": "止血不留瘀，傷科要藥"
+    },
+    {
+      "id": "h056",
+      "name": "仙鶴草",
+      "category": "止血藥",
+      "nature": "溫",
+      "flavor": "苦、澀",
+      "channels": [
+        "肝",
+        "脾"
+      ],
+      "dose": "6–12g（大劑30–60g）",
+      "efficacy": "收斂止血，補虛，殺蟲",
+      "indications": "出血諸證（寒熱虛實皆可），崩漏下血",
+      "caution": "無",
+      "memo": "止血範圍廣，寒熱虛實皆宜"
+    },
+    {
+      "id": "h057",
+      "name": "川芎",
+      "category": "活血祛瘀藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "肝",
+        "膽",
+        "心包"
+      ],
+      "dose": "3–10g",
+      "efficacy": "活血行氣，祛風止痛",
+      "indications": "血滯氣滯之經閉痛經，頭痛，風濕痹痛，胸脅刺痛",
+      "caution": "月經量多及孕婦慎用",
+      "memo": "血中之氣藥，治頭痛要藥"
+    },
+    {
+      "id": "h058",
+      "name": "延胡索",
+      "category": "活血祛瘀藥",
+      "nature": "溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "肝",
+        "脾"
+      ],
+      "dose": "3–10g",
+      "efficacy": "活血，行氣，止痛",
+      "indications": "氣血滯留之經閉痛經，胸痹心痛，皖腹疼痛，跌打損傷",
+      "caution": "孕婦慎用",
+      "memo": "專治氣血滯留諸痛"
+    },
+    {
+      "id": "h059",
+      "name": "丹參",
+      "category": "活血祛瘀藥",
+      "nature": "微寒",
+      "flavor": "苦",
+      "channels": [
+        "心",
+        "肝"
+      ],
+      "dose": "10–15g",
+      "efficacy": "活血祛瘀，通經止痛，清心除煩，涼血消癰",
+      "indications": "月經不調，胸痹心痛，脘腹脅痛，心烦不眠，癰腫疼痛",
+      "caution": "孕婦慎用",
+      "memo": "活血調經要藥，一味丹參功同四物"
+    },
+    {
+      "id": "h060",
+      "name": "益母草",
+      "category": "活血祛瘀藥",
+      "nature": "微寒",
+      "flavor": "苦、辛",
+      "channels": [
+        "肝",
+        "心包",
+        "膀胱"
+      ],
+      "dose": "9–30g",
+      "efficacy": "活血調經，利水消腫，清熱解毒",
+      "indications": "月經不調，痛經閉經，水腫尿少，瘡癰腫痛",
+      "caution": "孕婦禁用",
+      "memo": "婦科經產要藥"
+    },
+    {
+      "id": "h061",
+      "name": "牛膝",
+      "category": "活血祛瘀藥",
+      "nature": "平",
+      "flavor": "苦、甘、酸",
+      "channels": [
+        "肝",
+        "腎"
+      ],
+      "dose": "5–12g",
+      "efficacy": "活血祛瘀，補肝腎，強筋骨，利水通淋，引火（血）下行",
+      "indications": "經閉痛經，腰膝酸痛，淋證，頭痛眩晕",
+      "caution": "孕婦及月經過多者慎用",
+      "memo": "引血下行，補肝腎強筋骨"
+    },
+    {
+      "id": "h062",
+      "name": "紅花",
+      "category": "活血祛瘀藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "心",
+        "肝"
+      ],
+      "dose": "3–10g",
+      "efficacy": "活血通經，散瘀止痛",
+      "indications": "經閉痛經，恶露不下，跌打損傷，癰腫",
+      "caution": "孕婦忌用",
+      "memo": "活血通經要藥"
+    },
+    {
+      "id": "h063",
+      "name": "桃仁",
+      "category": "活血祛瘀藥",
+      "nature": "平；有小毒",
+      "flavor": "苦、甘",
+      "channels": [
+        "心",
+        "肝",
+        "大腸"
+      ],
+      "dose": "5–10g",
+      "efficacy": "活血祛瘀，潤腸通便，止咳平喘",
+      "indications": "經閉痛經，跌打損傷，肺癰腸癰，腸燥便秘",
+      "caution": "孕婦忌用",
+      "memo": "活血祛瘀兼潤腸"
+    },
+    {
+      "id": "h064",
+      "name": "半夏",
+      "category": "化痰止咳平喘藥",
+      "nature": "溫；有毒",
+      "flavor": "辛",
+      "channels": [
+        "脾",
+        "胃",
+        "肺"
+      ],
+      "dose": "3–10g",
+      "efficacy": "燥濕化痰，降逆止嘔，消痞散結",
+      "indications": "濕痰寒痰嘔吐，心下痞，梅核氣，外治癰腫",
+      "caution": "陰虛燥咳、血證及熱痰忌用；孕妇慎用；烏頭反半夏",
+      "memo": "燥濕化痰要藥，止嘔要藥"
+    },
+    {
+      "id": "h065",
+      "name": "川貝母",
+      "category": "化痰止咳平喘藥",
+      "nature": "微寒",
+      "flavor": "苦、甘",
+      "channels": [
+        "肺",
+        "心"
+      ],
+      "dose": "3–10g",
+      "efficacy": "清熱潤肺，化痰止咳，散消腫",
+      "indications": "肺熱燥咳，虛勞咳嗽，瘰癧",
+      "caution": "寒痰及濕痰不宜；乌頭反貝母",
+      "memo": "清熱潤肺化痰"
+    },
+    {
+      "id": "h066",
+      "name": "浙貝母",
+      "category": "化痰止咳平喘藥",
+      "nature": "寒",
+      "flavor": "苦",
+      "channels": [
+        "肺",
+        "心"
+      ],
+      "dose": "5–10g",
+      "efficacy": "清熱化痰，散結消癰",
+      "indications": "痰熱咳嗽，瘰癧，乳癰，肺癰",
+      "caution": "寒痰嗽及虛勞咳嗽不宜；乌頭反貝母",
+      "memo": "清熱化痰散結"
+    },
+    {
+      "id": "h067",
+      "name": "桔梗",
+      "category": "化痰止咳平喘藥",
+      "nature": "平",
+      "flavor": "苦、辛",
+      "channels": [
+        "肺"
+      ],
+      "dose": "3–10g",
+      "efficacy": "宣肺祛痰，利咽排膿",
+      "indications": "咳嗽痰多，咽喉腫痛，肺癰吐膿",
+      "caution": "用量過大可致嘔吐",
+      "memo": "宣肺利咽，載藥上行，舟楫之劑"
+    },
+    {
+      "id": "h068",
+      "name": "苦杏仁",
+      "category": "化痰止咳平喘藥",
+      "nature": "微溫；有小毒",
+      "flavor": "苦",
+      "channels": [
+        "肺",
+        "大腸"
+      ],
+      "dose": "5–10g",
+      "efficacy": "降氣止咳平喘，潤腸通便",
+      "indications": "咳嗽氣喘，腸燥便秘",
+      "caution": "嬰兒慎用；小量中毒",
+      "memo": "止咳平喘要藥"
+    },
+    {
+      "id": "h069",
+      "name": "紫蘇子",
+      "category": "化痰止咳平喘藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "肺",
+        "脾"
+      ],
+      "dose": "5–10g",
+      "efficacy": "降氣化痰止咳，潤腸通便",
+      "indications": "痰壅氣逆之咳嗽氣喘，腸燥便秘",
+      "caution": "脾虛便溏者慎服",
+      "memo": "降氣化痰"
+    },
+    {
+      "id": "h070",
+      "name": "朱砂",
+      "category": "安神藥",
+      "nature": "微寒；有毒",
+      "flavor": "甘",
+      "channels": [
+        "心"
+      ],
+      "dose": "0.1–0.5g，研末沖服或入丸散",
+      "efficacy": "清心鎮驚，安神解毒",
+      "indications": "心火亢盛之心神不寧，驚悸失眠，癲癇發狂",
+      "caution": "有毒，不可過量或持續服用；孕妇及肝腎功能不全者禁用",
+      "memo": "重鎮安神要藥"
+    },
+    {
+      "id": "h071",
+      "name": "磁石",
+      "category": "安神藥",
+      "nature": "寒",
+      "flavor": "鹹",
+      "channels": [
+        "肝",
+        "心",
+        "腎"
+      ],
+      "dose": "9–30g（先煎）",
+      "efficacy": "鎮驚安神，益腎納氣，平肝潛陽，聰耳明目",
+      "indications": "驚悸失眠，目昏耳聾，腎虛氣喘，肝陽眩暈",
+      "caution": "脾胃虛弱者不宜多服久服",
+      "memo": "益腎納氣平肝"
+    },
+    {
+      "id": "h072",
+      "name": "酸棗仁",
+      "category": "安神藥",
+      "nature": "平",
+      "flavor": "甘、酸",
+      "channels": [
+        "心",
+        "肝",
+        "膽"
+      ],
+      "dose": "10–15g",
+      "efficacy": "養心安神，斂汗",
+      "indications": "虛煩不眠，驚悸多夢，體虛多汗",
+      "caution": "有實火鬱熱者慎服",
+      "memo": "養心安神要藥"
+    },
+    {
+      "id": "h073",
+      "name": "遠志",
+      "category": "安神藥",
+      "nature": "微溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "心",
+        "腎",
+        "肺"
+      ],
+      "dose": "3–10g",
+      "efficacy": "安神益智，交通心腎，祛痰開竅",
+      "indications": "失眠多夢，心悸健忘，痰多咳喘",
+      "caution": "實熱癲狂者忌服",
+      "memo": "交通心腎，祛痰益智"
+    },
+    {
+      "id": "h074",
+      "name": "石決明",
+      "category": "平肝息風藥",
+      "nature": "微寒",
+      "flavor": "鹹",
+      "channels": [
+        "肝"
+      ],
+      "dose": "6–20g（先煎）",
+      "efficacy": "平肝潛陽，清肝明目，鎮痙",
+      "indications": "肝陽上亢之頭痛眩暈，目赤翳障，風熱目赤",
+      "caution": "脾胃虛寒者慎服",
+      "memo": "平肝潛陽要藥"
+    },
+    {
+      "id": "h075",
+      "name": "珍珠母",
+      "category": "平肝息風藥",
+      "nature": "寒",
+      "flavor": "鹹",
+      "channels": [
+        "肝",
+        "心"
+      ],
+      "dose": "15–30g（先煎）",
+      "efficacy": "平肝潛陽，定驚明目",
+      "indications": "肝陽上亢之頭暈目眩，心驚失眠，目赤雲翳",
+      "caution": "無",
+      "memo": "平肝安神明目"
+    },
+    {
+      "id": "h076",
+      "name": "鉤藤",
+      "category": "平肝息風藥",
+      "nature": "涼",
+      "flavor": "甘",
+      "channels": [
+        "肝",
+        "心包"
+      ],
+      "dose": "3–12g（後下）",
+      "efficacy": "息風止痉，清熱平肝，定驚",
+      "indications": "肝風內動之驚癇抽搐，小兒驚風，肝陽上亢之頭暈",
+      "caution": "無",
+      "memo": "息風止痉要藥，平肝不傷正"
+    },
+    {
+      "id": "h077",
+      "name": "天麻",
+      "category": "平肝息風藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "肝"
+      ],
+      "dose": "3–10g",
+      "efficacy": "息風止痉，平抑肝陽，祛風通絡",
+      "indications": "肝風內動之驚癇抽搐，肝陽上亢之頭暈眩暈，風濕痹痛",
+      "caution": "氣血虛甚者慎用",
+      "memo": "治風神藥，定風草"
+    },
+    {
+      "id": "h078",
+      "name": "全蠍",
+      "category": "平肝息風藥",
+      "nature": "平；有毒",
+      "flavor": "辛",
+      "channels": [
+        "肝"
+      ],
+      "dose": "3–6g",
+      "efficacy": "息風鎮痙，通絡止痛，攻毒散結",
+      "indications": "肝風內動之攣搐痙攣，中風口眼喎斜，風濕痹痛，瘡瘍",
+      "caution": "孕妇禁用",
+      "memo": "息風止痉要藥，搜風通絡"
+    },
+    {
+      "id": "h079",
+      "name": "麝香",
+      "category": "開竅藥",
+      "nature": "溫",
+      "flavor": "辛",
+      "channels": [
+        "心",
+        "脾"
+      ],
+      "dose": "0.03–0.1g，入丸散",
+      "efficacy": "開窍醒神，活血通經，消腫止痛",
+      "indications": "閉證神昏，經閉癓瘕，跌打損傷，瘡瘍",
+      "caution": "孕妇禁用",
+      "memo": "開窍醒神要藥，通諸竅"
+    },
+    {
+      "id": "h080",
+      "name": "冰片",
+      "category": "開竅藥",
+      "nature": "微寒",
+      "flavor": "辛、苦",
+      "channels": [
+        "心",
+        "脾",
+        "肺"
+      ],
+      "dose": "0.15–0.3g，入丸散",
+      "efficacy": "開窍醒神，清熱止痛",
+      "indications": "閉證神昏，目赤腫痛，喉痹口瘡",
+      "caution": "孕妇慎用",
+      "memo": "性涼，開竅兼清熱"
+    },
+    {
+      "id": "h081",
+      "name": "石菖蒲",
+      "category": "開竅藥",
+      "nature": "溫",
+      "flavor": "辛、苦",
+      "channels": [
+        "心",
+        "胃"
+      ],
+      "dose": "3–10g",
+      "efficacy": "開窍寧神，化濕和胃",
+      "indications": "痰蒙清竅之神志昏亂，健忘耳聾，濕阻中焦",
+      "caution": "陰虛陽亢、大汗、咳血者慎服",
+      "memo": "化濕豁痰開竅"
+    },
+    {
+      "id": "h082",
+      "name": "人參",
+      "category": "補虛藥",
+      "nature": "微溫",
+      "flavor": "甘、微苦",
+      "channels": [
+        "脾",
+        "肺",
+        "心",
+        "腎"
+      ],
+      "dose": "3–9g（另煎兌服）",
+      "efficacy": "大補元氣，復脈固脫，補脾益肺，生津安神",
+      "indications": "元氣虛脫，脾肺虛弱，津傷口渴，心神不安",
+      "caution": "反藜蘆，畏五靈脂，惡皂莢；實證熱證不宜",
+      "memo": "大補元氣第一要藥"
+    },
+    {
+      "id": "h083",
+      "name": "黨參",
+      "category": "補虛藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "脾",
+        "肺"
+      ],
+      "dose": "9–30g",
+      "efficacy": "補脾益肺，養血生津",
+      "indications": "脾肺气虛，氣血兩虛，津傷口渴",
+      "caution": "反藜蘆",
+      "memo": "人參之代用品，力較緩"
+    },
+    {
+      "id": "h084",
+      "name": "黃芪",
+      "category": "補虛藥",
+      "nature": "微溫",
+      "flavor": "甘",
+      "channels": [
+        "脾",
+        "肺"
+      ],
+      "dose": "9–30g",
+      "efficacy": "補氣升陽，益衛固表，托毒生肌，利水退腫",
+      "indications": "脾胃虛弱，中氣下陷，表虛自汗，氣虛水腫",
+      "caution": "表實邪旺、陰虛陽旺者不宜",
+      "memo": "補氣長藥，氣中升陽之品"
+    },
+    {
+      "id": "h085",
+      "name": "白朮",
+      "category": "補虛藥",
+      "nature": "溫",
+      "flavor": "苦、甘",
+      "channels": [
+        "脾",
+        "胃"
+      ],
+      "dose": "6–12g",
+      "efficacy": "補氣健脾，燥濕利水，止汗，安胎",
+      "indications": "脾虛食少，便溏泄瀉，水腫，自汗，胎動不安",
+      "caution": "陰津虧燥、氣滯胀滿者忌用",
+      "memo": "補氣健脾燥濕要藥"
+    },
+    {
+      "id": "h086",
+      "name": "山藥",
+      "category": "補虛藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "脾",
+        "肺",
+        "腎"
+      ],
+      "dose": "15–30g",
+      "efficacy": "補脾養胃，生津益肺，補腎澀精",
+      "indications": "脾虛食少，久瀉，肺虛喘咳，腎虛遺精",
+      "caution": "濕盛中滿或有實邪者不宜",
+      "memo": "平補脾肺腎三焦"
+    },
+    {
+      "id": "h087",
+      "name": "甘草",
+      "category": "補虛藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "心",
+        "肺",
+        "脾",
+        "胃"
+      ],
+      "dose": "2–10g",
+      "efficacy": "補脾益氣，祛痰止咳，緩急止痛，解毒調和",
+      "indications": "心氣虛弱之脈結代，脾胃虛弱，脘腹四肢攣急疼痛，咽痛咳喘",
+      "caution": "濕盛脹滿、水腫及嘔吐者慎用",
+      "memo": "國老，調和諸藥"
+    },
+    {
+      "id": "h088",
+      "name": "當歸",
+      "category": "補虛藥",
+      "nature": "溫",
+      "flavor": "甘、辛",
+      "channels": [
+        "肝",
+        "心",
+        "脾"
+      ],
+      "dose": "6–12g",
+      "efficacy": "補血調經，活血止痛，潤腸通便",
+      "indications": "血虛萎黃，月經不調，經閉痛經，跌打損傷，腸燥便秘",
+      "caution": "濕阻中满及大便溏泄者慎服",
+      "memo": "補血活血要藥，婦科調經要藥"
+    },
+    {
+      "id": "h089",
+      "name": "熟地黃",
+      "category": "補虛藥",
+      "nature": "微溫",
+      "flavor": "甘",
+      "channels": [
+        "肝",
+        "腎"
+      ],
+      "dose": "9–15g",
+      "efficacy": "補血滋陰，益精填髓",
+      "indications": "血虛萎黃，月經不調，肝腎陰虛，腰膝酸軟",
+      "caution": "氣滞痰多、腹滿便溏者忌服",
+      "memo": "補血養血要藥"
+    },
+    {
+      "id": "h090",
+      "name": "白芍",
+      "category": "補虛藥",
+      "nature": "微寒",
+      "flavor": "苦、酸",
+      "channels": [
+        "肝",
+        "脾"
+      ],
+      "dose": "6–15g",
+      "efficacy": "養血調經，斂陰止汗，柔肝止痛，平抑肝陽",
+      "indications": "月經不調，自汗盜汗，脅肋脘腹痛，四肢攣痛",
+      "caution": "虛寒腹痛泄瀉者慎用",
+      "memo": "養血柔肝止痛要藥"
+    },
+    {
+      "id": "h091",
+      "name": "阿膠",
+      "category": "補虛藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "肺",
+        "肝",
+        "腎"
+      ],
+      "dose": "3–9g（烊化兌服）",
+      "efficacy": "補血滋陰，潤燥，止血",
+      "indications": "血虛萎黃，眩暈心悸，肺燥咳嗽，出血證",
+      "caution": "脾胃虛弱、消化不良者慎用",
+      "memo": "補血止血潤燥"
+    },
+    {
+      "id": "h092",
+      "name": "何首烏",
+      "category": "補虛藥",
+      "nature": "微溫",
+      "flavor": "苦、甘、澀",
+      "channels": [
+        "肝",
+        "腎",
+        "心"
+      ],
+      "dose": "6–12g",
+      "efficacy": "補益精血，烏鬚髮，強筋骨，解毒截瘧",
+      "indications": "精血虧虛之鬚髮早白，頭暈耳鳴，腰膝酸軟",
+      "caution": "大便溏泄及濕痰重者不宜",
+      "memo": "制首烏補精血，生首烏解毒通便"
+    },
+    {
+      "id": "h093",
+      "name": "北沙參",
+      "category": "補虛藥",
+      "nature": "微寒",
+      "flavor": "甘、微苦",
+      "channels": [
+        "肺",
+        "胃"
+      ],
+      "dose": "5–12g",
+      "efficacy": "養陰清肺，益胃生津",
+      "indications": "肺熱燥咳，胃陰不足之口渴食少",
+      "caution": "風寒畏寒者不宜",
+      "memo": "養肺胃陰"
+    },
+    {
+      "id": "h094",
+      "name": "麥冬",
+      "category": "補虛藥",
+      "nature": "微寒",
+      "flavor": "甘、微苦",
+      "channels": [
+        "心",
+        "肺",
+        "胃"
+      ],
+      "dose": "6–12g",
+      "efficacy": "養陰潤肺，益胃生津，清心除煩",
+      "indications": "肺胃陰傷之燥咳口渴，心陰不足之心烦失眠",
+      "caution": "脾虛濕盛或風寒未解者不宜",
+      "memo": "養心肺胃三焦之陰"
+    },
+    {
+      "id": "h095",
+      "name": "枸杞子",
+      "category": "補虛藥",
+      "nature": "平",
+      "flavor": "甘",
+      "channels": [
+        "肝",
+        "腎"
+      ],
+      "dose": "6–12g",
+      "efficacy": "滋補肝腎，益精明目",
+      "indications": "肝腎精虧之腰膝酸痛、眩暈耳鳴、目昏不明",
+      "caution": "外邪實熱、脾虛濕盛及便溏者慎用",
+      "memo": "滋補肝腎明目要藥"
+    },
+    {
+      "id": "h096",
+      "name": "鹿茸",
+      "category": "補虛藥",
+      "nature": "溫",
+      "flavor": "甘、鹹",
+      "channels": [
+        "腎",
+        "肝"
+      ],
+      "dose": "1–3g（研末沖服）",
+      "efficacy": "壯腎陽，益精血，強筋骨，調沖任，托瘡毒",
+      "indications": "腎陽不足之腰脊冷痛、陽痿早泄，精血虧虛，小兒五遲",
+      "caution": "腎陰有火、血熱及外感熱病者忌服",
+      "memo": "補陽益精血要藥"
+    },
+    {
+      "id": "h097",
+      "name": "五味子",
+      "category": "收澀藥",
+      "nature": "溫",
+      "flavor": "酸、甘",
+      "channels": [
+        "肺",
+        "心",
+        "腎"
+      ],
+      "dose": "2–6g",
+      "efficacy": "收斂固澀，益氣生津，補腎寧心安神",
+      "indications": "久咳虛喘，津傷口渴，自汗盜汗，遺精久瀉，失眠",
+      "caution": "表邪未解、實熱、麻疹未透者不宜",
+      "memo": "收斂肺腎，生津斂汗"
+    },
+    {
+      "id": "h098",
+      "name": "山茱萸",
+      "category": "收澀藥",
+      "nature": "微溫",
+      "flavor": "酸、澀",
+      "channels": [
+        "肝",
+        "腎"
+      ],
+      "dose": "6–12g",
+      "efficacy": "補益肝腎，收澀固脫",
+      "indications": "遺精滑精，遺尿尿频，月經不止，崩漏，虛脫",
+      "caution": "命門火熾、濕熱者不宜",
+      "memo": "補肝腎兼固澀"
+    },
+    {
+      "id": "h099",
+      "name": "蓮子",
+      "category": "收澀藥",
+      "nature": "平",
+      "flavor": "甘、澀",
+      "channels": [
+        "脾",
+        "腎",
+        "心"
+      ],
+      "dose": "10–15g",
+      "efficacy": "補脾止瀉，益腎澀精，養心安神",
+      "indications": "脾虛泄瀉，遺精滑精，心悸失眠",
+      "caution": "中滿痞膈、便干者不宜",
+      "memo": "補脾腎養心安神"
+    },
+    {
+      "id": "h100",
+      "name": "金櫻子",
+      "category": "收澀藥",
+      "nature": "平",
+      "flavor": "酸、甘、澀",
+      "channels": [
+        "腎",
+        "膀胱",
+        "大腸"
+      ],
+      "dose": "6–12g",
+      "efficacy": "固精縮尿，澀腸止瀉，止帶",
+      "indications": "遺精滑精，遺尿尿频，久瀉久痢，白帶下",
+      "caution": "有實火、壯熱者不宜",
+      "memo": "澀精止帶要藥"
+    }
+  ]
+}

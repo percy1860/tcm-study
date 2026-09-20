@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>中醫自學</title>
+    <style>
+      :root {
+        --bg: #1a1a2e;
+        --surface: #16213e;
+        --card: #0f3460;
+        --accent: #e94560;
+        --text: #eaeaea;
+        --muted: #a0a0b0;
+        --green: #4caf50;
+        --radius: 8px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        padding-bottom: 70px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .tab-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        background: var(--surface);
+        border-top: 1px solid #2a2a4a;
+        z-index: 100;
+      }
+      .tab-bar button {
+        flex: 1;
+        padding: 10px 4px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .tab-bar button.active {
+        color: var(--accent);
+      }
+      .tab-bar button span.icon {
+        font-size: 18px;
+      }
+      .page {
+        display: none;
+        padding: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .page.active {
+        display: block;
+      }
+      h1 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: var(--accent);
+      }
+      h2 {
+        font-size: 17px;
+        margin: 16px 0 8px;
+        color: var(--text);
+      }
+      h3 {
+        font-size: 15px;
+        margin: 12px 0 6px;
+        color: var(--muted);
+      }
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 10px;
+      }
+      .badge {
+        display: inline-block;
+        background: var(--surface);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        margin-right: 4px;
+        color: var(--muted);
+      }
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        border: none;
+        border-radius: var(--radius);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+      }
+      .btn-green {
+        background: var(--green);
+      }
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #2a2a4a;
+        border-radius: var(--radius);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+      }
+      .flex {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+      .mt {
+        margin-top: 12px;
+      }
+      .mb {
+        margin-bottom: 12px;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .text-muted {
+        color: var(--muted);
+      }
+      .text-sm {
+        font-size: 12px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .flashcard {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 24px;
+        text-align: center;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        perspective: 1000px;
+      }
+      .flashcard .front {
+        font-size: 22px;
+        font-weight: bold;
+      }
+      .flashcard .back {
+        font-size: 14px;
+        text-align: left;
+        margin-top: 12px;
+        line-height: 1.8;
+      }
+      .flashcard .back dt {
+        color: var(--accent);
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      .flashcard .back dd {
+        margin-left: 0;
+      }
+      .nav-controls {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .progress-bar {
+        height: 4px;
+        background: var(--surface);
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 4px 0;
+      }
+      .progress-bar > div {
+        height: 100%;
+        background: var(--accent);
+        transition: width 0.3s;
+      }
+      .stage-card {
+        border-left: 3px solid var(--accent);
+        padding-left: 12px;
+        margin-bottom: 16px;
+      }
+      .quiz-option {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 12px;
+        margin: 6px 0;
+        border-radius: var(--radius);
+        border: 1px solid #2a2a4a;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .quiz-option.correct {
+        border-color: var(--green);
+        background: rgba(76, 175, 80, 0.15);
+      }
+      .quiz-option.wrong {
+        border-color: var(--accent);
+        background: rgba(233, 69, 96, 0.15);
+      }
+      .quiz-option:disabled {
+        opacity: 0.7;
+      }
+      .search-results {
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tab-bar">
+      <button class="active" data-tab="path">
+        <span class="icon">◈</span>學習路徑
+      </button>
+      <button data-tab="cards"><span class="icon">◇</span>卡片記憶</button>
+      <button data-tab="ref"><span class="icon">☰</span>查詢</button>
+      <button data-tab="quiz"><span class="icon">✓</span>測驗</button>
+    </div>
+
+    <div id="page-path" class="page active">
+      <h1>學習路徑</h1>
+      <div id="path-content"></div>
+    </div>
+    <div id="page-cards" class="page">
+      <h1>卡片記憶</h1>
+      <div id="card-controls"></div>
+      <div id="card-area"></div>
+    </div>
+    <div id="page-ref" class="page">
+      <h1>查詢工具書</h1>
+      <div id="ref-content"></div>
+    </div>
+    <div id="page-quiz" class="page">
+      <h1>測驗考試</h1>
+      <div id="quiz-content"></div>
+    </div>
+
+    <script>
+      window.TCM_DATA=/*__TCM_DATA__*/
+    </script>
+    <script>
+      const D = window.TCM_DATA;
+      const LS = "tcm.";
+      function get(k) {
+        try {
+          return JSON.parse(localStorage.getItem(LS + k));
+        } catch {
+          return null;
+        }
+      }
+      function set(k, v) {
+        localStorage.setItem(LS + k, JSON.stringify(v));
+      }
+
+      // Tab switching
+      document.querySelectorAll(".tab-bar button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-bar button")
+            .forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll(".page")
+            .forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          document
+            .getElementById("page-" + btn.dataset.tab)
+            .classList.add("active");
+        });
+      });
+
+      // === MODULE 1: 學習路徑 ===
+      function renderPath() {
+        const el = document.getElementById("path-content");
+        const prog = get("path_progress") || {};
+        let html = "";
+        D.curriculum.stages.forEach((s) => {
+          const done = prog[s.id] || [];
+          const pct = s.tasks.length
+            ? Math.round((done.length / s.tasks.length) * 100)
+            : 0;
+          html += `<div class="stage-card card">
+<h2>${s.title}</h2>
+<p class="text-muted text-sm">${s.goal}</p>
+<p class="text-sm" style="margin:4px 0">${s.duration}</p>
+<div class="progress-bar"><div style="width:${pct}%"></div></div>
+<p class="text-sm text-muted">${done.length}/${s.tasks.length} 完成</p>
+<div class="mt">`;
+          s.tasks.forEach((t, i) => {
+            const checked = done.includes(i) ? "checked" : "";
+            html += `<label style="display:block;margin:4px 0;cursor:pointer"><input type="checkbox" ${checked} data-stage="${s.id}" data-idx="${i}"> ${t.label}</label>`;
+          });
+          html += `</div><p class="text-sm mt" style="color:var(--green)">里程碑：${s.milestone}</p></div>`;
+        });
+        el.innerHTML = html;
+        el.addEventListener("change", (e) => {
+          if (e.target.matches("input[type=checkbox]")) {
+            const sid = e.target.dataset.stage,
+              idx = parseInt(e.target.dataset.idx);
+            const p = get("path_progress") || {};
+            if (!p[sid]) p[sid] = [];
+            if (e.target.checked) {
+              if (!p[sid].includes(idx)) p[sid].push(idx);
+            } else {
+              p[sid] = p[sid].filter((x) => x !== idx);
+            }
+            set("path_progress", p);
+            renderPath();
+          }
+        });
+      }
+
+      // === MODULE 2: 卡片記憶 ===
+      const cardTypes = [
+        {
+          key: "theory",
+          label: "基礎理論",
+          items: () =>
+            D.theory.concepts.map((c) => ({
+              id: c.id,
+              front: c.term,
+              back: `<dt>定義</dt><dd>${c.definition}</dd><dt>要點</dt><dd>${c.keyPoints.join("；")}</dd>`,
+              cat: c.category,
+            })),
+        },
+        {
+          key: "herbs",
+          label: "中藥",
+          items: () =>
+            D.herbs.herbs.map((h) => ({
+              id: h.id,
+              front: h.name,
+              back: `<dt>性味歸經</dt><dd>${h.nature}，${h.flavor}，入${h.channels.join("、")}</dd><dt>功效</dt><dd>${h.efficacy}</dd><dt>主治</dt><dd>${h.indications}</dd><dt>用量</dt><dd>${h.dose}</dd><dt>注意</dt><dd>${h.caution || "無"}</dd><dt>口訣</dt><dd>${h.memo}</dd>`,
+              cat: h.category,
+            })),
+        },
+        {
+          key: "formulas",
+          label: "方劑",
+          items: () =>
+            D.formulas.formulas.map((f) => ({
+              id: f.id,
+              front: f.name,
+              back: `<dt>組成</dt><dd>${f.composition.map((c) => c.herb + "(" + c.role + ")").join("、")}</dd><dt>功用</dt><dd>${f.function}</dd><dt>主治</dt><dd>${f.indications}</dd><dt>方解</dt><dd>${f.analysis}</dd><dt>方歌</dt><dd>${f.song}</dd>`,
+              cat: f.category,
+            })),
+        },
+        {
+          key: "acupoints",
+          label: "經絡穴位",
+          items: () =>
+            D.acupoints.points.map((p) => {
+              const m = D.acupoints.meridians.find((x) => x.id === p.meridian);
+              return {
+                id: p.id,
+                front: p.name + " (" + (m ? m.short : "") + ")",
+                back: `<dt>歸經</dt><dd>${m ? m.name : p.meridian}</dd><dt>定位</dt><dd>${p.location}</dd><dt>主治</dt><dd>${p.indications}</dd><dt>刺法</dt><dd>${p.method}</dd>${p.special ? "<dt>特異</dt><dd>" + p.special + "</dd>" : ""}`,
+                cat: m ? m.short : "其他",
+              };
+            }),
+        },
+      ];
+      let cardState = {
+        typeIdx: 0,
+        cats: [],
+        catFilter: "all",
+        deck: [],
+        idx: 0,
+        flipped: false,
+        known: 0,
+        unknown: 0,
+      };
+
+      function renderCardControls() {
+        const el = document.getElementById("card-controls");
+        let html = '<div class="flex flex-wrap mb">';
+        cardTypes.forEach((t, i) => {
+          html += `<button class="btn btn-sm ${i === cardState.typeIdx ? "" : "btn-outline"}" data-ct="${i}">${t.label}</button>`;
+        });
+        html += "</div>";
+        const allCats = [
+          ...new Set(cardTypes[cardState.typeIdx].items().map((x) => x.cat)),
+        ];
+        html += '<div class="flex flex-wrap mb">';
+        html += `<button class="btn btn-sm ${cardState.catFilter === "all" ? "" : "btn-outline"}" data-cf="all">全部</button>`;
+        allCats.forEach((c) => {
+          html += `<button class="btn btn-sm ${cardState.catFilter === c ? "" : "btn-outline"}" data-cf="${c}">${c}</button>`;
+        });
+        html += "</div>";
+        el.innerHTML = html;
+        el.querySelectorAll("[data-ct]").forEach((b) =>
+          b.addEventListener("click", () => {
+            cardState.typeIdx = parseInt(b.dataset.ct);
+            cardState.catFilter = "all";
+            initDeck();
+            renderCardControls();
+          }),
+        );
+        el.querySelectorAll("[data-cf]").forEach((b) =>
+          b.addEventListener("click", () => {
+            cardState.catFilter = b.dataset.cf;
+            initDeck();
+            renderCardControls();
+          }),
+        );
+      }
+      function initDeck() {
+        let items = cardTypes[cardState.typeIdx].items();
+        if (cardState.catFilter !== "all")
+          items = items.filter((x) => x.cat === cardState.catFilter);
+        // shuffle
+        const seed =
+          get("deck_seed_" + cardState.typeIdx + "_" + cardState.catFilter) ||
+          [];
+        if (!seed.length) {
+          for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+          }
+          set("deck_seed_" + cardState.typeIdx + "_" + cardState.catFilter, 1);
+        }
+        cardState.deck = items;
+        cardState.idx = 0;
+        cardState.flipped = false;
+        cardState.known = 0;
+        cardState.unknown = 0;
+      }
+      function renderCard() {
+        const el = document.getElementById("card-area");
+        if (!cardState.deck.length) {
+          el.innerHTML = '<p class="text-muted">無資料</p>';
+          return;
+        }
+        if (cardState.idx >= cardState.deck.length) {
+          el.innerHTML = `<div class="card text-center"><h2>本組完成</h2><p class="mt">記得：${cardState.known} 不記得：${cardState.unknown}</p><button class="btn mt" id="card-restart">重新開始</button></div>`;
+          document.getElementById("card-restart").onclick = () => {
+            initDeck();
+            renderCard();
+          };
+          return;
+        }
+        const c = cardState.deck[cardState.idx];
+        const progress = `${cardState.idx + 1}/${cardState.deck.length}`;
+        let html = `<p class="text-muted text-sm text-center mb">${progress}</p>`;
+        html += `<div class="flashcard" id="fc"><div class="front">${c.front}</div>`;
+        if (cardState.flipped) html += `<div class="back">${c.back}</div>`;
+        html += `</div>`;
+        if (cardState.flipped) {
+          html += `<div class="nav-controls"><button class="btn btn-outline" id="fc-no">不記得</button><button class="btn btn-green" id="fc-yes">記得</button></div>`;
+        } else {
+          html += `<div class="nav-controls"><button class="btn btn-outline" id="fc-flip">翻面</button><button class="btn" id="fc-next">下一張 →</button></div>`;
+        }
+        el.innerHTML = html;
+        const fc = document.getElementById("fc");
+        if (!cardState.flipped) {
+          document.getElementById("fc-flip").onclick = () => {
+            cardState.flipped = true;
+            renderCard();
+          };
+          document.getElementById("fc-next").onclick = () => {
+            cardState.idx++;
+            cardState.flipped = false;
+            renderCard();
+          };
+          fc.onclick = () => {
+            cardState.flipped = true;
+            renderCard();
+          };
+        } else {
+          document.getElementById("fc-no").onclick = () => {
+            cardState.unknown++;
+            cardState.idx++;
+            cardState.flipped = false;
+            renderCard();
+          };
+          document.getElementById("fc-yes").onclick = () => {
+            cardState.known++;
+            cardState.idx++;
+            cardState.flipped = false;
+            renderCard();
+          };
+        }
+      }
+
+      // === MODULE 3: 查詢工具書 ===
+      function renderRef() {
+        const el = document.getElementById("ref-content");
+        el.innerHTML = `<input type="text" id="ref-search" placeholder="搜尋藥名、方名、穴名、功效...">
+<div class="flex flex-wrap mb"><button class="btn btn-sm ref-filter active-f" data-type="all">全部</button><button class="btn btn-sm btn-outline ref-filter" data-type="theory">理論</button><button class="btn btn-sm btn-outline ref-filter" data-type="herbs">中藥</button><button class="btn btn-sm btn-outline ref-filter" data-type="formulas">方劑</button><button class="btn btn-sm btn-outline ref-filter" data-type="acupoints">穴位</button></div>
+<div class="search-results" id="ref-results"></div>`;
+        const searchInput = document.getElementById("ref-search");
+        const results = document.getElementById("ref-results");
+        let filterType = "all";
+        el.querySelectorAll(".ref-filter").forEach((b) =>
+          b.addEventListener("click", () => {
+            filterType = b.dataset.type;
+            el.querySelectorAll(".ref-filter").forEach((x) => {
+              x.classList.remove("active-f");
+              x.classList.add("btn-outline");
+            });
+            b.classList.add("active-f");
+            b.classList.remove("btn-outline");
+            doSearch();
+          }),
+        );
+        searchInput.addEventListener("input", doSearch);
+        function doSearch() {
+          const q = searchInput.value.trim().toLowerCase();
+          let items = [];
+          if (filterType === "all" || filterType === "theory") {
+            D.theory.concepts.forEach((c) => {
+              if (
+                !q ||
+                c.term.includes(q) ||
+                c.definition.includes(q) ||
+                c.category.includes(q)
+              )
+                items.push({
+                  type: "theory",
+                  name: c.term,
+                  cat: c.category,
+                  desc: c.definition,
+                });
+            });
+          }
+          if (filterType === "all" || filterType === "herbs") {
+            D.herbs.herbs.forEach((h) => {
+              if (
+                !q ||
+                h.name.includes(q) ||
+                h.efficacy.includes(q) ||
+                h.indications.includes(q) ||
+                h.category.includes(q)
+              )
+                items.push({
+                  type: "herb",
+                  name: h.name,
+                  cat: h.category,
+                  desc: h.efficacy,
+                });
+            });
+          }
+          if (filterType === "all" || filterType === "formulas") {
+            D.formulas.formulas.forEach((f) => {
+              if (
+                !q ||
+                f.name.includes(q) ||
+                f.function.includes(q) ||
+                f.indications.includes(q) ||
+                f.category.includes(q)
+              )
+                items.push({
+                  type: "formula",
+                  name: f.name,
+                  cat: f.category,
+                  desc: f.function,
+                });
+            });
+          }
+          if (filterType === "all" || filterType === "acupoints") {
+            D.acupoints.points.forEach((p) => {
+              const m = D.acupoints.meridians.find((x) => x.id === p.meridian);
+              const mname = m ? m.name : "";
+              if (
+                !q ||
+                p.name.includes(q) ||
+                p.indications.includes(q) ||
+                mname.includes(q)
+              )
+                items.push({
+                  type: "point",
+                  name: p.name,
+                  cat: mname,
+                  desc: p.indications,
+                });
+            });
+          }
+          if (!q) {
+            results.innerHTML = `<p class="text-muted" style="text-align:center;padding:40px 0">輸入關鍵字搜尋，或点击上方分類篩選</p>`;
+            return;
+          }
+          if (items.length > 200) items = items.slice(0, 200);
+          let html = `<p class="text-sm text-muted mb">${items.length} 條結果</p>`;
+          items.forEach((it) => {
+            html += `<div class="card"><strong>${it.name}</strong> <span class="badge">${it.cat}</span><p class="text-sm text-muted">${it.desc}</p></div>`;
+          });
+          results.innerHTML = html;
+        }
+        doSearch();
+      }
+
+      // === MODULE 4: 測驗考試 ===
+      function renderQuizSetup() {
+        const el = document.getElementById("quiz-content");
+        el.innerHTML = `<div class="card"><h3>選擇範圍</h3>
+<select id="qz-scope">
+<option value="all">全部題目（手動+自動）</option>
+<option value="manual">手動理論題</option>
+<option value="herbs">自動生成：中藥</option>
+<option value="formulas">自動生成：方劑</option>
+<option value="acupoints">自動生成：穴位</option>
+<option value="theory">自動生成：理論</option>
+</select>
+<label class="text-sm text-muted">題數</label>
+<select id="qz-count"><option value="10">10</option><option value="20">20</option><option value="30">30</option></select>
+<button class="btn mt" id="qz-start">開始測驗</button></div>`;
+        document.getElementById("qz-start").onclick = () => {
+          const scope = document.getElementById("qz-scope").value;
+          const count = parseInt(document.getElementById("qz-count").value);
+          startQuiz(scope, count);
+        };
+      }
+
+      function generateAutoQuestions(scope) {
+        let qs = [];
+        if (scope === "all" || scope === "herbs") {
+          D.herbs.herbs.forEach((h) => {
+            const others = D.herbs.herbs.filter((x) => x.id !== h.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_h_" + h.id,
+              stem: `${h.name} 的功效是？`,
+              options: [
+                h.efficacy,
+                wrong.efficacy,
+                D.herbs.herbs[Math.floor(Math.random() * others.length)]
+                  .efficacy,
+                D.herbs.herbs[Math.floor(Math.random() * others.length)]
+                  .efficacy,
+              ].slice(0, 4),
+              answer: 0,
+              explanation: `${h.name}：${h.efficacy}`,
+              _correct: h.efficacy,
+            });
+          });
+        }
+        if (scope === "all" || scope === "formulas") {
+          D.formulas.formulas.forEach((f) => {
+            const others = D.formulas.formulas.filter((x) => x.id !== f.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_f_" + f.id,
+              stem: `${f.name} 的功用是？`,
+              options: [f.function, wrong.function],
+              answer: 0,
+              _correct: f.function,
+            });
+            // need 4 options
+            const pool = [
+              f.function,
+              wrong.function,
+              D.formulas.formulas[
+                Math.floor(Math.random() * D.formulas.formulas.length)
+              ].function,
+              D.formulas.formulas[
+                Math.floor(Math.random() * D.formulas.formulas.length)
+              ].function,
+            ];
+            qs[qs.length - 1].options = pool.slice(0, 4);
+          });
+        }
+        if (scope === "all" || scope === "acupoints") {
+          D.acupoints.points.forEach((p) => {
+            const others = D.acupoints.points.filter((x) => x.id !== p.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_a_" + p.id,
+              stem: `${p.name} 的定位是？`,
+              options: [
+                p.location,
+                wrong.location,
+                D.acupoints.points[
+                  Math.floor(Math.random() * D.acupoints.points.length)
+                ].location,
+                D.acupoints.points[
+                  Math.floor(Math.random() * D.acupoints.points.length)
+                ].location,
+              ].slice(0, 4),
+              answer: 0,
+              _correct: p.location,
+            });
+          });
+        }
+        if (scope === "all" || scope === "theory") {
+          D.theory.concepts.forEach((c) => {
+            const others = D.theory.concepts.filter((x) => x.id !== c.id);
+            const wrong = others[Math.floor(Math.random() * others.length)];
+            qs.push({
+              id: "auto_t_" + c.id,
+              stem: `${c.term} 的定義是？`,
+              options: [
+                c.definition,
+                wrong.definition,
+                D.theory.concepts[
+                  Math.floor(Math.random() * D.theory.concepts.length)
+                ].definition,
+                D.theory.concepts[
+                  Math.floor(Math.random() * D.theory.concepts.length)
+                ].definition,
+              ].slice(0, 4),
+              answer: 0,
+              _correct: c.definition,
+            });
+          });
+        }
+        return qs;
+      }
+
+      function buildQuizSet(scope, count) {
+        let pool = [];
+        if (scope === "all" || scope === "manual")
+          pool = pool.concat(
+            D.quiz.questions.map((q) => ({ ...q, _source: "manual" })),
+          );
+        if (
+          scope === "all" ||
+          scope === "herbs" ||
+          scope === "formulas" ||
+          scope === "acupoints" ||
+          scope === "theory"
+        )
+          pool = pool.concat(
+            generateAutoQuestions(scope === "manual" ? "none" : scope),
+          );
+        // shuffle
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        return pool.slice(0, count);
+      }
+
+      function startQuiz(scope, count) {
+        const questions = buildQuizSet(scope, count);
+        let idx = 0,
+          score = 0,
+          wrongList = [];
+        function render() {
+          const el = document.getElementById("quiz-content");
+          if (idx >= questions.length) {
+            let pct = questions.length
+              ? Math.round((score / questions.length) * 100)
+              : 0;
+            let html = `<div class="card text-center"><h2>測驗結束</h2><p style="font-size:32px;color:${pct >= 60 ? "var(--green)" : "var(--accent)"}">${pct}%</p><p>${score}/${questions.length} 正確</p>`;
+            if (wrongList.length) {
+              html += '<h3 class="mt">錯題回顧</h3>';
+              wrongList.forEach((w) => {
+                html += `<div class="card"><p class="text-sm"><strong>${w.stem}</strong></p><p class="text-sm" style="color:var(--green)">正確：${w.options[w.answer]}</p><p class="text-sm" style="color:var(--accent)">你選：${w.options[w.selected]}</p></div>`;
+              });
+            }
+            html += '<button class="btn mt" id="qz-back">返回</button></div>';
+            el.innerHTML = html;
+            document.getElementById("qz-back").onclick = renderQuizSetup;
+            return;
+          }
+          const q = questions[idx];
+          // shuffle options while tracking correct
+          let optIndices = [0, 1, 2, 3];
+          for (let i = optIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [optIndices[i], optIndices[j]] = [optIndices[j], optIndices[i]];
+          }
+          const shuffled = optIndices.map((i) => q.options[i]);
+          const correctIdx = optIndices.indexOf(q.answer);
+
+          let html = `<div class="card"><p class="text-sm text-muted">${idx + 1}/${questions.length}</p><p class="mb" style="font-size:16px">${q.stem}</p>`;
+          shuffled.forEach((opt, i) => {
+            html += `<button class="quiz-option" data-oi="${i}" data-ci="${correctIdx}">${"ABCD"[i]}. ${opt}</button>`;
+          });
+          html += `<div id="qz-explain" style="display:none" class="mt"></div><div id="qz-nav" style="display:none" class="mt text-center"><button class="btn" id="qz-next">下一題 →</button></div></div>`;
+          el.innerHTML = html;
+          el.querySelectorAll(".quiz-option").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const sel = parseInt(btn.dataset.oi);
+              const ci = parseInt(btn.dataset.ci);
+              el.querySelectorAll(".quiz-option").forEach((b, i) => {
+                b.disabled = true;
+                if (i === ci) b.classList.add("correct");
+                if (i === sel && sel !== ci) b.classList.add("wrong");
+              });
+              if (sel === ci) score++;
+              else wrongList.push({ ...q, selected: sel });
+              const exp = document.getElementById("qz-explain");
+              if (q.explanation)
+                exp.innerHTML = `<p class="text-sm text-muted">解析：${q.explanation}</p>`;
+              exp.style.display = "block";
+              document.getElementById("qz-nav").style.display = "block";
+              document.getElementById("qz-next").onclick = () => {
+                idx++;
+                render();
+              };
+            });
+          });
+        }
+        render();
+      }
+
+      // Init
+      renderPath();
+      renderCardControls();
+      initDeck();
+      renderCard();
+      renderRef();
+      renderQuizSetup();
+    </script>
+  </body>
+</html>
