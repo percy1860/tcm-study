@@ -2,6 +2,8 @@
 
 All content is **繁體中文（台灣用字）**. Data lives in `data/*.json` (UTF-8, no BOM).
 The final single-file app inlines every JSON into one `window.TCM_DATA` object via `build.py`.
+`build.py` also runs schema validation and writes both `dist/tcm-study.html` and the repo-root
+`index.html` (the GitHub Pages artifact) so they never drift apart.
 
 Top-level keys of `window.TCM_DATA`:
 `meta`, `curriculum`, `theory`, `herbs`, `formulas`, "acupoints" (meridians+points), `quiz`.
@@ -32,7 +34,7 @@ Top-level keys of `window.TCM_DATA`:
     {
       "id": "h001",
       "name": "黃芪",
-      "category": "補氣藥",
+      "category": "補虛藥",
       "nature": "微溫",
       "flavor": "甘",
       "channels": ["脾", "肺"],
@@ -71,7 +73,7 @@ Top-level keys of `window.TCM_DATA`:
 }
 ```
 - `category` ∈ `解表劑` `清熱劑` `瀉下劑` `祛風濕劑` `開竅劑` `理氣劑` `消食劑` `止血劑` `理血劑` `化痰止咳平喘劑` `安神劑` `平肝息風劑` `補益劑` `固澀劑` `腫瘍劑等其他`
-- `role` ∈ `君` `臣` `佐` `使`；`id` 格式 `f###`。
+- `role` ∈ `君` `臣` `佐` `使`（一藥兼職可寫 `佐使`）；`id` 格式 `f###`。
 
 ## data/acupoints.json
 ```json
@@ -131,7 +133,7 @@ Top-level keys of `window.TCM_DATA`:
 ---
 
 ## App modules (index.html)
-1. **學習路徑**：渲染 curriculum 五階段 + 進度（localStorage）。
+1. **學習路徑**：渲染 curriculum 六階段 + 進度（localStorage）；每個 task 的「開啟 ▸」依 `module`/`filter` 深連結到對應卡片牌組或測驗。
 2. **卡片記憶**：全部資料均可翻卡（正面 name/term，背面詳情），支援分類牌組過濾 + 「記得/不記得」計數。
 3. **查詢工具書**：全域搜尋（名稱/功效/主治）+ 分類瀏覽 + 詳情。
 4. **測驗考試**：手動題庫 + 自動生成題（藥性/歸經/方劑組成/穴位定位），可選範圍與題數，計分 + 錯題回顧。

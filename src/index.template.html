@@ -297,21 +297,26 @@
       function set(k, v) {
         localStorage.setItem(LS + k, JSON.stringify(v));
       }
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
 
       // Tab switching
+      function activateTab(name) {
+        document
+          .querySelectorAll(".tab-bar button")
+          .forEach((b) => b.classList.toggle("active", b.dataset.tab === name));
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page-" + name).classList.add("active");
+      }
       document.querySelectorAll(".tab-bar button").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll(".tab-bar button")
-            .forEach((b) => b.classList.remove("active"));
-          document
-            .querySelectorAll(".page")
-            .forEach((p) => p.classList.remove("active"));
-          btn.classList.add("active");
-          document
-            .getElementById("page-" + btn.dataset.tab)
-            .classList.add("active");
-        });
+        btn.addEventListener("click", () => activateTab(btn.dataset.tab));
       });
 
       // === MODULE 1: 學習路徑 ===
@@ -333,26 +338,70 @@
 <div class="mt">`;
           s.tasks.forEach((t, i) => {
             const checked = done.includes(i) ? "checked" : "";
-            html += `<label style="display:block;margin:4px 0;cursor:pointer"><input type="checkbox" ${checked} data-stage="${s.id}" data-idx="${i}"> ${t.label}</label>`;
+            const filter = t.filter || "";
+            html += `<div style="display:flex;align-items:center;gap:8px;margin:4px 0">
+<label style="flex:1;cursor:pointer"><input type="checkbox" ${checked} data-stage="${s.id}" data-idx="${i}"> ${t.label}</label>
+<button class="btn btn-sm btn-outline task-go" data-module="${t.module}" data-filter="${filter}">開啟 ▸</button>
+</div>`;
           });
           html += `</div><p class="text-sm mt" style="color:var(--green)">里程碑：${s.milestone}</p></div>`;
         });
         el.innerHTML = html;
+      }
+      // Delegated once: checkbox progress + task deep-links (survives innerHTML re-render).
+      function wirePath() {
+        const el = document.getElementById("path-content");
         el.addEventListener("change", (e) => {
-          if (e.target.matches("input[type=checkbox]")) {
-            const sid = e.target.dataset.stage,
-              idx = parseInt(e.target.dataset.idx);
-            const p = get("path_progress") || {};
-            if (!p[sid]) p[sid] = [];
-            if (e.target.checked) {
-              if (!p[sid].includes(idx)) p[sid].push(idx);
-            } else {
-              p[sid] = p[sid].filter((x) => x !== idx);
-            }
-            set("path_progress", p);
-            renderPath();
+          if (!e.target.matches("input[type=checkbox]")) return;
+          const sid = e.target.dataset.stage,
+            idx = parseInt(e.target.dataset.idx);
+          const p = get("path_progress") || {};
+          if (!p[sid]) p[sid] = [];
+          if (e.target.checked) {
+            if (!p[sid].includes(idx)) p[sid].push(idx);
+          } else {
+            p[sid] = p[sid].filter((x) => x !== idx);
           }
+          set("path_progress", p);
+          renderPath();
         });
+        el.addEventListener("click", (e) => {
+          const b = e.target.closest(".task-go");
+          if (b) openModule(b.dataset.module, b.dataset.filter);
+        });
+      }
+
+      function cardTypeIndex(key) {
+        return cardTypes.findIndex((t) => t.key === key);
+      }
+      function catForType(typeKey, filter) {
+        if (!filter) return "all";
+        const cats = cardTypes[cardTypeIndex(typeKey)]
+          .items()
+          .map((x) => x.cat);
+        let want = filter;
+        if (typeKey === "acupoints") {
+          const m = D.acupoints.meridians.find((x) => x.id === filter);
+          if (m) want = m.short;
+        }
+        return cats.includes(want) ? want : "all";
+      }
+      function openModule(module, filter) {
+        if (module === "quiz") {
+          activateTab("quiz");
+          return;
+        }
+        const ti = cardTypeIndex(module);
+        if (ti < 0) {
+          activateTab("cards");
+          return;
+        }
+        cardState.typeIdx = ti;
+        cardState.catFilter = catForType(module, filter);
+        renderCardControls();
+        initDeck();
+        renderCard();
+        activateTab("cards");
       }
 
       // === MODULE 2: 卡片記憶 ===
@@ -453,18 +502,7 @@
         let items = cardTypes[cardState.typeIdx].items();
         if (cardState.catFilter !== "all")
           items = items.filter((x) => x.cat === cardState.catFilter);
-        // shuffle
-        const seed =
-          get("deck_seed_" + cardState.typeIdx + "_" + cardState.catFilter) ||
-          [];
-        if (!seed.length) {
-          for (let i = items.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [items[i], items[j]] = [items[j], items[i]];
-          }
-          set("deck_seed_" + cardState.typeIdx + "_" + cardState.catFilter, 1);
-        }
-        cardState.deck = items;
+        cardState.deck = shuffle(items);
         cardState.idx = 0;
         cardState.flipped = false;
         cardState.known = 0;
@@ -531,7 +569,7 @@
       function renderRef() {
         const el = document.getElementById("ref-content");
         el.innerHTML = `<input type="text" id="ref-search" placeholder="搜尋藥名、方名、穴名、功效...">
-<div class="flex flex-wrap mb"><button class="btn btn-sm ref-filter active-f" data-type="all">全部</button><button class="btn btn-sm btn-outline ref-filter" data-type="theory">理論</button><button class="btn btn-sm btn-outline ref-filter" data-type="herbs">中藥</button><button class="btn btn-sm btn-outline ref-filter" data-type="formulas">方劑</button><button class="btn btn-sm btn-outline ref-filter" data-type="acupoints">穴位</button></div>
+<div class="flex flex-wrap mb"><button class="btn btn-sm ref-filter" data-type="all">全部</button><button class="btn btn-sm btn-outline ref-filter" data-type="theory">理論</button><button class="btn btn-sm btn-outline ref-filter" data-type="herbs">中藥</button><button class="btn btn-sm btn-outline ref-filter" data-type="formulas">方劑</button><button class="btn btn-sm btn-outline ref-filter" data-type="acupoints">穴位</button></div>
 <div class="search-results" id="ref-results"></div>`;
         const searchInput = document.getElementById("ref-search");
         const results = document.getElementById("ref-results");
@@ -539,11 +577,9 @@
         el.querySelectorAll(".ref-filter").forEach((b) =>
           b.addEventListener("click", () => {
             filterType = b.dataset.type;
-            el.querySelectorAll(".ref-filter").forEach((x) => {
-              x.classList.remove("active-f");
-              x.classList.add("btn-outline");
-            });
-            b.classList.add("active-f");
+            el.querySelectorAll(".ref-filter").forEach((x) =>
+              x.classList.add("btn-outline"),
+            );
             b.classList.remove("btn-outline");
             doSearch();
           }),
@@ -656,98 +692,66 @@
         };
       }
 
+      function autoQuestions(items, cfg) {
+        const texts = cfg.textList;
+        return items.map((it) => {
+          const correct = cfg.answerText(it);
+          const distractors = shuffle([
+            ...new Set(texts.filter((t) => t !== correct)),
+          ]).slice(0, 3);
+          const options = shuffle([correct, ...distractors]);
+          return {
+            id: "auto_" + cfg.prefix + "_" + it.id,
+            stem: cfg.stem(it),
+            options,
+            answer: options.indexOf(correct),
+            explanation: cfg.explain(it),
+          };
+        });
+      }
+
       function generateAutoQuestions(scope) {
         let qs = [];
-        if (scope === "all" || scope === "herbs") {
-          D.herbs.herbs.forEach((h) => {
-            const others = D.herbs.herbs.filter((x) => x.id !== h.id);
-            const wrong = others[Math.floor(Math.random() * others.length)];
-            qs.push({
-              id: "auto_h_" + h.id,
-              stem: `${h.name} 的功效是？`,
-              options: [
-                h.efficacy,
-                wrong.efficacy,
-                D.herbs.herbs[Math.floor(Math.random() * others.length)]
-                  .efficacy,
-                D.herbs.herbs[Math.floor(Math.random() * others.length)]
-                  .efficacy,
-              ].slice(0, 4),
-              answer: 0,
-              explanation: `${h.name}：${h.efficacy}`,
-              _correct: h.efficacy,
-            });
-          });
-        }
-        if (scope === "all" || scope === "formulas") {
-          D.formulas.formulas.forEach((f) => {
-            const others = D.formulas.formulas.filter((x) => x.id !== f.id);
-            const wrong = others[Math.floor(Math.random() * others.length)];
-            qs.push({
-              id: "auto_f_" + f.id,
-              stem: `${f.name} 的功用是？`,
-              options: [f.function, wrong.function],
-              answer: 0,
-              _correct: f.function,
-            });
-            // need 4 options
-            const pool = [
-              f.function,
-              wrong.function,
-              D.formulas.formulas[
-                Math.floor(Math.random() * D.formulas.formulas.length)
-              ].function,
-              D.formulas.formulas[
-                Math.floor(Math.random() * D.formulas.formulas.length)
-              ].function,
-            ];
-            qs[qs.length - 1].options = pool.slice(0, 4);
-          });
-        }
-        if (scope === "all" || scope === "acupoints") {
-          D.acupoints.points.forEach((p) => {
-            const others = D.acupoints.points.filter((x) => x.id !== p.id);
-            const wrong = others[Math.floor(Math.random() * others.length)];
-            qs.push({
-              id: "auto_a_" + p.id,
-              stem: `${p.name} 的定位是？`,
-              options: [
-                p.location,
-                wrong.location,
-                D.acupoints.points[
-                  Math.floor(Math.random() * D.acupoints.points.length)
-                ].location,
-                D.acupoints.points[
-                  Math.floor(Math.random() * D.acupoints.points.length)
-                ].location,
-              ].slice(0, 4),
-              answer: 0,
-              _correct: p.location,
-            });
-          });
-        }
-        if (scope === "all" || scope === "theory") {
-          D.theory.concepts.forEach((c) => {
-            const others = D.theory.concepts.filter((x) => x.id !== c.id);
-            const wrong = others[Math.floor(Math.random() * others.length)];
-            qs.push({
-              id: "auto_t_" + c.id,
-              stem: `${c.term} 的定義是？`,
-              options: [
-                c.definition,
-                wrong.definition,
-                D.theory.concepts[
-                  Math.floor(Math.random() * D.theory.concepts.length)
-                ].definition,
-                D.theory.concepts[
-                  Math.floor(Math.random() * D.theory.concepts.length)
-                ].definition,
-              ].slice(0, 4),
-              answer: 0,
-              _correct: c.definition,
-            });
-          });
-        }
+        if (scope === "all" || scope === "herbs")
+          qs = qs.concat(
+            autoQuestions(D.herbs.herbs, {
+              prefix: "h",
+              stem: (h) => `${h.name} 的功效是？`,
+              answerText: (h) => h.efficacy,
+              explain: (h) => `${h.name}：${h.efficacy}`,
+              textList: D.herbs.herbs.map((x) => x.efficacy),
+            }),
+          );
+        if (scope === "all" || scope === "formulas")
+          qs = qs.concat(
+            autoQuestions(D.formulas.formulas, {
+              prefix: "f",
+              stem: (f) => `${f.name} 的功用是？`,
+              answerText: (f) => f.function,
+              explain: (f) => `${f.name}：${f.function}`,
+              textList: D.formulas.formulas.map((x) => x.function),
+            }),
+          );
+        if (scope === "all" || scope === "acupoints")
+          qs = qs.concat(
+            autoQuestions(D.acupoints.points, {
+              prefix: "a",
+              stem: (p) => `${p.name} 的定位是？`,
+              answerText: (p) => p.location,
+              explain: (p) => `${p.name}：${p.location}`,
+              textList: D.acupoints.points.map((x) => x.location),
+            }),
+          );
+        if (scope === "all" || scope === "theory")
+          qs = qs.concat(
+            autoQuestions(D.theory.concepts, {
+              prefix: "t",
+              stem: (c) => `${c.term} 的定義是？`,
+              answerText: (c) => c.definition,
+              explain: (c) => `${c.term}：${c.definition}`,
+              textList: D.theory.concepts.map((x) => x.definition),
+            }),
+          );
         return qs;
       }
 
@@ -764,15 +768,8 @@
           scope === "acupoints" ||
           scope === "theory"
         )
-          pool = pool.concat(
-            generateAutoQuestions(scope === "manual" ? "none" : scope),
-          );
-        // shuffle
-        for (let i = pool.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [pool[i], pool[j]] = [pool[j], pool[i]];
-        }
-        return pool.slice(0, count);
+          pool = pool.concat(generateAutoQuestions(scope));
+        return shuffle(pool).slice(0, count);
       }
 
       function startQuiz(scope, count) {
@@ -799,12 +796,8 @@
             return;
           }
           const q = questions[idx];
-          // shuffle options while tracking correct
-          let optIndices = [0, 1, 2, 3];
-          for (let i = optIndices.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [optIndices[i], optIndices[j]] = [optIndices[j], optIndices[i]];
-          }
+          // shuffle options while tracking which shuffled slot holds the answer
+          const optIndices = shuffle([0, 1, 2, 3]);
           const shuffled = optIndices.map((i) => q.options[i]);
           const correctIdx = optIndices.indexOf(q.answer);
 
@@ -842,6 +835,7 @@
 
       // Init
       renderPath();
+      wirePath();
       renderCardControls();
       initDeck();
       renderCard();
