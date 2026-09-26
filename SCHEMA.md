@@ -4,6 +4,8 @@ All content is **繁體中文（台灣用字）**. Data lives in `data/*.json` (
 The final single-file app inlines every JSON into one `window.TCM_DATA` object via `build.py`.
 `build.py` also runs schema validation and writes both `dist/tcm-study.html` and the repo-root
 `index.html` (the GitHub Pages artifact) so they never drift apart.
+Builds are **deterministic**（`meta` 不含日期）—— 只有改到 template/data 才會讓產出檔產生 diff。
+改完資料/模板後跑 `python3 build.py`；要檢查根目錄產出是否過期跑 `python3 build.py --check`（exit 1 = 過期）。
 
 Top-level keys of `window.TCM_DATA`:
 `meta`, `curriculum`, `theory`, `herbs`, `formulas`, "acupoints" (meridians+points), `quiz`.

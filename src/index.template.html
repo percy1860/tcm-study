@@ -488,6 +488,7 @@
             cardState.catFilter = "all";
             initDeck();
             renderCardControls();
+            renderCard();
           }),
         );
         el.querySelectorAll("[data-cf]").forEach((b) =>
@@ -495,6 +496,7 @@
             cardState.catFilter = b.dataset.cf;
             initDeck();
             renderCardControls();
+            renderCard();
           }),
         );
       }
@@ -656,12 +658,15 @@
                 });
             });
           }
-          if (!q) {
+          if (!q && filterType === "all") {
             results.innerHTML = `<p class="text-muted" style="text-align:center;padding:40px 0">輸入關鍵字搜尋，或点击上方分類篩選</p>`;
             return;
           }
+          const total = items.length;
           if (items.length > 200) items = items.slice(0, 200);
-          let html = `<p class="text-sm text-muted mb">${items.length} 條結果</p>`;
+          let html = `<p class="text-sm text-muted mb">${total} 條結果${
+            total > items.length ? "（僅顯示前 200 筆）" : ""
+          }</p>`;
           items.forEach((it) => {
             html += `<div class="card"><strong>${it.name}</strong> <span class="badge">${it.cat}</span><p class="text-sm text-muted">${it.desc}</p></div>`;
           });
@@ -787,7 +792,7 @@
             if (wrongList.length) {
               html += '<h3 class="mt">錯題回顧</h3>';
               wrongList.forEach((w) => {
-                html += `<div class="card"><p class="text-sm"><strong>${w.stem}</strong></p><p class="text-sm" style="color:var(--green)">正確：${w.options[w.answer]}</p><p class="text-sm" style="color:var(--accent)">你選：${w.options[w.selected]}</p></div>`;
+                html += `<div class="card"><p class="text-sm"><strong>${w.stem}</strong></p><p class="text-sm" style="color:var(--green)">正確：${w.correct}</p><p class="text-sm" style="color:var(--accent)">你選：${w.picked}</p>${w.explanation ? `<p class="text-sm text-muted">解析：${w.explanation}</p>` : ""}</div>`;
               });
             }
             html += '<button class="btn mt" id="qz-back">返回</button></div>';
@@ -803,21 +808,28 @@
 
           let html = `<div class="card"><p class="text-sm text-muted">${idx + 1}/${questions.length}</p><p class="mb" style="font-size:16px">${q.stem}</p>`;
           shuffled.forEach((opt, i) => {
-            html += `<button class="quiz-option" data-oi="${i}" data-ci="${correctIdx}">${"ABCD"[i]}. ${opt}</button>`;
+            html += `<button class="quiz-option" data-oi="${i}">${"ABCD"[i]}. ${opt}</button>`;
           });
           html += `<div id="qz-explain" style="display:none" class="mt"></div><div id="qz-nav" style="display:none" class="mt text-center"><button class="btn" id="qz-next">下一題 →</button></div></div>`;
           el.innerHTML = html;
           el.querySelectorAll(".quiz-option").forEach((btn) => {
             btn.addEventListener("click", () => {
+              // correctIdx comes from the render() closure, never from the DOM
               const sel = parseInt(btn.dataset.oi);
-              const ci = parseInt(btn.dataset.ci);
+              const ci = correctIdx;
               el.querySelectorAll(".quiz-option").forEach((b, i) => {
                 b.disabled = true;
                 if (i === ci) b.classList.add("correct");
                 if (i === sel && sel !== ci) b.classList.add("wrong");
               });
               if (sel === ci) score++;
-              else wrongList.push({ ...q, selected: sel });
+              else
+                wrongList.push({
+                  stem: q.stem,
+                  correct: shuffled[ci],
+                  picked: shuffled[sel],
+                  explanation: q.explanation,
+                });
               const exp = document.getElementById("qz-explain");
               if (q.explanation)
                 exp.innerHTML = `<p class="text-sm text-muted">解析：${q.explanation}</p>`;

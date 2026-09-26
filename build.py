@@ -2,7 +2,15 @@
 """Assemble the single-file TCM study app.
 
 Reads src/index.template.html and every data/*.json, injects them as
-window.TCM_DATA, writes dist/tcm-study.html (fully self-contained).
+window.TCM_DATA, writes dist/tcm-study.html (fully self-contained) and the
+repo-root index.html served by GitHub Pages.
+
+Build is deterministic (no timestamp in the payload) so the committed artifact
+only changes when the template or data changes.
+
+Usage:
+  python3 build.py            validate + write both outputs
+  python3 build.py --check    validate + fail if the committed outputs are stale
 """
 import datetime
 import json
@@ -82,7 +90,6 @@ def main():
     data = {name: load(name) for name in REQUIRED}
     data["meta"] = {
         "app": "中醫自學",
-        "generated": datetime.date.today().isoformat(),
         "counts": {
             "theory": len(data["theory"]["concepts"]),
             "herbs": len(data["herbs"]["herbs"]),
@@ -106,6 +113,21 @@ def main():
     payload = json.dumps(data, ensure_ascii=False)
     payload = payload.replace("</", "<\\/")  # keep inline <script> safe
     html = html.replace(marker, payload)
+
+    if "--check" in sys.argv[1:]:
+        stale = [
+            str(p)
+            for p in (ROOT_INDEX,)  # dist/ is gitignored; only the committed output matters
+            if not p.exists() or p.read_text(encoding="utf-8") != html
+        ]
+        if stale:
+            print("STALE OUTPUTS (re-run: python3 build.py):")
+            for p in stale:
+                print("  -", p)
+            sys.exit(1)
+        print("OK: outputs in sync with src/ + data/")
+        return
+
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(html, encoding="utf-8")
     ROOT_INDEX.write_text(html, encoding="utf-8")
@@ -113,6 +135,7 @@ def main():
     print(f"OK -> {OUT}")
     print(f"OK -> {ROOT_INDEX} (GitHub Pages) ({size_kb:.0f} KB)")
     print("counts:", json.dumps(data["meta"]["counts"], ensure_ascii=False))
+    print("built:", datetime.date.today().isoformat())
 
 
 if __name__ == "__main__":
